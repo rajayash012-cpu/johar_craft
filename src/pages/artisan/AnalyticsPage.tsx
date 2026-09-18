@@ -114,7 +114,7 @@ export function AnalyticsPage() {
       </div>
 
       {/* Summary stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label: 'Total Published', value: products.length, icon: '📦' },
           { label: 'Total Views', value: products.reduce((sum, p) => sum + p.views, 0), icon: '👁️' },

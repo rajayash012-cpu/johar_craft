@@ -426,7 +426,7 @@ export function AddProductPage() {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="label">Materials Used</label>
                 <input
@@ -468,7 +468,7 @@ export function AddProductPage() {
           <p className="text-sm text-earth-500 mb-4">
             Enter your costs to calculate a fair, profitable selling price
           </p>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {[
               { field: 'rawMaterial', label: 'Raw Material Cost (₹)' },
               { field: 'labour', label: 'Artisan Labour Cost (₹)' },

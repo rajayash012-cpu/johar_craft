@@ -1163,7 +1163,7 @@ export function SmartCatalogPage() {
                   </button>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 pt-2 border-t border-stone-100 text-xs">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-stone-100 text-xs">
                   <div>
                     <label className="label">Stock Quantity</label>
                     <input
