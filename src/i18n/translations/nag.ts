@@ -171,5 +171,18 @@ export const nag: TranslationSchema = {
     send_enquiry: 'सीधा पूछताछ भेजू',
     verified_artisan: 'जांचल कारीगर',
     verified_buyer: 'जांचल खरीददार'
+  },
+  image_enhancer: {
+    modal_title: 'डीप इमेज एआई फोटो संवर्धक',
+    modal_subtitle: 'झारखंडी सामान कर फोटो के सुथरा आर चकमक बनाऊ',
+    enhance_btn: 'डीप इमेज एआई से संवर्धित करू',
+    keep_original: 'पुरना फोटो राखू',
+    use_enhanced: 'सुथरा फोटो लगाऊ',
+    continue_original: 'पुरने फोटो संग आगू बढ़ू',
+    revert: 'पहिले लेखा करू',
+    before_after: 'पहिले / पाछे',
+    enhance_all: 'सभे फोटो संवर्धित करू',
+    ai_enhanced_badge: 'डीप इमेज एआई से संवर्धित',
+    authenticity_notice: 'सच्चा हुनर कर भरोसा: फोटो के साफ बनावेला, रूप-रंग के नइ बदले।'
   }
 };

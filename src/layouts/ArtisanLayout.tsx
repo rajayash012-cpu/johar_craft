@@ -28,6 +28,7 @@ export function ArtisanLayout({ children }: ArtisanLayoutProps) {
     { to: '/artisan', label: t('nav.dashboard'), icon: LayoutDashboard, exact: true },
     { to: '/artisan/profile', label: t('nav.profile'), icon: User },
     { to: '/artisan/products', label: t('nav.products'), icon: Package },
+    { to: '/artisan/image-enhancer', label: t('nav.image_enhancer') || '✨ Image Enhancer', icon: Sparkles },
     { to: '/artisan/smart-catalog', label: t('nav.smart_catalog'), icon: Sparkles },
     { to: '/artisan/products/add', label: t('nav.add_product'), icon: PlusCircle },
     { to: '/artisan/pricing', label: t('nav.pricing'), icon: Calculator },

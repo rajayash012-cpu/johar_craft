@@ -196,6 +196,25 @@ export interface SmartCatalogMetadata {
   }>;
 }
 
+export type ImageEnhancementPreset = 'auto' | 'product' | 'catalog' | 'custom';
+
+export interface ImageEnhancementOptions {
+  denoise?: boolean;
+  deblur?: boolean;
+  light?: boolean;
+  color?: boolean;
+  upscale?: 'none' | '2x' | '4x';
+}
+
+export interface ImageEnhancementMetadata {
+  isEnhanced: boolean;
+  originalUrl: string;
+  enhancedUrl: string;
+  preset?: ImageEnhancementPreset;
+  operationsApplied?: string[];
+  enhancedAt: string;
+}
+
 export interface Product {
   id: string;
   accountId?: string;
@@ -205,6 +224,8 @@ export interface Product {
   name: string;
   image?: string;
   images?: string[];
+  enhancedImages?: Record<number, ImageEnhancementMetadata>;
+  hasEnhancedPhotos?: boolean;
   craftCategory: string;
   description: string;
   materials: string;

@@ -45,6 +45,7 @@ export const en = {
     documentation: 'Documentation & GI',
     artisan_portal: 'Artisan Portal',
     smart_catalog: 'Smart Catalog',
+    image_enhancer: '✨ Image Enhancer',
     search_placeholder: 'Search crafts, products or artisans...',
     view_desktop: 'Desktop',
     view_mobile: 'Mobile',
@@ -403,6 +404,19 @@ export const en = {
     village: 'Village',
     district: 'District',
     jharkhand: 'Jharkhand'
+  },
+  image_enhancer: {
+    modal_title: 'Deep Image AI Photo Enhancer',
+    modal_subtitle: 'Enhance lighting, clarity, and texture resolution for Jharkhand handicrafts',
+    enhance_btn: 'Enhance with Deep Image AI',
+    keep_original: 'Keep Original',
+    use_enhanced: 'Use Enhanced Image',
+    continue_original: 'Continue with Original Photo',
+    revert: 'Revert to Original',
+    before_after: 'Before / After',
+    enhance_all: 'Enhance All Photos',
+    ai_enhanced_badge: 'Deep Image AI Enhanced',
+    authenticity_notice: 'Authenticity Guarantee: Enhances clarity, exposure & weave definition. Cultural motifs, patterns, and handiwork are never altered.'
   }
 };
 

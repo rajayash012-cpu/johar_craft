@@ -47,6 +47,7 @@ export const hi: TranslationSchema = {
     documentation: 'दस्तावेज़ व जीआई',
     artisan_portal: 'कारीगर पोर्टल',
     smart_catalog: 'स्मार्ट कैटलॉग',
+    image_enhancer: '✨ इमेज एन्हांसर (फोटो सुधार)',
     search_placeholder: 'शिल्प, उत्पाद या कारीगर खोजें...',
     view_desktop: 'डेस्कटॉप',
     view_mobile: 'मोबाइल',
@@ -405,5 +406,18 @@ export const hi: TranslationSchema = {
     village: 'गाँव',
     district: 'ज़िला',
     jharkhand: 'झारखंड'
+  },
+  image_enhancer: {
+    modal_title: 'डीप इमेज एआई फोटो संवर्धक',
+    modal_subtitle: 'झारखंडी हस्तशिल्प के लिए प्रकाश, स्पष्टता व बनावट गुणवत्ता बढ़ाएँ',
+    enhance_btn: 'डीप इमेज एआई से संवर्धित करें',
+    keep_original: 'मूल फोटो रखें',
+    use_enhanced: 'संवर्धित फोटो उपयोग करें',
+    continue_original: 'मूल फोटो के साथ आगे बढ़ें',
+    revert: 'मूल पर लौटें',
+    before_after: 'पहले / बाद में',
+    enhance_all: 'सभी फोटो संवर्धित करें',
+    ai_enhanced_badge: 'डीप इमेज एआई द्वारा संवर्धित',
+    authenticity_notice: 'प्रामाणिकता गारंटी: स्पष्टता व बुनावट संवर्धित करता है। सांस्कृतिक रूपांकन कभी नहीं बदले जाते।'
   }
 };

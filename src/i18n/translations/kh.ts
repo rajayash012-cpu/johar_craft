@@ -168,5 +168,18 @@ export const kh: TranslationSchema = {
     send_enquiry: 'सीधा पूछताछ भेजो',
     verified_artisan: 'जाँचल कारीगर',
     verified_buyer: 'जाँचल खरीददार'
+  },
+  image_enhancer: {
+    modal_title: 'Deep Image AI फोटो सजाव',
+    modal_subtitle: 'झारखंड शिल्प खातिर फोटो के उज्जर आर साफ बनावा',
+    enhance_btn: 'Deep Image AI से सजावा',
+    keep_original: 'पहिले कर फोटो राखा',
+    use_enhanced: 'सजावल फोटो लगावा',
+    continue_original: 'पहिले कर फोटो संग आगू बढ़ा',
+    revert: 'पहिले जइसन करा',
+    before_after: 'पहिले / बाद',
+    enhance_all: 'सभे फोटो सजावा',
+    ai_enhanced_badge: 'Deep Image AI से सजल',
+    authenticity_notice: 'सच्चा नियम: फोटो साफ होवेला, कला कर रूप नइ बदले।'
   }
 };

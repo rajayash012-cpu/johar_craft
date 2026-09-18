@@ -47,11 +47,14 @@ import {
   AIConfidence,
   FactProvenance,
   PriceRange,
-  PriceReferenceItem
+  PriceReferenceItem,
+  ImageEnhancementMetadata,
 } from '../../types';
 import { formatRupees } from '../../utils/pricing';
 import { useLanguage } from '../../i18n';
 import { getTierLabel } from '../../services/verificationService';
+import { EnhancementStatusBadge } from '../../components/ImageEnhancer';
+import { DeepImageService } from '../../services/deepImageService';
 
 export function SmartCatalogPage() {
   const navigate = useNavigate();
@@ -63,8 +66,10 @@ export function SmartCatalogPage() {
   // Stages: 'input' -> 'analyzing' -> 'review' -> 'success'
   const [stage, setStage] = useState<'input' | 'analyzing' | 'review' | 'success'>('input');
 
-  // Stage 1: Photos
+  // Stage 1: Photos & Enhancement
   const [images, setImages] = useState<string[]>([]);
+  const [enhancedMetadata, setEnhancedMetadata] = useState<Record<number, ImageEnhancementMetadata>>({});
+  const [originalImages, setOriginalImages] = useState<Record<number, string>>({});
   const [selectedSample, setSelectedSample] = useState<string | null>(null);
 
   // Stage 2: Live Pipeline Animation State
@@ -131,10 +136,38 @@ export function SmartCatalogPage() {
     }
   }, [searchParams]);
 
+  // Check if user transferred an enhanced image from Image Enhancer
+  useEffect(() => {
+    const transferred = DeepImageService.getTransferredImage();
+    if (transferred && transferred.url) {
+      const enhancedUrl = transferred.url;
+      const originalUrl = transferred.metadata?.originalUrl || transferred.url;
+      setImages([enhancedUrl]);
+      setOriginalImages({ 0: originalUrl });
+      if (transferred.metadata) {
+        setEnhancedMetadata({ 0: transferred.metadata });
+      } else {
+        setEnhancedMetadata({
+          0: {
+            isEnhanced: true,
+            originalUrl,
+            enhancedUrl,
+            preset: 'catalog',
+            operationsApplied: ['light', 'color', 'deblur', 'denoise'],
+            enhancedAt: new Date().toISOString(),
+          },
+        });
+      }
+      DeepImageService.clearTransferredImage();
+    }
+  }, []);
+
   // Load sample preset photos
   const handleSelectSample = (sample: SampleCraftPreset) => {
     setSelectedSample(sample.id);
     setImages([sample.image]);
+    setEnhancedMetadata({});
+    setOriginalImages({});
     setErrorMsg('');
   };
 
@@ -297,6 +330,8 @@ export function SmartCatalogPage() {
       name: title.trim(),
       image: primaryImg,
       images: images,
+      enhancedImages: Object.keys(enhancedMetadata).length > 0 ? enhancedMetadata : undefined,
+      hasEnhancedPhotos: Object.values(enhancedMetadata).some((m) => m?.isEnhanced),
       craftCategory: craftCategory,
       description: description,
       materials: materials || 'Information not provided',
@@ -445,9 +480,38 @@ export function SmartCatalogPage() {
               </p>
             </div>
 
+            {/* Deep Image AI Banner */}
+            <div className="max-w-3xl mx-auto p-4 rounded-2xl bg-gradient-to-r from-purple-500/10 via-brand-500/10 to-transparent border border-purple-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-left">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-purple-600 text-white flex items-center justify-center shrink-0 shadow-2xs">
+                  <Sparkles className="w-5 h-5" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-xs sm:text-sm text-stone-900">✨ Improve Image Before AI Analysis</h4>
+                  <p className="text-xs text-stone-600 mt-0.5">
+                    For sharper AI vision recognition, brighten low-light photos and enhance clarity with Deep Image AI.
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => navigate('/artisan/image-enhancer')}
+                className="px-3.5 py-1.5 bg-purple-700 hover:bg-purple-800 text-white text-xs font-semibold rounded-xl shrink-0 shadow-2xs transition-colors cursor-pointer"
+              >
+                ✨ Open Image Enhancer →
+              </button>
+            </div>
+
             {/* Reused ProductPhotoUploader */}
             <div className="max-w-3xl mx-auto text-left">
-              <ProductPhotoUploader images={images} onChange={setImages} />
+              <ProductPhotoUploader
+                images={images}
+                onChange={setImages}
+                enhancedMetadata={enhancedMetadata}
+                onEnhancedMetadataChange={setEnhancedMetadata}
+                originalImages={originalImages}
+                onOriginalImagesChange={setOriginalImages}
+              />
             </div>
 
             {/* Quick Test Sample Presets (For all 6 test cases) */}
@@ -543,6 +607,13 @@ export function SmartCatalogPage() {
               <div className="w-10 h-10 border-3 border-white/60 border-t-white rounded-full animate-spin" />
             </div>
           </div>
+
+          {enhancedMetadata[0]?.isEnhanced && (
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100/90 border border-amber-300 text-amber-900 text-xs font-semibold mx-auto shadow-2xs">
+              <Sparkles className="w-3.5 h-3.5 text-amber-600 fill-amber-500" />
+              <span>Deep Image AI Enhanced Photo being analyzed</span>
+            </div>
+          )}
 
           <div>
             <h2 className="text-2xl font-serif font-bold text-stone-900">
@@ -651,6 +722,9 @@ export function SmartCatalogPage() {
                   <Check className="w-3.5 h-3.5 text-emerald-600" />
                   AI CATALOG READY
                 </span>
+                {enhancedMetadata[0]?.isEnhanced && (
+                  <EnhancementStatusBadge metadata={enhancedMetadata[0]} compact />
+                )}
                 <span className="text-xs text-stone-400">·</span>
                 <span className="text-xs text-stone-500">Researched 17 September 2026</span>
               </div>

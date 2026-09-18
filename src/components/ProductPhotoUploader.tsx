@@ -11,9 +11,15 @@ import {
   CheckCircle2,
   Star,
   Plus,
-  Maximize2
+  Maximize2,
+  Sparkles,
+  Undo2,
+  SlidersHorizontal
 } from 'lucide-react';
 import { compressImageToDataUri } from '../utils/photo';
+import { ImageEnhanceModal, EnhancementStatusBadge } from './ImageEnhancer';
+import { ImageEnhancementMetadata } from '../types';
+import { DeepImageService } from '../services/deepImageService';
 
 const MAX_FILE_MB = 5;
 const MAX_FILE_BYTES = MAX_FILE_MB * 1024 * 1024;
@@ -33,14 +39,45 @@ function isMobile(): boolean {
 interface ProductPhotoUploaderProps {
   images: string[];
   onChange: (images: string[]) => void;
+  enhancedMetadata?: Record<number, ImageEnhancementMetadata>;
+  onEnhancedMetadataChange?: (metadata: Record<number, ImageEnhancementMetadata>) => void;
+  originalImages?: Record<number, string>;
+  onOriginalImagesChange?: (originals: Record<number, string>) => void;
 }
 
-export function ProductPhotoUploader({ images, onChange }: ProductPhotoUploaderProps) {
+export function ProductPhotoUploader({
+  images,
+  onChange,
+  enhancedMetadata: externalMetadata,
+  onEnhancedMetadataChange,
+  originalImages: externalOriginals,
+  onOriginalImagesChange,
+}: ProductPhotoUploaderProps) {
   const [activeSlot, setActiveSlot] = useState<number>(0);
   const [cameraOpen, setCameraOpen] = useState(false);
   const [status, setStatus] = useState<'idle' | 'processing' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
   const [dragOver, setDragOver] = useState(false);
+
+  // Deep Image AI Enhancement State
+  const [internalMetadata, setInternalMetadata] = useState<Record<number, ImageEnhancementMetadata>>({});
+  const [internalOriginals, setInternalOriginals] = useState<Record<number, string>>({});
+  const [enhanceModalOpen, setEnhanceModalOpen] = useState(false);
+  const [isBatchEnhancing, setIsBatchEnhancing] = useState(false);
+  const [batchStatus, setBatchStatus] = useState('');
+
+  const enhancedMetadata = externalMetadata || internalMetadata;
+  const originalImages = externalOriginals || internalOriginals;
+
+  const updateMetadata = (newMeta: Record<number, ImageEnhancementMetadata>) => {
+    setInternalMetadata(newMeta);
+    onEnhancedMetadataChange?.(newMeta);
+  };
+
+  const updateOriginals = (newOrig: Record<number, string>) => {
+    setInternalOriginals(newOrig);
+    onOriginalImagesChange?.(newOrig);
+  };
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const galleryInputRef = useRef<HTMLInputElement>(null);
@@ -82,15 +119,24 @@ export function ProductPhotoUploader({ images, onChange }: ProductPhotoUploaderP
     setStatus('processing');
     setErrorMsg('');
     try {
-      // 600px max dimension, 0.78 quality produces crisp yet ~40-60KB lightweight images
-      const dataUri = await compressImageToDataUri(fileOrBlob as File, 600, 0.78);
-      
+      const dataUri = await compressImageToDataUri(fileOrBlob as File, 800, 0.85);
+
       const newImages = [...images];
       if (targetSlot < newImages.length) {
         newImages[targetSlot] = dataUri;
       } else {
         newImages.push(dataUri);
       }
+
+      // If replacing photo in slot, clear enhancement metadata for that slot
+      const newMeta = { ...enhancedMetadata };
+      delete newMeta[targetSlot];
+      updateMetadata(newMeta);
+
+      const newOrig = { ...originalImages };
+      delete newOrig[targetSlot];
+      updateOriginals(newOrig);
+
       onChange(newImages);
       setActiveSlot(Math.min(targetSlot, newImages.length - 1));
       setStatus('idle');
@@ -149,7 +195,6 @@ export function ProductPhotoUploader({ images, onChange }: ProductPhotoUploaderP
     setStatus('idle');
 
     if (isMobile()) {
-      // Use native mobile camera file dialog
       cameraInputRef.current?.click();
       return;
     }
@@ -223,7 +268,33 @@ export function ProductPhotoUploader({ images, onChange }: ProductPhotoUploaderP
 
   const removeImageAt = (index: number) => {
     const newImages = images.filter((_, i) => i !== index);
+
+    // Re-index metadata and originalImages
+    const newMeta: Record<number, ImageEnhancementMetadata> = {};
+    const newOrig: Record<number, string> = {};
+
+    Object.keys(enhancedMetadata).forEach((k) => {
+      const slot = Number(k);
+      if (slot < index && enhancedMetadata[slot]) {
+        newMeta[slot] = enhancedMetadata[slot];
+      } else if (slot > index && enhancedMetadata[slot]) {
+        newMeta[slot - 1] = enhancedMetadata[slot];
+      }
+    });
+
+    Object.keys(originalImages).forEach((k) => {
+      const slot = Number(k);
+      if (slot < index && originalImages[slot]) {
+        newOrig[slot] = originalImages[slot];
+      } else if (slot > index && originalImages[slot]) {
+        newOrig[slot - 1] = originalImages[slot];
+      }
+    });
+
+    updateMetadata(newMeta);
+    updateOriginals(newOrig);
     onChange(newImages);
+
     if (activeSlot >= newImages.length) {
       setActiveSlot(Math.max(0, newImages.length - 1));
     }
@@ -235,37 +306,159 @@ export function ProductPhotoUploader({ images, onChange }: ProductPhotoUploaderP
     const item = images[index];
     const rest = images.filter((_, i) => i !== index);
     const reordered = [item, ...rest];
+
+    // Reorder metadata and originals
+    const newMeta: Record<number, ImageEnhancementMetadata> = {};
+    const newOrig: Record<number, string> = {};
+
+    if (enhancedMetadata[index]) newMeta[0] = enhancedMetadata[index];
+    if (originalImages[index]) newOrig[0] = originalImages[index];
+
+    let targetIdx = 1;
+    for (let i = 0; i < images.length; i++) {
+      if (i !== index) {
+        if (enhancedMetadata[i]) newMeta[targetIdx] = enhancedMetadata[i];
+        if (originalImages[i]) newOrig[targetIdx] = originalImages[i];
+        targetIdx++;
+      }
+    }
+
+    updateMetadata(newMeta);
+    updateOriginals(newOrig);
     onChange(reordered);
     setActiveSlot(0);
   };
 
+  // Deep Image AI: Apply Enhanced Photo
+  const handleApplyEnhanced = (enhancedUrl: string, metadata: ImageEnhancementMetadata) => {
+    const current = images[activeSlot];
+    const newOrig = { ...originalImages };
+    // Preserve initial original
+    if (!newOrig[activeSlot]) {
+      newOrig[activeSlot] = current;
+    }
+
+    const newMeta = { ...enhancedMetadata, [activeSlot]: metadata };
+    const newImages = [...images];
+    newImages[activeSlot] = enhancedUrl;
+
+    updateOriginals(newOrig);
+    updateMetadata(newMeta);
+    onChange(newImages);
+  };
+
+  // Deep Image AI: Revert back to original photo
+  const handleRevertToOriginal = (slotIdx: number) => {
+    if (originalImages[slotIdx]) {
+      const newImages = [...images];
+      newImages[slotIdx] = originalImages[slotIdx];
+
+      const newMeta = { ...enhancedMetadata };
+      delete newMeta[slotIdx];
+
+      const newOrig = { ...originalImages };
+      delete newOrig[slotIdx];
+
+      updateMetadata(newMeta);
+      updateOriginals(newOrig);
+      onChange(newImages);
+    }
+  };
+
+  // Deep Image AI: Batch Enhance All Unenhanced Photos
+  const handleBatchEnhance = async () => {
+    if (isBatchEnhancing || images.length === 0) return;
+    setIsBatchEnhancing(true);
+    setBatchStatus('Starting batch enhancement...');
+
+    const newImages = [...images];
+    const newOrig = { ...originalImages };
+    const newMeta = { ...enhancedMetadata };
+
+    for (let i = 0; i < images.length; i++) {
+      if (!newMeta[i]?.isEnhanced) {
+        setBatchStatus(`Enhancing photo ${i + 1} of ${images.length}...`);
+        const originalUrl = images[i];
+        const res = await DeepImageService.enhanceImage(originalUrl, 'product');
+        if (res.success && res.resultUrl) {
+          if (!newOrig[i]) newOrig[i] = originalUrl;
+          newImages[i] = res.resultUrl;
+          newMeta[i] = DeepImageService.createMetadata(
+            originalUrl,
+            res.resultUrl,
+            'product',
+            res.operationsApplied
+          );
+        } else if (res.status === 'unconfigured') {
+          setErrorMsg('Deep Image AI API key is not configured in .env');
+          break;
+        }
+      }
+    }
+
+    updateOriginals(newOrig);
+    updateMetadata(newMeta);
+    onChange(newImages);
+    setIsBatchEnhancing(false);
+    setBatchStatus('');
+  };
+
   const currentImage = images[activeSlot];
   const activeSlotConfig = SLOT_CONFIGS[activeSlot] || SLOT_CONFIGS[0];
+  const activeMetadata = enhancedMetadata[activeSlot];
+  const hasUnenhancedPhotos = images.some((_, idx) => !enhancedMetadata[idx]?.isEnhanced);
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      {/* Top Header & Summary */}
+      <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
           <label className="label !mb-0 font-semibold text-earth-900 text-base">
             Add Product Photos <span className="text-brand-600">*</span>
           </label>
           <p className="text-xs text-earth-500 mt-0.5">
-            Show your product clearly to buyers (Add up to 4 photos)
+            Show your authentic craft clearly (Add up to 4 photos)
           </p>
         </div>
-        {images.length > 0 && (
-          <span className="badge-brand text-xs font-semibold">
-            {images.length}/4 Photos
-          </span>
-        )}
+
+        <div className="flex items-center gap-2 flex-wrap">
+          {images.length > 1 && hasUnenhancedPhotos && (
+            <button
+              type="button"
+              disabled={isBatchEnhancing}
+              onClick={handleBatchEnhance}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-gradient-to-r from-amber-500/15 via-brand-500/20 to-orange-500/15 text-brand-900 border border-brand-300 hover:border-brand-500 shadow-2xs transition-all cursor-pointer disabled:opacity-50"
+              title="Enhance all uploaded photos with Deep Image AI"
+            >
+              {isBatchEnhancing ? (
+                <>
+                  <Loader2 className="w-3.5 h-3.5 animate-spin text-brand-600" />
+                  <span>{batchStatus || 'Enhancing all...'}</span>
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+                  <span>Enhance All Photos</span>
+                </>
+              )}
+            </button>
+          )}
+
+          {images.length > 0 && (
+            <span className="badge-brand text-xs font-semibold">
+              {images.length}/4 Photos
+            </span>
+          )}
+        </div>
       </div>
 
-      {/* Slots tab row */}
+      {/* Slots Tab Row */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
         {SLOT_CONFIGS.map((slot) => {
           const hasImg = !!images[slot.id];
           const isSelected = activeSlot === slot.id;
           const isNextSlot = slot.id === images.length;
+          const isEnhanced = enhancedMetadata[slot.id]?.isEnhanced;
 
           return (
             <button
@@ -298,6 +491,14 @@ export function ProductPhotoUploader({ images, onChange }: ProductPhotoUploaderP
                         <Star className="w-2.5 h-2.5 fill-white" />
                       </span>
                     )}
+                    {isEnhanced && (
+                      <span
+                        className="absolute top-0 right-0 bg-gradient-to-tr from-amber-500 to-brand-500 text-white p-0.5 rounded-bl shadow-2xs"
+                        title="Enhanced with Deep Image AI"
+                      >
+                        <Sparkles className="w-2.5 h-2.5 fill-white" />
+                      </span>
+                    )}
                   </div>
                 ) : (
                   <div
@@ -315,7 +516,14 @@ export function ProductPhotoUploader({ images, onChange }: ProductPhotoUploaderP
                     </span>
                     {slot.id === 0 && <span className="text-[10px] text-brand-600 font-semibold">(Key)</span>}
                   </div>
-                  <p className="text-[10px] text-earth-500 truncate">{hasImg ? 'Added' : 'Empty'}</p>
+                  <div className="flex items-center gap-1 mt-0.5">
+                    <p className="text-[10px] text-earth-500 truncate">{hasImg ? 'Added' : 'Empty'}</p>
+                    {isEnhanced && (
+                      <span className="text-[9px] font-bold text-amber-700 bg-amber-100/70 px-1 rounded">
+                        ✨ Enhanced
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             </button>
@@ -347,7 +555,7 @@ export function ProductPhotoUploader({ images, onChange }: ProductPhotoUploaderP
                 stopStream();
                 setCameraOpen(false);
               }}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-white/20 text-white hover:bg-white/10 transition-colors text-sm font-medium"
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-white/20 text-white hover:bg-white/10 transition-colors text-sm font-medium cursor-pointer"
             >
               <X className="w-4 h-4" />
               Cancel
@@ -355,7 +563,7 @@ export function ProductPhotoUploader({ images, onChange }: ProductPhotoUploaderP
             <button
               type="button"
               onClick={capturePhoto}
-              className="flex-2 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-brand-600 text-white hover:bg-brand-500 transition-colors text-sm font-semibold shadow"
+              className="flex-2 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-brand-600 text-white hover:bg-brand-500 transition-colors text-sm font-semibold shadow cursor-pointer"
             >
               <Camera className="w-4 h-4" />
               Capture Photo
@@ -364,16 +572,18 @@ export function ProductPhotoUploader({ images, onChange }: ProductPhotoUploaderP
         </div>
       )}
 
-      {/* Main preview or upload container */}
+      {/* Main Preview or Upload Container */}
       {!cameraOpen && currentImage ? (
-        /* Image Preview Mode for active slot */
         <div className="card overflow-hidden border-2 border-brand-200 bg-white shadow-xs">
+          {/* Main Photo Viewport */}
           <div className="relative bg-earth-100 flex items-center justify-center overflow-hidden">
             <img
               src={currentImage}
               alt={activeSlotConfig.title}
               className="w-full h-64 sm:h-72 object-contain bg-earth-900/5 backdrop-blur-xs"
             />
+
+            {/* Badges on top of photo */}
             <div className="absolute top-3 left-3 flex flex-wrap gap-2">
               {activeSlot === 0 ? (
                 <span className="badge bg-brand-600 text-white font-semibold flex items-center gap-1 shadow-xs text-xs px-2.5 py-1">
@@ -385,9 +595,37 @@ export function ProductPhotoUploader({ images, onChange }: ProductPhotoUploaderP
                   {activeSlotConfig.title}
                 </span>
               )}
+
+              {activeMetadata?.isEnhanced && (
+                <span className="badge bg-amber-600/90 text-white font-semibold flex items-center gap-1 shadow-xs text-xs px-2.5 py-1 backdrop-blur-xs">
+                  <Sparkles className="w-3.5 h-3.5 fill-amber-300 text-amber-300" />
+                  Deep Image AI Enhanced
+                </span>
+              )}
             </div>
           </div>
 
+          {/* Enhancement Status Bar (if active photo is enhanced) */}
+          {activeMetadata?.isEnhanced && (
+            <div className="px-4 py-2.5 bg-gradient-to-r from-amber-50 to-orange-50 border-t border-b border-amber-200 flex items-center justify-between gap-3 flex-wrap">
+              <EnhancementStatusBadge
+                metadata={activeMetadata}
+                onViewComparison={() => setEnhanceModalOpen(true)}
+                onRevert={() => handleRevertToOriginal(activeSlot)}
+              />
+
+              <button
+                type="button"
+                onClick={() => setEnhanceModalOpen(true)}
+                className="inline-flex items-center gap-1 text-xs font-semibold text-brand-800 hover:text-brand-950 bg-white px-2.5 py-1 rounded-lg border border-brand-300 shadow-2xs cursor-pointer transition-colors"
+              >
+                <SlidersHorizontal className="w-3.5 h-3.5 text-brand-600" />
+                <span>Re-Enhance Settings</span>
+              </button>
+            </div>
+          )}
+
+          {/* Action Toolbar */}
           <div className="p-4 bg-white border-t border-earth-100 flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="text-xs font-semibold text-earth-800">{activeSlotConfig.title}</p>
@@ -395,29 +633,54 @@ export function ProductPhotoUploader({ images, onChange }: ProductPhotoUploaderP
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
+              {/* Deep Image AI Trigger Button */}
+              {!activeMetadata?.isEnhanced ? (
+                <button
+                  type="button"
+                  onClick={() => setEnhanceModalOpen(true)}
+                  className="btn-primary !py-1.5 !px-3 !text-xs !bg-gradient-to-r !from-amber-600 !to-brand-600 hover:!from-amber-500 hover:!to-brand-500 flex items-center gap-1.5 shadow-2xs cursor-pointer"
+                  title="Enhance clarity, lighting & resolution with Deep Image AI"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-amber-200 fill-amber-200" />
+                  <span>Enhance Photo (AI)</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => handleRevertToOriginal(activeSlot)}
+                  className="btn-outline !py-1.5 !px-3 !text-xs !border-stone-300 !text-stone-700 hover:!bg-stone-50 flex items-center gap-1.5 cursor-pointer"
+                  title="Restore unenhanced original photo"
+                >
+                  <Undo2 className="w-3.5 h-3.5 text-stone-500" />
+                  <span>Revert to Original</span>
+                </button>
+              )}
+
               {activeSlot !== 0 && (
                 <button
                   type="button"
                   onClick={() => makeMainImage(activeSlot)}
-                  className="btn-outline !py-1.5 !px-3 !text-xs !border-brand-300 !text-brand-700 hover:!bg-brand-50"
+                  className="btn-outline !py-1.5 !px-3 !text-xs !border-brand-300 !text-brand-700 hover:!bg-brand-50 cursor-pointer"
                   title="Make this the primary photo buyers see first"
                 >
                   <Star className="w-3.5 h-3.5" />
-                  Set as Main Image
+                  <span>Set as Main</span>
                 </button>
               )}
+
               <button
                 type="button"
                 onClick={openFilePicker}
-                className="btn-secondary !py-1.5 !px-3 !text-xs"
+                className="btn-secondary !py-1.5 !px-3 !text-xs cursor-pointer"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
-                Change Image
+                <span>Change Image</span>
               </button>
+
               <button
                 type="button"
                 onClick={() => removeImageAt(activeSlot)}
-                className="p-1.5 rounded-lg border border-red-200 text-red-600 hover:bg-red-50 transition-colors"
+                className="p-1.5 rounded-lg border border-red-200 text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
                 title="Remove this photo"
               >
                 <Trash2 className="w-4 h-4" />
@@ -459,7 +722,10 @@ export function ProductPhotoUploader({ images, onChange }: ProductPhotoUploaderP
                 <p className="text-xs text-earth-500 max-w-sm mb-1.5">
                   {activeSlotConfig.subtitle} · Drag & drop photo here or choose an option
                 </p>
-                <p className="text-[11px] text-earth-400">Accepts JPG, PNG, WebP (Max 5 MB)</p>
+                <div className="flex items-center gap-1.5 text-[11px] text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200 mt-1">
+                  <Sparkles className="w-3 h-3 text-amber-500" />
+                  <span>Deep Image AI enhancement available after upload</span>
+                </div>
               </>
             )}
           </div>
@@ -469,7 +735,7 @@ export function ProductPhotoUploader({ images, onChange }: ProductPhotoUploaderP
               <button
                 type="button"
                 onClick={openFilePicker}
-                className="flex items-center justify-center gap-2 px-4 py-3.5 text-sm font-medium text-earth-800 hover:bg-brand-50 hover:text-brand-700 transition-colors"
+                className="flex items-center justify-center gap-2 px-4 py-3.5 text-sm font-medium text-earth-800 hover:bg-brand-50 hover:text-brand-700 transition-colors cursor-pointer"
               >
                 <Upload className="w-4 h-4 text-brand-600 flex-shrink-0" />
                 <span>Upload Image</span>
@@ -478,7 +744,7 @@ export function ProductPhotoUploader({ images, onChange }: ProductPhotoUploaderP
               <button
                 type="button"
                 onClick={openGalleryPicker}
-                className="flex items-center justify-center gap-2 px-4 py-3.5 text-sm font-medium text-earth-800 hover:bg-brand-50 hover:text-brand-700 transition-colors"
+                className="flex items-center justify-center gap-2 px-4 py-3.5 text-sm font-medium text-earth-800 hover:bg-brand-50 hover:text-brand-700 transition-colors cursor-pointer"
               >
                 <ImageIcon className="w-4 h-4 text-brand-600 flex-shrink-0" />
                 <span>Choose from Gallery</span>
@@ -487,7 +753,7 @@ export function ProductPhotoUploader({ images, onChange }: ProductPhotoUploaderP
               <button
                 type="button"
                 onClick={openCamera}
-                className="flex items-center justify-center gap-2 px-4 py-3.5 text-sm font-medium text-earth-800 hover:bg-brand-50 hover:text-brand-700 transition-colors"
+                className="flex items-center justify-center gap-2 px-4 py-3.5 text-sm font-medium text-earth-800 hover:bg-brand-50 hover:text-brand-700 transition-colors cursor-pointer"
               >
                 <Camera className="w-4 h-4 text-brand-600 flex-shrink-0" />
                 <span>Take Photo</span>
@@ -502,10 +768,10 @@ export function ProductPhotoUploader({ images, onChange }: ProductPhotoUploaderP
         <div className="flex items-start gap-2.5 p-3.5 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 animate-slide-up">
           <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />
           <div className="flex-1">
-            <p className="font-semibold text-red-800">Photo Upload Notice</p>
+            <p className="font-semibold text-red-800">Photo Notice</p>
             <p className="mt-0.5">{errorMsg}</p>
           </div>
-          <button type="button" onClick={() => setErrorMsg('')} className="text-red-400 hover:text-red-600">
+          <button type="button" onClick={() => setErrorMsg('')} className="text-red-400 hover:text-red-600 cursor-pointer">
             <X className="w-3.5 h-3.5" />
           </button>
         </div>
@@ -535,6 +801,18 @@ export function ProductPhotoUploader({ images, onChange }: ProductPhotoUploaderP
         onChange={handleFileSelected}
       />
       <canvas ref={canvasRef} className="hidden" />
+
+      {/* Deep Image AI Enhancement Modal */}
+      {currentImage && (
+        <ImageEnhanceModal
+          isOpen={enhanceModalOpen}
+          onClose={() => setEnhanceModalOpen(false)}
+          imageUrl={originalImages[activeSlot] || currentImage}
+          initialPreset={activeMetadata?.preset || (activeSlot === 0 ? 'product' : 'auto')}
+          onApply={(enhancedUrl, meta) => handleApplyEnhanced(enhancedUrl, meta)}
+          slotIndex={activeSlot}
+        />
+      )}
     </div>
   );
 }

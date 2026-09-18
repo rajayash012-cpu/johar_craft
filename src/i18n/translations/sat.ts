@@ -48,6 +48,7 @@ export const sat: TranslationSchema = {
     documentation: 'ᱫᱚᱞᱤᱞ ᱟᱨ GI',
     artisan_portal: 'ᱠᱟᱹᱨᱤᱜᱟᱹᱨ ᱯᱚᱨᱴᱟᱞ',
     smart_catalog: 'ᱥᱢᱟᱨᱴ ᱠᱮᱴᱟᱞᱚᱜᱽ',
+    image_enhancer: '✨ ᱪᱤᱛᱟᱹᱨ ᱥᱟᱡᱟᱣ (Image Enhancer)',
     search_placeholder: 'ᱠᱟᱹᱨᱤᱜᱟᱹᱨᱤ, ᱡᱤᱱᱤᱥ ᱥᱮ ᱠᱟᱹᱨᱤᱜᱟᱹᱨ ᱥᱮᱸᱫᱽᱨᱟᱭ ᱢᱮ...',
     view_desktop: 'ᱰᱮᱥᱠᱴᱚᱯ',
     view_mobile: 'ᱢᱚᱵᱟᱭᱤᱞ',
@@ -406,5 +407,18 @@ export const sat: TranslationSchema = {
     village: 'ᱟᱹᱛᱩ',
     district: 'ᱡᱤᱞᱟᱹ',
     jharkhand: 'ᱡᱷᱟᱨᱠᱷᱚᱸᱰ'
+  },
+  image_enhancer: {
+    modal_title: 'Deep Image AI ᱪᱤᱛᱟᱹᱨ ᱥᱟᱡᱟᱣ',
+    modal_subtitle: 'ᱡᱷᱟᱨᱠᱷᱚᱸᱰ ᱦᱩᱱᱟᱹᱨ ᱞᱟᱹᱜᱤᱫ ᱢᱟᱨᱥᱟᱞ ᱟᱨ ᱥᱟᱯᱷᱟ ᱪᱤᱛᱟᱹᱨ ᱵᱮᱱᱟᱣ',
+    enhance_btn: 'Deep Image AI ᱛᱮ ᱥᱟᱡᱟᱣ ᱢᱮ',
+    keep_original: 'ᱢᱩᱬ ᱪᱤᱛᱟᱹᱨ ᱫᱚᱦᱚᱭ ᱢᱮ',
+    use_enhanced: 'ᱥᱟᱡᱟᱣ ᱪᱤᱛᱟᱹᱨ ᱵᱮᱵᱷᱟᱨ ᱢᱮ',
+    continue_original: 'ᱢᱩᱬ ᱪᱤᱛᱟᱹᱨ ᱥᱟᱶ ᱞᱟᱦᱟᱜ ᱢᱮ',
+    revert: 'ᱢᱩᱬ ᱛᱮ ᱨᱩᱣᱟᱹᱲ ᱢᱮ',
+    before_after: 'ᱢᱟᱬᱟᱝ / ᱛᱟᱭᱚᱢ',
+    enhance_all: 'ᱡᱚᱛᱚ ᱪᱤᱛᱟᱹᱨ ᱥᱟᱡᱟᱣ ᱢᱮ',
+    ai_enhanced_badge: 'Deep Image AI ᱛᱮ ᱥᱟᱡᱟᱣ ᱟᱠᱟᱱ',
+    authenticity_notice: 'ᱥᱟᱹᱨᱤ ᱱᱤᱭᱟᱹᱢ: ᱥᱟᱯᱷᱟ ᱟᱨ ᱪᱚᱨᱚᱠ ᱵᱮᱱᱟᱣᱟ, ᱟᱹᱨᱤᱪᱟᱹᱞᱤ ᱨᱩᱯ ᱵᱟᱭ ᱵᱚᱫᱚᱞᱟ᱾'
   }
 };

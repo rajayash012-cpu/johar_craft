@@ -18,6 +18,7 @@ import { DashboardPage } from './pages/artisan/DashboardPage';
 import { ProfilePage } from './pages/artisan/ProfilePage';
 import { MyProductsPage } from './pages/artisan/MyProductsPage';
 import { AddProductPage } from './pages/artisan/AddProductPage';
+import { ImageEnhancerPage } from './pages/artisan/ImageEnhancerPage';
 import { SmartCatalogPage } from './pages/artisan/SmartCatalogPage';
 import { PricingPage } from './pages/artisan/PricingPage';
 import { QRPage } from './pages/artisan/QRPage';
@@ -60,6 +61,7 @@ export default function App() {
                 <Route path="/artisan" element={<ArtisanRoute><DashboardPage /></ArtisanRoute>} />
                 <Route path="/artisan/profile" element={<ArtisanRoute><ProfilePage /></ArtisanRoute>} />
                 <Route path="/artisan/products" element={<ArtisanRoute><MyProductsPage /></ArtisanRoute>} />
+                <Route path="/artisan/image-enhancer" element={<ArtisanRoute><ImageEnhancerPage /></ArtisanRoute>} />
                 <Route path="/artisan/smart-catalog" element={<ArtisanRoute><SmartCatalogPage /></ArtisanRoute>} />
                 <Route path="/artisan/products/add" element={<ArtisanRoute><AddProductPage /></ArtisanRoute>} />
                 <Route path="/artisan/pricing" element={<ArtisanRoute><PricingPage /></ArtisanRoute>} />

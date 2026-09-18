@@ -168,5 +168,18 @@ export const kur: TranslationSchema = {
     send_enquiry: 'सीधा पूछताछ भेजो',
     verified_artisan: 'जाँचल कारीगर',
     verified_buyer: 'जाँचल किनिहा'
+  },
+  image_enhancer: {
+    modal_title: 'Deep Image AI फोटो बेस बना',
+    modal_subtitle: 'झारखंडी सामान कर फोटो गहीन आर साफ बना',
+    enhance_btn: 'Deep Image AI ले बेस बना',
+    keep_original: 'पुरना फोटो तरा',
+    use_enhanced: 'बेस फोटो लगा',
+    continue_original: 'पुरना फोटो संगे आगे कालो',
+    revert: 'पुरना लेखा करा',
+    before_after: 'मुन्दी / खोखा',
+    enhance_all: 'सब फोटो बेस बना',
+    ai_enhanced_badge: 'Deep Image AI ले बेस',
+    authenticity_notice: 'सच्चा हुनर: फोटो साफ मन्नीर, परम्परा कर रूप मल बदलो।'
   }
 };

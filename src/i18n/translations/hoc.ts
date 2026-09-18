@@ -168,5 +168,18 @@ export const hoc: TranslationSchema = {
     send_enquiry: 'सीधा कुली कुल मे',
     verified_artisan: 'जांचल कारीगर',
     verified_buyer: 'जांचल किरिंया'
+  },
+  image_enhancer: {
+    modal_title: 'Deep Image AI फोटो बेस बनाव',
+    modal_subtitle: 'झारखंडी सामान कर फोटो मार्साल आर सुथरा बनाव',
+    enhance_btn: 'Deep Image AI ते बेस बनाव',
+    keep_original: 'मारे फोटो दोहो मे',
+    use_enhanced: 'बेस फोटो लगाव मे',
+    continue_original: 'मारे फोटो लोः सेनोः मे',
+    revert: 'मारे लेका रूअड़',
+    before_after: 'सिदारे / तायोम',
+    enhance_all: 'सोबेन फोटो बेस बनाव',
+    ai_enhanced_badge: 'Deep Image AI ते बेस',
+    authenticity_notice: 'सच्चा नेयम: फोटो सुथरा होबाओआ, परम्परा कर रूप का बदलोआ।'
   }
 };

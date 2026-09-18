@@ -8,8 +8,9 @@ import { useToast } from '../../hooks/useToast';
 import { ToastContainer } from '../../components/ui/Toast';
 import { ProductPhotoUploader } from '../../components/ProductPhotoUploader';
 import { SmartCatalogService } from '../../services/smartCatalogService';
+import { DeepImageService } from '../../services/deepImageService';
 import { useLanguage } from '../../i18n';
-import type { Product } from '../../types';
+import type { Product, ImageEnhancementMetadata } from '../../types';
 
 function generateCatalogDescription(name: string, material: string, category: string, days: number): string {
   return SmartCatalogService.generateDescription({
@@ -33,6 +34,8 @@ export function AddProductPage() {
   const [loading, setLoading] = useState(false);
   const [catalogPreview, setCatalogPreview] = useState('');
   const [images, setImages] = useState<string[]>([]);
+  const [enhancedMetadata, setEnhancedMetadata] = useState<Record<number, ImageEnhancementMetadata>>({});
+  const [originalImages, setOriginalImages] = useState<Record<number, string>>({});
 
   const [form, setForm] = useState({
     name: '',
@@ -75,6 +78,34 @@ export function AddProductPage() {
         } else if (existingProduct.image) {
           setImages([existingProduct.image]);
         }
+        if (existingProduct.enhancedImages) {
+          setEnhancedMetadata(existingProduct.enhancedImages);
+        }
+      }
+    } else {
+      // Check if user just came from Image Enhancer
+      const transferred = DeepImageService.getTransferredImage();
+      if (transferred && transferred.url) {
+        const enhancedUrl = transferred.url;
+        const originalUrl = transferred.metadata?.originalUrl || transferred.url;
+        setImages([enhancedUrl]);
+        setOriginalImages({ 0: originalUrl });
+        if (transferred.metadata) {
+          setEnhancedMetadata({ 0: transferred.metadata });
+        } else {
+          setEnhancedMetadata({
+            0: {
+              isEnhanced: true,
+              originalUrl,
+              enhancedUrl,
+              preset: 'product',
+              operationsApplied: ['light', 'color', 'deblur', 'denoise'],
+              enhancedAt: new Date().toISOString(),
+            },
+          });
+        }
+        addToast('success', '✨ Enhanced photo loaded from Image Enhancer!');
+        DeepImageService.clearTransferredImage();
       }
     }
   }, [editId]);
@@ -134,6 +165,8 @@ export function AddProductPage() {
       name: form.name.trim(),
       image: mainImage,
       images: images.length > 0 ? images : undefined,
+      enhancedImages: Object.keys(enhancedMetadata).length > 0 ? enhancedMetadata : undefined,
+      hasEnhancedPhotos: Object.values(enhancedMetadata).some((m) => m?.isEnhanced),
       craftCategory: form.craftCategory,
       description:
         form.description.trim() ||
@@ -221,6 +254,8 @@ export function AddProductPage() {
             onClick={() => {
               setStep('form');
               setImages([]);
+              setEnhancedMetadata({});
+              setOriginalImages({});
               setForm({
                 name: '',
                 craftCategory: artisan.craftCategory || CRAFT_CATEGORIES[0],
@@ -377,6 +412,28 @@ export function AddProductPage() {
       </div>
 
       <div className="space-y-6">
+        {/* Deep Image AI Enhancer Banner */}
+        <div className="p-4 rounded-2xl bg-gradient-to-r from-purple-500/10 via-brand-500/10 to-transparent border border-purple-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-2xs">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-purple-600 text-white flex items-center justify-center shrink-0 shadow-2xs">
+              <Sparkles className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="font-bold text-xs sm:text-sm text-stone-900">Want studio-grade product photos?</h3>
+              <p className="text-xs text-stone-600 mt-0.5">
+                Improve lighting, clarity and details with Deep Image AI without altering craft authenticity.
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => navigate('/artisan/image-enhancer')}
+            className="px-3.5 py-1.5 bg-purple-700 hover:bg-purple-800 text-white text-xs font-semibold rounded-xl shrink-0 shadow-2xs transition-colors cursor-pointer"
+          >
+            ✨ Enhance Photos First →
+          </button>
+        </div>
+
         {/* 1. Product Photos Component */}
         <div className="card p-6">
           <ProductPhotoUploader
@@ -384,6 +441,10 @@ export function AddProductPage() {
             onChange={(newImages) => {
               setImages(newImages);
             }}
+            enhancedMetadata={enhancedMetadata}
+            onEnhancedMetadataChange={setEnhancedMetadata}
+            originalImages={originalImages}
+            onOriginalImagesChange={setOriginalImages}
           />
         </div>
 

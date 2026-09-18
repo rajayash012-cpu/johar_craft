@@ -149,31 +149,61 @@ export function DashboardPage() {
         </Link>
       </div>
 
-      {/* Smart Catalog Section Card */}
-      <div className="card-warm p-6 border border-earth-300 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">
-        <div className="flex items-start gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-brand-600 text-white flex items-center justify-center shrink-0 shadow-xs">
-            <Sparkles className="w-6 h-6" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h3 className="font-serif font-bold text-lg text-earth-900">{t('nav.smart_catalog')}</h3>
-              <span className="text-[10px] uppercase font-bold tracking-wider text-brand-800 bg-brand-100 px-2.5 py-0.5 rounded-full border border-brand-200">
-                {t('artisan.assistive_ai')}
-              </span>
+      {/* AI Action Cards: Image Enhancer & Smart Catalog */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* Deep Image AI Enhancer Card */}
+        <div className="card-warm p-5 sm:p-6 border border-amber-300 bg-gradient-to-br from-amber-500/15 via-orange-500/10 to-transparent flex flex-col justify-between gap-4 shadow-xs rounded-3xl">
+          <div className="flex items-start gap-3.5">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-600 to-brand-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+              <Sparkles className="w-6 h-6" />
             </div>
-            <p className="text-xs sm:text-sm text-earth-700 mt-1 max-w-xl leading-relaxed">
-              {t('artisan.smart_catalog_desc')}
-            </p>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <h3 className="font-serif font-bold text-lg text-earth-900">✨ Image Enhancer</h3>
+                <span className="text-[10px] uppercase font-bold tracking-wider text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full border border-amber-300">
+                  Official Deep Image AI
+                </span>
+              </div>
+              <p className="text-xs sm:text-sm text-earth-700 mt-1 leading-relaxed">
+                Improve lighting, clarity, and texture resolution of your craft photos before creating listings or running AI cataloging.
+              </p>
+            </div>
           </div>
+          <Link
+            to="/artisan/image-enhancer"
+            className="btn-primary self-start !px-5 !py-2.5 !text-xs sm:!text-sm flex items-center gap-2 shadow-xs !bg-gradient-to-r !from-amber-600 !to-brand-600 hover:!from-amber-500 hover:!to-brand-500"
+          >
+            <Sparkles className="w-4 h-4 text-amber-200" />
+            <span>Enhance Product Photo →</span>
+          </Link>
         </div>
-        <Link
-          to="/artisan/smart-catalog"
-          className="btn-primary shrink-0 self-start sm:self-center !px-5 !py-2.5 !text-xs sm:!text-sm flex items-center gap-2 shadow-xs"
-        >
-          <Sparkles className="w-4 h-4" />
-          <span>+ {t('nav.smart_catalog')}</span>
-        </Link>
+
+        {/* Smart Catalog Section Card */}
+        <div className="card-warm p-5 sm:p-6 border border-earth-300 flex flex-col justify-between gap-4 shadow-xs rounded-3xl">
+          <div className="flex items-start gap-3.5">
+            <div className="w-12 h-12 rounded-2xl bg-brand-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+              <Sparkles className="w-6 h-6" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <h3 className="font-serif font-bold text-lg text-earth-900">{t('nav.smart_catalog')}</h3>
+                <span className="text-[10px] uppercase font-bold tracking-wider text-brand-800 bg-brand-100 px-2.5 py-0.5 rounded-full border border-brand-200">
+                  {t('artisan.assistive_ai')}
+                </span>
+              </div>
+              <p className="text-xs sm:text-sm text-earth-700 mt-1 leading-relaxed">
+                {t('artisan.smart_catalog_desc')}
+              </p>
+            </div>
+          </div>
+          <Link
+            to="/artisan/smart-catalog"
+            className="btn-primary self-start !px-5 !py-2.5 !text-xs sm:!text-sm flex items-center gap-2 shadow-xs"
+          >
+            <Sparkles className="w-4 h-4" />
+            <span>+ {t('nav.smart_catalog')}</span>
+          </Link>
+        </div>
       </div>
 
       {/* Stats */}

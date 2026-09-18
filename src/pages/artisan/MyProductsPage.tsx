@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { PlusCircle, Package, Eye, Edit, Trash2, AlertCircle } from 'lucide-react';
+import { PlusCircle, Package, Eye, Edit, Trash2, AlertCircle, Sparkles } from 'lucide-react';
 import { getArtisan, getProductsByArtisan, deleteProduct } from '../../utils/storage';
 import { formatRupees } from '../../utils/pricing';
 import { PhotoPlaceholder } from '../../components/PhotoPlaceholder';
@@ -50,10 +50,20 @@ export function MyProductsPage() {
               : t('product.products_listed_plural', { count: products.length })}
           </p>
         </div>
-        <Link to="/artisan/products/add" className="btn-primary self-start xs:self-auto">
-          <PlusCircle className="w-4 h-4" />
-          {t('nav.add_product')}
-        </Link>
+        <div className="flex items-center gap-2 self-start xs:self-auto flex-wrap">
+          <Link
+            to="/artisan/image-enhancer"
+            className="btn-outline !py-2 !px-3.5 !text-xs !border-amber-400 !text-amber-900 hover:!bg-amber-50 flex items-center gap-1.5 shadow-2xs"
+            title="Enhance product photos with Deep Image AI"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-amber-600 fill-amber-500" />
+            <span>✨ Enhance Photos</span>
+          </Link>
+          <Link to="/artisan/products/add" className="btn-primary">
+            <PlusCircle className="w-4 h-4" />
+            {t('nav.add_product')}
+          </Link>
+        </div>
       </div>
 
       {products.length === 0 ? (
