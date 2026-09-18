@@ -1,0 +1,231 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/components/FloatingLanguageSelector.tsx");import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=c2d670a5"; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+let prevRefreshReg;
+let prevRefreshSig;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  prevRefreshReg = window.$RefreshReg$;
+  prevRefreshSig = window.$RefreshSig$;
+  window.$RefreshReg$ = RefreshRuntime.getRefreshReg("C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/components/FloatingLanguageSelector.tsx");
+  window.$RefreshSig$ = RefreshRuntime.createSignatureFunctionForTransform;
+}
+var _s = $RefreshSig$();
+import __vite__cjsImport3_react from "/node_modules/.vite/deps/react.js?v=c2d670a5"; const useState = __vite__cjsImport3_react["useState"]; const useRef = __vite__cjsImport3_react["useRef"]; const useEffect = __vite__cjsImport3_react["useEffect"];
+import { Globe, ChevronDown, ChevronUp, Check } from "/node_modules/.vite/deps/lucide-react.js?v=c2d670a5";
+import { useLanguage } from "/src/i18n/index.ts";
+export function FloatingLanguageSelector() {
+  _s();
+  const { language, setLanguage, currentLanguage, languages, t } = useLanguage();
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef(null);
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (containerRef.current && !containerRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    }
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("touchstart", handleClickOutside);
+      document.addEventListener("click", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+        document.removeEventListener("touchstart", handleClickOutside);
+        document.removeEventListener("click", handleClickOutside);
+      };
+    }
+  }, [isOpen]);
+  useEffect(() => {
+    function handleKeyDown(event) {
+      if (event.key === "Escape" && isOpen) {
+        setIsOpen(false);
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen]);
+  const handleSelect = (code) => {
+    setLanguage(code);
+    setIsOpen(false);
+  };
+  return /* @__PURE__ */ jsxDEV(
+    "div",
+    {
+      ref: containerRef,
+      className: "fixed z-40 right-2.5 sm:right-3 bottom-20 sm:bottom-auto sm:top-1/2 sm:-translate-y-1/2 select-none print:hidden",
+      children: [
+        /* @__PURE__ */ jsxDEV(
+          "button",
+          {
+            type: "button",
+            onClick: () => setIsOpen(!isOpen),
+            "aria-expanded": isOpen,
+            "aria-haspopup": "listbox",
+            "aria-label": t("common.change_language") || "Change language",
+            className: `group flex items-center gap-2 px-3 py-2 sm:px-3.5 sm:py-2.5 rounded-full border transition-all duration-200 cursor-pointer shadow-md hover:shadow-lg backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-amber-500/50 ${isOpen ? "bg-amber-900 text-amber-50 border-amber-800 ring-2 ring-amber-600/30" : "bg-white/95 hover:bg-white text-stone-800 border-stone-300/80 hover:border-amber-600/60 hover:-translate-x-0.5"}`,
+            children: [
+              /* @__PURE__ */ jsxDEV(Globe, { className: `w-4 h-4 transition-transform group-hover:rotate-12 ${isOpen ? "text-amber-300" : "text-amber-700"}` }, void 0, false, {
+                fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/components/FloatingLanguageSelector.tsx",
+                lineNumber: 82,
+                columnNumber: 9
+              }, this),
+              /* @__PURE__ */ jsxDEV("span", { className: "hidden sm:inline font-medium text-xs tracking-wide", children: currentLanguage.name }, void 0, false, {
+                fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/components/FloatingLanguageSelector.tsx",
+                lineNumber: 85,
+                columnNumber: 9
+              }, this),
+              /* @__PURE__ */ jsxDEV("span", { className: "sm:hidden font-semibold text-xs tracking-wider", children: currentLanguage.shortLabel }, void 0, false, {
+                fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/components/FloatingLanguageSelector.tsx",
+                lineNumber: 89,
+                columnNumber: 9
+              }, this),
+              isOpen ? /* @__PURE__ */ jsxDEV(ChevronUp, { className: "w-3.5 h-3.5 opacity-70" }, void 0, false, {
+                fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/components/FloatingLanguageSelector.tsx",
+                lineNumber: 94,
+                columnNumber: 9
+              }, this) : /* @__PURE__ */ jsxDEV(ChevronDown, { className: "w-3.5 h-3.5 opacity-70 group-hover:translate-y-0.5 transition-transform" }, void 0, false, {
+                fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/components/FloatingLanguageSelector.tsx",
+                lineNumber: 96,
+                columnNumber: 9
+              }, this)
+            ]
+          },
+          void 0,
+          true,
+          {
+            fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/components/FloatingLanguageSelector.tsx",
+            lineNumber: 70,
+            columnNumber: 7
+          },
+          this
+        ),
+        isOpen && /* @__PURE__ */ jsxDEV(
+          "div",
+          {
+            role: "listbox",
+            "aria-label": t("common.select_language") || "Select Language",
+            className: "absolute right-0 bottom-full mb-2 sm:bottom-auto sm:top-1/2 sm:-translate-y-1/2 sm:right-full sm:mr-3 w-56 sm:w-60 bg-white/98 backdrop-blur-md rounded-2xl shadow-2xl border border-stone-200/90 py-2 animate-in fade-in zoom-in-95 duration-150 overflow-hidden",
+            children: [
+              /* @__PURE__ */ jsxDEV("div", { className: "px-4 py-2 border-b border-stone-100 flex items-center justify-between", children: [
+                /* @__PURE__ */ jsxDEV("span", { className: "text-[11px] font-semibold text-stone-500 uppercase tracking-wider", children: t("common.language") }, void 0, false, {
+                  fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/components/FloatingLanguageSelector.tsx",
+                  lineNumber: 109,
+                  columnNumber: 13
+                }, this),
+                /* @__PURE__ */ jsxDEV("span", { className: "text-[10px] text-amber-800 font-medium px-1.5 py-0.5 rounded-full bg-amber-50 border border-amber-200/60", children: "8 Languages" }, void 0, false, {
+                  fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/components/FloatingLanguageSelector.tsx",
+                  lineNumber: 112,
+                  columnNumber: 13
+                }, this)
+              ] }, void 0, true, {
+                fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/components/FloatingLanguageSelector.tsx",
+                lineNumber: 108,
+                columnNumber: 11
+              }, this),
+              /* @__PURE__ */ jsxDEV("div", { className: "max-h-72 overflow-y-auto py-1 divide-y divide-stone-50", children: languages.map((lang) => {
+                const isSelected = lang.code === language;
+                return /* @__PURE__ */ jsxDEV(
+                  "button",
+                  {
+                    role: "option",
+                    "aria-selected": isSelected,
+                    onClick: () => handleSelect(lang.code),
+                    className: `w-full px-4 py-2.5 text-left flex items-center justify-between transition-colors cursor-pointer text-xs group ${isSelected ? "bg-amber-50/80 text-amber-950 font-semibold" : "text-stone-700 hover:bg-stone-50 hover:text-stone-950"}`,
+                    children: [
+                      /* @__PURE__ */ jsxDEV("div", { className: "flex flex-col", children: [
+                        /* @__PURE__ */ jsxDEV("span", { className: "text-sm font-medium leading-tight group-hover:text-amber-900 transition-colors", children: lang.name }, void 0, false, {
+                          fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/components/FloatingLanguageSelector.tsx",
+                          lineNumber: 134,
+                          columnNumber: 21
+                        }, this),
+                        /* @__PURE__ */ jsxDEV("span", { className: "text-[10px] text-stone-600 mt-0.5", children: lang.englishName }, void 0, false, {
+                          fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/components/FloatingLanguageSelector.tsx",
+                          lineNumber: 137,
+                          columnNumber: 21
+                        }, this)
+                      ] }, void 0, true, {
+                        fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/components/FloatingLanguageSelector.tsx",
+                        lineNumber: 133,
+                        columnNumber: 19
+                      }, this),
+                      isSelected && /* @__PURE__ */ jsxDEV("div", { className: "w-5 h-5 rounded-full bg-amber-600 text-white flex items-center justify-center flex-shrink-0 shadow-xs", children: /* @__PURE__ */ jsxDEV(Check, { className: "w-3 h-3 stroke-[2.5]" }, void 0, false, {
+                        fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/components/FloatingLanguageSelector.tsx",
+                        lineNumber: 144,
+                        columnNumber: 23
+                      }, this) }, void 0, false, {
+                        fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/components/FloatingLanguageSelector.tsx",
+                        lineNumber: 143,
+                        columnNumber: 17
+                      }, this)
+                    ]
+                  },
+                  lang.code,
+                  true,
+                  {
+                    fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/components/FloatingLanguageSelector.tsx",
+                    lineNumber: 122,
+                    columnNumber: 15
+                  },
+                  this
+                );
+              }) }, void 0, false, {
+                fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/components/FloatingLanguageSelector.tsx",
+                lineNumber: 118,
+                columnNumber: 11
+              }, this),
+              /* @__PURE__ */ jsxDEV("div", { className: "px-3.5 py-1.5 bg-stone-50/80 border-t border-stone-100 text-[10px] text-stone-600 text-center italic", children: "Jharkhand Regional Languages" }, void 0, false, {
+                fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/components/FloatingLanguageSelector.tsx",
+                lineNumber: 153,
+                columnNumber: 11
+              }, this)
+            ]
+          },
+          void 0,
+          true,
+          {
+            fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/components/FloatingLanguageSelector.tsx",
+            lineNumber: 102,
+            columnNumber: 7
+          },
+          this
+        )
+      ]
+    },
+    void 0,
+    true,
+    {
+      fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/components/FloatingLanguageSelector.tsx",
+      lineNumber: 65,
+      columnNumber: 5
+    },
+    this
+  );
+}
+_s(FloatingLanguageSelector, "vzYcMRAHGr3/OEaQO/qb2DQgll4=", false, function() {
+  return [useLanguage];
+});
+_c = FloatingLanguageSelector;
+export default FloatingLanguageSelector;
+var _c;
+$RefreshReg$(_c, "FloatingLanguageSelector");
+if (import.meta.hot && !inWebWorker) {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+if (import.meta.hot && !inWebWorker) {
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/components/FloatingLanguageSelector.tsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/components/FloatingLanguageSelector.tsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+
+//# sourceMappingURL=data:application/json;base64,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LHFCQWdDQTtBQUFBLGNBR0EsdUJBQUMsU0FBSSxXQUFVLHdHQUFzRyw0Q0FBckg7QUFBQTtBQUFBO0FBQUE7QUFBQSxxQkFFQTtBQUFBO0FBQUE7QUFBQSxVQXJERjtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUEsUUFzREE7QUFBQTtBQUFBO0FBQUEsSUEzRko7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBLEVBNkZBO0FBRUo7QUFBQ3JCLEdBeEllRCwwQkFBd0I7QUFBQSxVQUMyQkQsV0FBVztBQUFBO0FBQUEsS0FEOURDO0FBeUloQixlQUFlQTtBQUF5QixJQUFBNkI7QUFBQSxhQUFBQSxJQUFBIiwibmFtZXMiOlsidXNlU3RhdGUiLCJ1c2VSZWYiLCJ1c2VFZmZlY3QiLCJHbG9iZSIsIkNoZXZyb25Eb3duIiwiQ2hldnJvblVwIiwiQ2hlY2siLCJ1c2VMYW5ndWFnZSIsIkZsb2F0aW5nTGFuZ3VhZ2VTZWxlY3RvciIsIl9zIiwibGFuZ3VhZ2UiLCJzZXRMYW5ndWFnZSIsImN1cnJlbnRMYW5ndWFnZSIsImxhbmd1YWdlcyIsInQiLCJpc09wZW4iLCJzZXRJc09wZW4iLCJjb250YWluZXJSZWYiLCJoYW5kbGVDbGlja091dHNpZGUiLCJldmVudCIsImN1cnJlbnQiLCJjb250YWlucyIsInRhcmdldCIsImRvY3VtZW50IiwiYWRkRXZlbnRMaXN0ZW5lciIsInJlbW92ZUV2ZW50TGlzdGVuZXIiLCJoYW5kbGVLZXlEb3duIiwia2V5Iiwid2luZG93IiwiaGFuZGxlU2VsZWN0IiwiY29kZSIsIm5hbWUiLCJzaG9ydExhYmVsIiwibWFwIiwibGFuZyIsImlzU2VsZWN0ZWQiLCJlbmdsaXNoTmFtZSIsIl9jIl0sImlnbm9yZUxpc3QiOltdLCJzb3VyY2VzIjpbIkZsb2F0aW5nTGFuZ3VhZ2VTZWxlY3Rvci50c3giXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFJlYWN0LCB7IHVzZVN0YXRlLCB1c2VSZWYsIHVzZUVmZmVjdCB9IGZyb20gJ3JlYWN0JztcbmltcG9ydCB7IEdsb2JlLCBDaGV2cm9uRG93biwgQ2hldnJvblVwLCBDaGVjayB9IGZyb20gJ2x1Y2lkZS1yZWFjdCc7XG5pbXBvcnQgeyB1c2VMYW5ndWFnZSB9IGZyb20gJy4uL2kxOG4nO1xuXG5leHBvcnQgZnVuY3Rpb24gRmxvYXRpbmdMYW5ndWFnZVNlbGVjdG9yKCkge1xuICBjb25zdCB7IGxhbmd1YWdlLCBzZXRMYW5ndWFnZSwgY3VycmVudExhbmd1YWdlLCBsYW5ndWFnZXMsIHQgfSA9IHVzZUxhbmd1YWdlKCk7XG4gIGNvbnN0IFtpc09wZW4sIHNldElzT3Blbl0gPSB1c2VTdGF0ZShmYWxzZSk7XG4gIGNvbnN0IGNvbnRhaW5lclJlZiA9IHVzZVJlZjxIVE1MRGl2RWxlbWVudD4obnVsbCk7XG5cbiAgLy8gQ2xvc2Ugd2hlbiBjbGlja2luZyBvdXRzaWRlIChtb3VzZSwgdG91Y2gsIGNsaWNrKVxuICB1c2VFZmZlY3QoKCkgPT4ge1xuICAgIGZ1bmN0aW9uIGhhbmRsZUNsaWNrT3V0c2lkZShldmVudDogTW91c2VFdmVudCB8IFRvdWNoRXZlbnQpIHtcbiAgICAgIGlmIChjb250YWluZXJSZWYuY3VycmVudCAmJiAhY29udGFpbmVyUmVmLmN1cnJlbnQuY29udGFpbnMoZXZlbnQudGFyZ2V0IGFzIE5vZGUpKSB7XG4gICAgICAgIHNldElzT3BlbihmYWxzZSk7XG4gICAgICB9XG4gICAgfVxuICAgIGlmIChpc09wZW4pIHtcbiAgICAgIGRvY3VtZW50LmFkZEV2ZW50TGlzdGVuZXIoJ21vdXNlZG93bicsIGhhbmRsZUNsaWNrT3V0c2lkZSk7XG4gICAgICBkb2N1bWVudC5hZGRFdmVudExpc3RlbmVyKCd0b3VjaHN0YXJ0JywgaGFuZGxlQ2xpY2tPdXRzaWRlKTtcbiAgICAgIGRvY3VtZW50LmFkZEV2ZW50TGlzdGVuZXIoJ2NsaWNrJywgaGFuZGxlQ2xpY2tPdXRzaWRlKTtcbiAgICAgIHJldHVybiAoKSA9PiB7XG4gICAgICAgIGRvY3VtZW50LnJlbW92ZUV2ZW50TGlzdGVuZXIoJ21vdXNlZG93bicsIGhhbmRsZUNsaWNrT3V0c2lkZSk7XG4gICAgICAgIGRvY3VtZW50LnJlbW92ZUV2ZW50TGlzdGVuZXIoJ3RvdWNoc3RhcnQnLCBoYW5kbGVDbGlja091dHNpZGUpO1xuICAgICAgICBkb2N1bWVudC5yZW1vdmVFdmVudExpc3RlbmVyKCdjbGljaycsIGhhbmRsZUNsaWNrT3V0c2lkZSk7XG4gICAgICB9O1xuICAgIH1cbiAgfSwgW2lzT3Blbl0pO1xuXG4gIC8vIENsb3NlIG9uIEVzY2FwZSBrZXlcbiAgdXNlRWZmZWN0KCgpID0+IHtcbiAgICBmdW5jdGlvbiBoYW5kbGVLZXlEb3duKGV2ZW50OiBLZXlib2FyZEV2ZW50KSB7XG4gICAgICBpZiAoZXZlbnQua2V5ID09PSAnRXNjYXBlJyAmJiBpc09wZW4pIHtcbiAgICAgICAgc2V0SXNPcGVuKGZhbHNlKTtcbiAgICAgIH1cbiAgICB9XG4gICAgd2luZG93LmFkZEV2ZW50TGlzdGVuZXIoJ2tleWRvd24nLCBoYW5kbGVLZXlEb3duKTtcbiAgICByZXR1cm4gKCkgPT4gd2luZG93LnJlbW92ZUV2ZW50TGlzdGVuZXIoJ2tleWRvd24nLCBoYW5kbGVLZXlEb3duKTtcbiAgfSwgW2lzT3Blbl0pO1xuXG4gIGNvbnN0IGhhbmRsZVNlbGVjdCA9IChjb2RlOiBzdHJpbmcpID0+IHtcbiAgICBzZXRMYW5ndWFnZShjb2RlKTtcbiAgICBzZXRJc09wZW4oZmFsc2UpO1xuICB9O1xuXG4gIHJldHVybiAoXG4gICAgPGRpdlxuICAgICAgcmVmPXtjb250YWluZXJSZWZ9XG4gICAgICBjbGFzc05hbWU9XCJmaXhlZCB6LTQwIHJpZ2h0LTIuNSBzbTpyaWdodC0zIGJvdHRvbS0yMCBzbTpib3R0b20tYXV0byBzbTp0b3AtMS8yIHNtOi10cmFuc2xhdGUteS0xLzIgc2VsZWN0LW5vbmUgcHJpbnQ6aGlkZGVuXCJcbiAgICA+XG4gICAgICB7LyogTWFpbiBGbG9hdGluZyBUcmlnZ2VyIEJ1dHRvbiAqL31cbiAgICAgIDxidXR0b25cbiAgICAgICAgdHlwZT1cImJ1dHRvblwiXG4gICAgICAgIG9uQ2xpY2s9eygpID0+IHNldElzT3BlbighaXNPcGVuKX1cbiAgICAgICAgYXJpYS1leHBhbmRlZD17aXNPcGVufVxuICAgICAgICBhcmlhLWhhc3BvcHVwPVwibGlzdGJveFwiXG4gICAgICAgIGFyaWEtbGFiZWw9e3QoJ2NvbW1vbi5jaGFuZ2VfbGFuZ3VhZ2UnKSB8fCAnQ2hhbmdlIGxhbmd1YWdlJ31cbiAgICAgICAgY2xhc3NOYW1lPXtgZ3JvdXAgZmxleCBpdGVtcy1jZW50ZXIgZ2FwLTIgcHgtMyBweS0yIHNtOnB4LTMuNSBzbTpweS0yLjUgcm91bmRlZC1mdWxsIGJvcmRlciB0cmFuc2l0aW9uLWFsbCBkdXJhdGlvbi0yMDAgY3Vyc29yLXBvaW50ZXIgc2hhZG93LW1kIGhvdmVyOnNoYWRvdy1sZyBiYWNrZHJvcC1ibHVyLW1kIGZvY3VzOm91dGxpbmUtbm9uZSBmb2N1czpyaW5nLTIgZm9jdXM6cmluZy1hbWJlci01MDAvNTAgJHtcbiAgICAgICAgICBpc09wZW5cbiAgICAgICAgICAgID8gJ2JnLWFtYmVyLTkwMCB0ZXh0LWFtYmVyLTUwIGJvcmRlci1hbWJlci04MDAgcmluZy0yIHJpbmctYW1iZXItNjAwLzMwJ1xuICAgICAgICAgICAgOiAnYmctd2hpdGUvOTUgaG92ZXI6Ymctd2hpdGUgdGV4dC1zdG9uZS04MDAgYm9yZGVyLXN0b25lLTMwMC84MCBob3Zlcjpib3JkZXItYW1iZXItNjAwLzYwIGhvdmVyOi10cmFuc2xhdGUteC0wLjUnXG4gICAgICAgIH1gfVxuICAgICAgPlxuICAgICAgICA8R2xvYmUgY2xhc3NOYW1lPXtgdy00IGgtNCB0cmFuc2l0aW9uLXRyYW5zZm9ybSBncm91cC1ob3Zlcjpyb3RhdGUtMTIgJHtpc09wZW4gPyAndGV4dC1hbWJlci0zMDAnIDogJ3RleHQtYW1iZXItNzAwJ31gfSAvPlxuICAgICAgICBcbiAgICAgICAgey8qIERlc2t0b3A6IEZ1bGwgTmF0aXZlIE5hbWUgKi99XG4gICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cImhpZGRlbiBzbTppbmxpbmUgZm9udC1tZWRpdW0gdGV4dC14cyB0cmFja2luZy13aWRlXCI+XG4gICAgICAgICAge2N1cnJlbnRMYW5ndWFnZS5uYW1lfVxuICAgICAgICA8L3NwYW4+XG4gICAgICAgIHsvKiBNb2JpbGU6IENvbXBhY3QgMi1sZXR0ZXIgQ29kZSAqL31cbiAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwic206aGlkZGVuIGZvbnQtc2VtaWJvbGQgdGV4dC14cyB0cmFja2luZy13aWRlclwiPlxuICAgICAgICAgIHtjdXJyZW50TGFuZ3VhZ2Uuc2hvcnRMYWJlbH1cbiAgICAgICAgPC9zcGFuPlxuXG4gICAgICAgIHtpc09wZW4gPyAoXG4gICAgICAgICAgPENoZXZyb25VcCBjbGFzc05hbWU9XCJ3LTMuNSBoLTMuNSBvcGFjaXR5LTcwXCIgLz5cbiAgICAgICAgKSA6IChcbiAgICAgICAgICA8Q2hldnJvbkRvd24gY2xhc3NOYW1lPVwidy0zLjUgaC0zLjUgb3BhY2l0eS03MCBncm91cC1ob3Zlcjp0cmFuc2xhdGUteS0wLjUgdHJhbnNpdGlvbi10cmFuc2Zvcm1cIiAvPlxuICAgICAgICApfVxuICAgICAgPC9idXR0b24+XG5cbiAgICAgIHsvKiBEcm9wZG93biBNZW51ICovfVxuICAgICAge2lzT3BlbiAmJiAoXG4gICAgICAgIDxkaXZcbiAgICAgICAgICByb2xlPVwibGlzdGJveFwiXG4gICAgICAgICAgYXJpYS1sYWJlbD17dCgnY29tbW9uLnNlbGVjdF9sYW5ndWFnZScpIHx8ICdTZWxlY3QgTGFuZ3VhZ2UnfVxuICAgICAgICAgIGNsYXNzTmFtZT1cImFic29sdXRlIHJpZ2h0LTAgYm90dG9tLWZ1bGwgbWItMiBzbTpib3R0b20tYXV0byBzbTp0b3AtMS8yIHNtOi10cmFuc2xhdGUteS0xLzIgc206cmlnaHQtZnVsbCBzbTptci0zIHctNTYgc206dy02MCBiZy13aGl0ZS85OCBiYWNrZHJvcC1ibHVyLW1kIHJvdW5kZWQtMnhsIHNoYWRvdy0yeGwgYm9yZGVyIGJvcmRlci1zdG9uZS0yMDAvOTAgcHktMiBhbmltYXRlLWluIGZhZGUtaW4gem9vbS1pbi05NSBkdXJhdGlvbi0xNTAgb3ZlcmZsb3ctaGlkZGVuXCJcbiAgICAgICAgPlxuICAgICAgICAgIHsvKiBIZWFkZXIgKi99XG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJweC00IHB5LTIgYm9yZGVyLWIgYm9yZGVyLXN0b25lLTEwMCBmbGV4IGl0ZW1zLWNlbnRlciBqdXN0aWZ5LWJldHdlZW5cIj5cbiAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cInRleHQtWzExcHhdIGZvbnQtc2VtaWJvbGQgdGV4dC1zdG9uZS01MDAgdXBwZXJjYXNlIHRyYWNraW5nLXdpZGVyXCI+XG4gICAgICAgICAgICAgIHt0KCdjb21tb24ubGFuZ3VhZ2UnKX1cbiAgICAgICAgICAgIDwvc3Bhbj5cbiAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cInRleHQtWzEwcHhdIHRleHQtYW1iZXItODAwIGZvbnQtbWVkaXVtIHB4LTEuNSBweS0wLjUgcm91bmRlZC1mdWxsIGJnLWFtYmVyLTUwIGJvcmRlciBib3JkZXItYW1iZXItMjAwLzYwXCI+XG4gICAgICAgICAgICAgIDggTGFuZ3VhZ2VzXG4gICAgICAgICAgICA8L3NwYW4+XG4gICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICB7LyogTGFuZ3VhZ2VzIGxpc3QgKi99XG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJtYXgtaC03MiBvdmVyZmxvdy15LWF1dG8gcHktMSBkaXZpZGUteSBkaXZpZGUtc3RvbmUtNTBcIj5cbiAgICAgICAgICAgIHtsYW5ndWFnZXMubWFwKChsYW5nKSA9PiB7XG4gICAgICAgICAgICAgIGNvbnN0IGlzU2VsZWN0ZWQgPSBsYW5nLmNvZGUgPT09IGxhbmd1YWdlO1xuICAgICAgICAgICAgICByZXR1cm4gKFxuICAgICAgICAgICAgICAgIDxidXR0b25cbiAgICAgICAgICAgICAgICAgIGtleT17bGFuZy5jb2RlfVxuICAgICAgICAgICAgICAgICAgcm9sZT1cIm9wdGlvblwiXG4gICAgICAgICAgICAgICAgICBhcmlhLXNlbGVjdGVkPXtpc1NlbGVjdGVkfVxuICAgICAgICAgICAgICAgICAgb25DbGljaz17KCkgPT4gaGFuZGxlU2VsZWN0KGxhbmcuY29kZSl9XG4gICAgICAgICAgICAgICAgICBjbGFzc05hbWU9e2B3LWZ1bGwgcHgtNCBweS0yLjUgdGV4dC1sZWZ0IGZsZXggaXRlbXMtY2VudGVyIGp1c3RpZnktYmV0d2VlbiB0cmFuc2l0aW9uLWNvbG9ycyBjdXJzb3ItcG9pbnRlciB0ZXh0LXhzIGdyb3VwICR7XG4gICAgICAgICAgICAgICAgICAgIGlzU2VsZWN0ZWRcbiAgICAgICAgICAgICAgICAgICAgICA/ICdiZy1hbWJlci01MC84MCB0ZXh0LWFtYmVyLTk1MCBmb250LXNlbWlib2xkJ1xuICAgICAgICAgICAgICAgICAgICAgIDogJ3RleHQtc3RvbmUtNzAwIGhvdmVyOmJnLXN0b25lLTUwIGhvdmVyOnRleHQtc3RvbmUtOTUwJ1xuICAgICAgICAgICAgICAgICAgfWB9XG4gICAgICAgICAgICAgICAgPlxuICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJmbGV4IGZsZXgtY29sXCI+XG4gICAgICAgICAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cInRleHQtc20gZm9udC1tZWRpdW0gbGVhZGluZy10aWdodCBncm91cC1ob3Zlcjp0ZXh0LWFtYmVyLTkwMCB0cmFuc2l0aW9uLWNvbG9yc1wiPlxuICAgICAgICAgICAgICAgICAgICAgIHtsYW5nLm5hbWV9XG4gICAgICAgICAgICAgICAgICAgIDwvc3Bhbj5cbiAgICAgICAgICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwidGV4dC1bMTBweF0gdGV4dC1zdG9uZS02MDAgbXQtMC41XCI+XG4gICAgICAgICAgICAgICAgICAgICAge2xhbmcuZW5nbGlzaE5hbWV9XG4gICAgICAgICAgICAgICAgICAgIDwvc3Bhbj5cbiAgICAgICAgICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgICAgICAgICB7aXNTZWxlY3RlZCAmJiAoXG4gICAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwidy01IGgtNSByb3VuZGVkLWZ1bGwgYmctYW1iZXItNjAwIHRleHQtd2hpdGUgZmxleCBpdGVtcy1jZW50ZXIganVzdGlmeS1jZW50ZXIgZmxleC1zaHJpbmstMCBzaGFkb3cteHNcIj5cbiAgICAgICAgICAgICAgICAgICAgICA8Q2hlY2sgY2xhc3NOYW1lPVwidy0zIGgtMyBzdHJva2UtWzIuNV1cIiAvPlxuICAgICAgICAgICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgICAgICAgICl9XG4gICAgICAgICAgICAgICAgPC9idXR0b24+XG4gICAgICAgICAgICAgICk7XG4gICAgICAgICAgICB9KX1cbiAgICAgICAgICA8L2Rpdj5cblxuICAgICAgICAgIHsvKiBTdWJ0bGUgZm9vdGVyICovfVxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwicHgtMy41IHB5LTEuNSBiZy1zdG9uZS01MC84MCBib3JkZXItdCBib3JkZXItc3RvbmUtMTAwIHRleHQtWzEwcHhdIHRleHQtc3RvbmUtNjAwIHRleHQtY2VudGVyIGl0YWxpY1wiPlxuICAgICAgICAgICAgSmhhcmtoYW5kIFJlZ2lvbmFsIExhbmd1YWdlc1xuICAgICAgICAgIDwvZGl2PlxuICAgICAgICA8L2Rpdj5cbiAgICAgICl9XG4gICAgPC9kaXY+XG4gICk7XG59XG5leHBvcnQgZGVmYXVsdCBGbG9hdGluZ0xhbmd1YWdlU2VsZWN0b3I7XG4iXSwiZmlsZSI6IkM6L1VzZXJzL1lBU0gvT25lRHJpdmUvRG9jdW1lbnRzL05ldyBmb2xkZXIvam9oYXItY3JhZnQvc3JjL2NvbXBvbmVudHMvRmxvYXRpbmdMYW5ndWFnZVNlbGVjdG9yLnRzeCJ9

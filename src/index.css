@@ -1,0 +1,164 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-earth-50 text-earth-950 font-sans;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display tracking-tight text-earth-900;
+  }
+}
+
+@layer components {
+  /* Primary Button: Terracotta with Cream/White text, rounded-xl */
+  .btn-primary {
+    @apply inline-flex items-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 bg-brand-600 text-white font-medium text-sm rounded-xl hover:bg-brand-700 active:bg-brand-800 transition-all duration-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:ring-offset-2 cursor-pointer;
+  }
+
+  /* Secondary Button: Cream background with Sand border and Deep Earth Brown text */
+  .btn-secondary {
+    @apply inline-flex items-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 bg-[#FAF4EB] text-earth-800 font-medium text-sm rounded-xl border border-earth-200 hover:border-earth-400 hover:bg-[#F4E5D3] active:bg-earth-200 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:ring-offset-2 cursor-pointer shadow-xs;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center gap-2 px-4 py-2 text-earth-800 font-medium text-sm rounded-xl border border-earth-300 hover:bg-earth-100/70 hover:border-brand-600 transition-all duration-200 cursor-pointer;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 px-3.5 py-2 text-earth-700 font-medium text-sm rounded-lg hover:bg-earth-200/50 transition-all duration-200 cursor-pointer;
+  }
+
+  /* Authentic Card Styling */
+  .card {
+    @apply bg-white rounded-2xl shadow-xs border border-earth-200/80 overflow-hidden;
+  }
+
+  .card-warm {
+    @apply bg-[#FAF5EC] rounded-2xl shadow-xs border border-earth-200/90 overflow-hidden;
+  }
+
+  .card-hover {
+    @apply card hover:shadow-md hover:border-earth-300 hover:-translate-y-0.5 transition-all duration-300;
+  }
+
+  .input {
+    @apply w-full px-4 py-2.5 sm:py-3 rounded-xl border border-earth-200 bg-white text-earth-950 placeholder-earth-400 focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-600 transition-all duration-200;
+  }
+
+  .label {
+    @apply block text-sm font-medium text-earth-800 mb-1.5;
+  }
+
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .badge-brand {
+    @apply badge bg-brand-100 text-brand-800 border border-brand-200/60;
+  }
+
+  .badge-green {
+    @apply badge bg-forest-100 text-forest-700 border border-forest-200/60;
+  }
+
+  .badge-earth {
+    @apply badge bg-earth-100 text-earth-800 border border-earth-200/70;
+  }
+
+  .badge-sand {
+    @apply badge bg-[#F4E5D3] text-earth-900 border border-earth-300/80;
+  }
+
+  .section-heading {
+    @apply text-2xl sm:text-3xl md:text-4xl font-display font-bold text-earth-900;
+  }
+
+  .section-subheading {
+    @apply text-base sm:text-lg text-earth-700 mt-2;
+  }
+
+  /* Cultural Label Tracking */
+  .cultural-label {
+    @apply text-[11px] uppercase tracking-widest font-semibold text-earth-600 font-sans;
+  }
+}
+
+/* Scrollbar styling in authentic terracotta */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F0E5D3;
+}
+::-webkit-scrollbar-thumb {
+  background: #B85C38;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #964525;
+}
+
+/* Pattern Background Utilities */
+.pattern-sohrai {
+  background-color: #F7F0E3;
+  background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%234A2C20' stroke-width='1.2' stroke-opacity='0.05'%3E%3Cpolygon points='40,10 70,40 40,70 10,40' /%3E%3Cpolygon points='40,22 58,40 40,58 22,40' /%3E%3Cline x1='40' y1='0' x2='40' y2='80' /%3E%3Cline x1='0' y1='40' x2='80' y2='40' /%3E%3C/g%3E%3C/svg%3E");
+}
+
+.pattern-khovar {
+  background-color: #F7F0E3;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 30 Q 15 10, 30 30 T 60 30' fill='none' stroke='%234A2C20' stroke-width='1' stroke-opacity='0.05'/%3E%3Cpath d='M0 45 Q 15 25, 30 45 T 60 45' fill='none' stroke='%23B85C38' stroke-width='1' stroke-opacity='0.05'/%3E%3C/svg%3E");
+}
+
+.tribal-bg {
+  background-color: #F7F0E3;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23B85C38' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* ================================================
+   RESPONSIVE UTILITIES — Mobile & Touch
+   ================================================ */
+
+/* Hide scrollbar but allow scroll */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* Safe area padding for notched phones */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Minimum touch target size */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Mobile bottom navigation safe area */
+.pb-mobile-nav {
+  padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+}
+
+/* Prevent horizontal overflow on any element */
+.no-overflow-x {
+  max-width: 100%;
+  overflow-x: hidden;
+}

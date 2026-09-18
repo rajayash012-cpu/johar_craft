@@ -1,0 +1,378 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/pages/artisan/QRPage.tsx");import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=c2d670a5"; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+let prevRefreshReg;
+let prevRefreshSig;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  prevRefreshReg = window.$RefreshReg$;
+  prevRefreshSig = window.$RefreshSig$;
+  window.$RefreshReg$ = RefreshRuntime.getRefreshReg("C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx");
+  window.$RefreshSig$ = RefreshRuntime.createSignatureFunctionForTransform;
+}
+var _s = $RefreshSig$();
+import __vite__cjsImport3_react from "/node_modules/.vite/deps/react.js?v=c2d670a5"; const useRef = __vite__cjsImport3_react["useRef"];
+import { useNavigate } from "/node_modules/.vite/deps/react-router-dom.js?v=c2d670a5";
+import { QRCodeSVG } from "/node_modules/.vite/deps/qrcode__react.js?v=c2d670a5";
+import { Share2, Download, MapPin, Award, ExternalLink } from "/node_modules/.vite/deps/lucide-react.js?v=c2d670a5";
+import { getArtisan } from "/src/utils/storage.ts?t=1789650154684";
+import { PhotoPlaceholder } from "/src/components/PhotoPlaceholder.tsx";
+import { useToast } from "/src/hooks/useToast.ts";
+import { ToastContainer } from "/src/components/ui/Toast.tsx";
+export function QRPage() {
+  _s();
+  const navigate = useNavigate();
+  const artisan = getArtisan();
+  const { toasts, addToast, dismissToast } = useToast();
+  const qrRef = useRef(null);
+  if (!artisan) {
+    return /* @__PURE__ */ jsxDEV("div", { className: "text-center py-20", children: [
+      /* @__PURE__ */ jsxDEV("div", { className: "text-6xl mb-4", children: "🪪" }, void 0, false, {
+        fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+        lineNumber: 38,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("h2", { className: "text-2xl font-display font-bold text-earth-900 mb-3", children: "No Identity Yet" }, void 0, false, {
+        fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+        lineNumber: 39,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("p", { className: "text-earth-600 mb-6", children: "Create your artisan profile to generate your QR Identity." }, void 0, false, {
+        fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+        lineNumber: 40,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("button", { onClick: () => navigate("/artisan/profile"), className: "btn-primary", children: "Create Profile" }, void 0, false, {
+        fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+        lineNumber: 41,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+      lineNumber: 37,
+      columnNumber: 7
+    }, this);
+  }
+  const profileUrl = `${window.location.origin}/artisan/${artisan.id}`;
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: `${artisan.name} – Johar Craft`, text: `Check out ${artisan.name}'s artisan profile on Johar Craft!`, url: profileUrl });
+      } catch (_) {
+        handleCopyLink();
+      }
+    } else {
+      handleCopyLink();
+    }
+  };
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(profileUrl).then(() => {
+      addToast("success", "Profile link copied!", "Share it with buyers and customers.");
+    });
+  };
+  const handleDownloadQR = () => {
+    const svg = qrRef.current?.querySelector("svg");
+    if (!svg) return;
+    const svgData = new XMLSerializer().serializeToString(svg);
+    const blob = new Blob([svgData], { type: "image/svg+xml" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${artisan.id}-qr-identity.svg`;
+    a.click();
+    URL.revokeObjectURL(url);
+    addToast("success", "QR downloaded!", "Print it and display at your stall.");
+  };
+  return /* @__PURE__ */ jsxDEV("div", { className: "max-w-lg mx-auto animate-fade-in", children: [
+    /* @__PURE__ */ jsxDEV(ToastContainer, { toasts, onDismiss: dismissToast }, void 0, false, {
+      fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+      lineNumber: 82,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV("div", { className: "text-center mb-8", children: [
+      /* @__PURE__ */ jsxDEV("h1", { className: "text-2xl font-display font-bold text-earth-900", children: "Digital Artisan Identity" }, void 0, false, {
+        fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+        lineNumber: 85,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("p", { className: "text-earth-600 text-sm mt-1", children: "Your unique QR identity card – share it with buyers" }, void 0, false, {
+        fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+        lineNumber: 86,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+      lineNumber: 84,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV("div", { className: "card overflow-hidden mb-6", children: [
+      /* @__PURE__ */ jsxDEV("div", { className: "bg-gradient-to-r from-earth-900 to-brand-800 p-6 text-white", children: [
+        /* @__PURE__ */ jsxDEV("div", { className: "flex items-center gap-2 mb-4", children: [
+          /* @__PURE__ */ jsxDEV("div", { className: "w-2 h-2 bg-brand-400 rounded-full" }, void 0, false, {
+            fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+            lineNumber: 94,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV("span", { className: "text-xs text-brand-300 font-medium tracking-widest uppercase", children: "Johar Craft • Verified Artisan" }, void 0, false, {
+            fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+            lineNumber: 95,
+            columnNumber: 13
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+          lineNumber: 93,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { className: "flex items-center gap-4", children: [
+          artisan.profilePhoto ? /* @__PURE__ */ jsxDEV(
+            "img",
+            {
+              src: artisan.profilePhoto,
+              alt: artisan.name,
+              className: "w-20 h-20 rounded-2xl object-cover border-3 border-white/30"
+            },
+            void 0,
+            false,
+            {
+              fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+              lineNumber: 99,
+              columnNumber: 13
+            },
+            this
+          ) : /* @__PURE__ */ jsxDEV(PhotoPlaceholder, { type: "artisan", compact: true, className: "w-20 h-20 rounded-2xl border-3 border-white/30 bg-white/20 text-white" }, void 0, false, {
+            fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+            lineNumber: 105,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { children: [
+            /* @__PURE__ */ jsxDEV("h2", { className: "text-xl font-bold", children: artisan.name }, void 0, false, {
+              fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+              lineNumber: 108,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("p", { className: "text-brand-300 font-mono text-sm mt-0.5", children: artisan.id }, void 0, false, {
+              fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+              lineNumber: 109,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { className: "flex items-center gap-1.5 mt-2 text-earth-300 text-xs", children: [
+              /* @__PURE__ */ jsxDEV(MapPin, { className: "w-3 h-3" }, void 0, false, {
+                fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+                lineNumber: 111,
+                columnNumber: 17
+              }, this),
+              /* @__PURE__ */ jsxDEV("span", { children: [
+                artisan.district,
+                ", Jharkhand"
+              ] }, void 0, true, {
+                fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+                lineNumber: 112,
+                columnNumber: 17
+              }, this)
+            ] }, void 0, true, {
+              fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+              lineNumber: 110,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { className: "flex items-center gap-1.5 mt-1 text-earth-300 text-xs", children: [
+              /* @__PURE__ */ jsxDEV("span", { children: "🏺" }, void 0, false, {
+                fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+                lineNumber: 115,
+                columnNumber: 17
+              }, this),
+              /* @__PURE__ */ jsxDEV("span", { children: [
+                artisan.craftCategory,
+                typeof artisan.yearsExperience === "number" ? ` · ${artisan.yearsExperience} years` : artisan.yearsExperience && artisan.yearsExperience !== "Information not provided" ? ` · ${artisan.yearsExperience}` : ""
+              ] }, void 0, true, {
+                fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+                lineNumber: 116,
+                columnNumber: 17
+              }, this)
+            ] }, void 0, true, {
+              fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+              lineNumber: 114,
+              columnNumber: 15
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+            lineNumber: 107,
+            columnNumber: 13
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+          lineNumber: 97,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+        lineNumber: 92,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { className: "p-8 flex flex-col items-center bg-white", children: [
+        /* @__PURE__ */ jsxDEV("div", { ref: qrRef, className: "p-4 bg-white border-2 border-earth-100 rounded-2xl shadow-inner mb-4", children: /* @__PURE__ */ jsxDEV(
+          QRCodeSVG,
+          {
+            value: profileUrl,
+            size: 200,
+            fgColor: "#3a160c",
+            bgColor: "#ffffff",
+            level: "H",
+            includeMargin: false
+          },
+          void 0,
+          false,
+          {
+            fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+            lineNumber: 132,
+            columnNumber: 13
+          },
+          this
+        ) }, void 0, false, {
+          fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+          lineNumber: 131,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("p", { className: "text-xs text-earth-500 text-center max-w-xs", children: [
+          "Scan this QR code to view ",
+          artisan.name,
+          "'s artisan profile and product catalog"
+        ] }, void 0, true, {
+          fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+          lineNumber: 141,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { className: "mt-3 flex items-center gap-1.5 text-xs text-brand-600 font-medium", children: [
+          /* @__PURE__ */ jsxDEV(ExternalLink, { className: "w-3.5 h-3.5" }, void 0, false, {
+            fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+            lineNumber: 145,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV("span", { className: "truncate max-w-xs", children: profileUrl }, void 0, false, {
+            fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+            lineNumber: 146,
+            columnNumber: 13
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+          lineNumber: 144,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+        lineNumber: 130,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { className: "px-6 py-4 bg-earth-50 border-t border-earth-100", children: /* @__PURE__ */ jsxDEV("div", { className: "flex items-center justify-between text-xs text-earth-500", children: [
+        /* @__PURE__ */ jsxDEV("span", { children: "Johar Craft Platform" }, void 0, false, {
+          fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+          lineNumber: 153,
+          columnNumber: 13
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { className: "flex items-center gap-1", children: [
+          /* @__PURE__ */ jsxDEV(Award, { className: "w-3.5 h-3.5 text-brand-500" }, void 0, false, {
+            fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+            lineNumber: 155,
+            columnNumber: 15
+          }, this),
+          /* @__PURE__ */ jsxDEV("span", { children: "Jharkhand Tribal Artisan" }, void 0, false, {
+            fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+            lineNumber: 156,
+            columnNumber: 15
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+          lineNumber: 154,
+          columnNumber: 13
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+        lineNumber: 152,
+        columnNumber: 11
+      }, this) }, void 0, false, {
+        fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+        lineNumber: 151,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+      lineNumber: 90,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV("div", { className: "grid grid-cols-2 gap-3", children: [
+      /* @__PURE__ */ jsxDEV("button", { onClick: handleDownloadQR, className: "btn-secondary justify-center", children: [
+        /* @__PURE__ */ jsxDEV(Download, { className: "w-4 h-4" }, void 0, false, {
+          fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+          lineNumber: 165,
+          columnNumber: 11
+        }, this),
+        "Download QR"
+      ] }, void 0, true, {
+        fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+        lineNumber: 164,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("button", { onClick: handleShare, className: "btn-primary justify-center", children: [
+        /* @__PURE__ */ jsxDEV(Share2, { className: "w-4 h-4" }, void 0, false, {
+          fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+          lineNumber: 169,
+          columnNumber: 11
+        }, this),
+        "Share Identity"
+      ] }, void 0, true, {
+        fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+        lineNumber: 168,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+      lineNumber: 163,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV("div", { className: "mt-4 text-center", children: /* @__PURE__ */ jsxDEV("button", { onClick: () => navigate(`/artisan/${artisan.id}`), className: "btn-ghost text-sm", children: [
+      /* @__PURE__ */ jsxDEV(ExternalLink, { className: "w-4 h-4" }, void 0, false, {
+        fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+        lineNumber: 176,
+        columnNumber: 11
+      }, this),
+      "View Public Profile"
+    ] }, void 0, true, {
+      fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+      lineNumber: 175,
+      columnNumber: 9
+    }, this) }, void 0, false, {
+      fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+      lineNumber: 174,
+      columnNumber: 7
+    }, this)
+  ] }, void 0, true, {
+    fileName: "C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx",
+    lineNumber: 81,
+    columnNumber: 5
+  }, this);
+}
+_s(QRPage, "nRD9fKl8H5N39466YgwKPXrCWcs=", false, function() {
+  return [useNavigate, useToast];
+});
+_c = QRPage;
+var _c;
+$RefreshReg$(_c, "QRPage");
+if (import.meta.hot && !inWebWorker) {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+if (import.meta.hot && !inWebWorker) {
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/YASH/OneDrive/Documents/New folder/johar-craft/src/pages/artisan/QRPage.tsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+
+//# sourceMappingURL=data:application/json;base64,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QUFBO0FBQUE7QUFBQTtBQUFBLGFBR0E7QUFBQSxTQVJGO0FBQUE7QUFBQTtBQUFBO0FBQUEsV0FTQTtBQUFBLElBRUEsdUJBQUMsU0FBSSxXQUFVLG9CQUNiLGlDQUFDLFlBQU8sU0FBUyxNQUFNWCxTQUFTLFlBQVlDLFFBQVFTLEVBQUUsRUFBRSxHQUFHLFdBQVUscUJBQ25FO0FBQUEsNkJBQUMsZ0JBQWEsV0FBVSxhQUF4QjtBQUFBO0FBQUE7QUFBQTtBQUFBLGFBQWlDO0FBQUE7QUFBQSxTQURuQztBQUFBO0FBQUE7QUFBQTtBQUFBLFdBR0EsS0FKRjtBQUFBO0FBQUE7QUFBQTtBQUFBLFdBS0E7QUFBQSxPQWxHRjtBQUFBO0FBQUE7QUFBQTtBQUFBLFNBbUdBO0FBRUo7QUFBQ1gsR0F6SmVELFFBQU07QUFBQSxVQUNIWCxhQUUwQlMsUUFBUTtBQUFBO0FBQUEsS0FIckNFO0FBQU0sSUFBQWdEO0FBQUEsYUFBQUEsSUFBQSIsIm5hbWVzIjpbInVzZVJlZiIsInVzZU5hdmlnYXRlIiwiUVJDb2RlU1ZHIiwiU2hhcmUyIiwiRG93bmxvYWQiLCJNYXBQaW4iLCJBd2FyZCIsIkV4dGVybmFsTGluayIsImdldEFydGlzYW4iLCJQaG90b1BsYWNlaG9sZGVyIiwidXNlVG9hc3QiLCJUb2FzdENvbnRhaW5lciIsIlFSUGFnZSIsIl9zIiwibmF2aWdhdGUiLCJhcnRpc2FuIiwidG9hc3RzIiwiYWRkVG9hc3QiLCJkaXNtaXNzVG9hc3QiLCJxclJlZiIsInByb2ZpbGVVcmwiLCJ3aW5kb3ciLCJsb2NhdGlvbiIsIm9yaWdpbiIsImlkIiwiaGFuZGxlU2hhcmUiLCJuYXZpZ2F0b3IiLCJzaGFyZSIsInRpdGxlIiwibmFtZSIsInRleHQiLCJ1cmwiLCJfIiwiaGFuZGxlQ29weUxpbmsiLCJjbGlwYm9hcmQiLCJ3cml0ZVRleHQiLCJ0aGVuIiwiaGFuZGxlRG93bmxvYWRRUiIsInN2ZyIsImN1cnJlbnQiLCJxdWVyeVNlbGVjdG9yIiwic3ZnRGF0YSIsIlhNTFNlcmlhbGl6ZXIiLCJzZXJpYWxpemVUb1N0cmluZyIsImJsb2IiLCJCbG9iIiwidHlwZSIsIlVSTCIsImNyZWF0ZU9iamVjdFVSTCIsImEiLCJkb2N1bWVudCIsImNyZWF0ZUVsZW1lbnQiLCJocmVmIiwiZG93bmxvYWQiLCJjbGljayIsInJldm9rZU9iamVjdFVSTCIsInByb2ZpbGVQaG90byIsImRpc3RyaWN0IiwiY3JhZnRDYXRlZ29yeSIsInllYXJzRXhwZXJpZW5jZSIsIl9jIl0sImlnbm9yZUxpc3QiOltdLCJzb3VyY2VzIjpbIlFSUGFnZS50c3giXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFJlYWN0LCB7IHVzZVJlZiB9IGZyb20gJ3JlYWN0JztcbmltcG9ydCB7IHVzZU5hdmlnYXRlIH0gZnJvbSAncmVhY3Qtcm91dGVyLWRvbSc7XG5pbXBvcnQgeyBRUkNvZGVTVkcgfSBmcm9tICdxcmNvZGUucmVhY3QnO1xuaW1wb3J0IHsgU2hhcmUyLCBEb3dubG9hZCwgTWFwUGluLCBBd2FyZCwgRXh0ZXJuYWxMaW5rIH0gZnJvbSAnbHVjaWRlLXJlYWN0JztcbmltcG9ydCB7IGdldEFydGlzYW4gfSBmcm9tICcuLi8uLi91dGlscy9zdG9yYWdlJztcbmltcG9ydCB7IFBob3RvUGxhY2Vob2xkZXIgfSBmcm9tICcuLi8uLi9jb21wb25lbnRzL1Bob3RvUGxhY2Vob2xkZXInO1xuaW1wb3J0IHsgdXNlVG9hc3QgfSBmcm9tICcuLi8uLi9ob29rcy91c2VUb2FzdCc7XG5pbXBvcnQgeyBUb2FzdENvbnRhaW5lciB9IGZyb20gJy4uLy4uL2NvbXBvbmVudHMvdWkvVG9hc3QnO1xuXG5leHBvcnQgZnVuY3Rpb24gUVJQYWdlKCkge1xuICBjb25zdCBuYXZpZ2F0ZSA9IHVzZU5hdmlnYXRlKCk7XG4gIGNvbnN0IGFydGlzYW4gPSBnZXRBcnRpc2FuKCk7XG4gIGNvbnN0IHsgdG9hc3RzLCBhZGRUb2FzdCwgZGlzbWlzc1RvYXN0IH0gPSB1c2VUb2FzdCgpO1xuICBjb25zdCBxclJlZiA9IHVzZVJlZjxIVE1MRGl2RWxlbWVudD4obnVsbCk7XG5cbiAgaWYgKCFhcnRpc2FuKSB7XG4gICAgcmV0dXJuIChcbiAgICAgIDxkaXYgY2xhc3NOYW1lPVwidGV4dC1jZW50ZXIgcHktMjBcIj5cbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJ0ZXh0LTZ4bCBtYi00XCI+8J+qqjwvZGl2PlxuICAgICAgICA8aDIgY2xhc3NOYW1lPVwidGV4dC0yeGwgZm9udC1kaXNwbGF5IGZvbnQtYm9sZCB0ZXh0LWVhcnRoLTkwMCBtYi0zXCI+Tm8gSWRlbnRpdHkgWWV0PC9oMj5cbiAgICAgICAgPHAgY2xhc3NOYW1lPVwidGV4dC1lYXJ0aC02MDAgbWItNlwiPkNyZWF0ZSB5b3VyIGFydGlzYW4gcHJvZmlsZSB0byBnZW5lcmF0ZSB5b3VyIFFSIElkZW50aXR5LjwvcD5cbiAgICAgICAgPGJ1dHRvbiBvbkNsaWNrPXsoKSA9PiBuYXZpZ2F0ZSgnL2FydGlzYW4vcHJvZmlsZScpfSBjbGFzc05hbWU9XCJidG4tcHJpbWFyeVwiPkNyZWF0ZSBQcm9maWxlPC9idXR0b24+XG4gICAgICA8L2Rpdj5cbiAgICApO1xuICB9XG5cbiAgY29uc3QgcHJvZmlsZVVybCA9IGAke3dpbmRvdy5sb2NhdGlvbi5vcmlnaW59L2FydGlzYW4vJHthcnRpc2FuLmlkfWA7XG5cbiAgY29uc3QgaGFuZGxlU2hhcmUgPSBhc3luYyAoKSA9PiB7XG4gICAgaWYgKG5hdmlnYXRvci5zaGFyZSkge1xuICAgICAgdHJ5IHtcbiAgICAgICAgYXdhaXQgbmF2aWdhdG9yLnNoYXJlKHsgdGl0bGU6IGAke2FydGlzYW4ubmFtZX0g4oCTIEpvaGFyIENyYWZ0YCwgdGV4dDogYENoZWNrIG91dCAke2FydGlzYW4ubmFtZX0ncyBhcnRpc2FuIHByb2ZpbGUgb24gSm9oYXIgQ3JhZnQhYCwgdXJsOiBwcm9maWxlVXJsIH0pO1xuICAgICAgfSBjYXRjaCAoXykge1xuICAgICAgICBoYW5kbGVDb3B5TGluaygpO1xuICAgICAgfVxuICAgIH0gZWxzZSB7XG4gICAgICBoYW5kbGVDb3B5TGluaygpO1xuICAgIH1cbiAgfTtcblxuICBjb25zdCBoYW5kbGVDb3B5TGluayA9ICgpID0+IHtcbiAgICBuYXZpZ2F0b3IuY2xpcGJvYXJkLndyaXRlVGV4dChwcm9maWxlVXJsKS50aGVuKCgpID0+IHtcbiAgICAgIGFkZFRvYXN0KCdzdWNjZXNzJywgJ1Byb2ZpbGUgbGluayBjb3BpZWQhJywgJ1NoYXJlIGl0IHdpdGggYnV5ZXJzIGFuZCBjdXN0b21lcnMuJyk7XG4gICAgfSk7XG4gIH07XG5cbiAgY29uc3QgaGFuZGxlRG93bmxvYWRRUiA9ICgpID0+IHtcbiAgICBjb25zdCBzdmcgPSBxclJlZi5jdXJyZW50Py5xdWVyeVNlbGVjdG9yKCdzdmcnKTtcbiAgICBpZiAoIXN2ZykgcmV0dXJuO1xuICAgIGNvbnN0IHN2Z0RhdGEgPSBuZXcgWE1MU2VyaWFsaXplcigpLnNlcmlhbGl6ZVRvU3RyaW5nKHN2Zyk7XG4gICAgY29uc3QgYmxvYiA9IG5ldyBCbG9iKFtzdmdEYXRhXSwgeyB0eXBlOiAnaW1hZ2Uvc3ZnK3htbCcgfSk7XG4gICAgY29uc3QgdXJsID0gVVJMLmNyZWF0ZU9iamVjdFVSTChibG9iKTtcbiAgICBjb25zdCBhID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgnYScpO1xuICAgIGEuaHJlZiA9IHVybDtcbiAgICBhLmRvd25sb2FkID0gYCR7YXJ0aXNhbi5pZH0tcXItaWRlbnRpdHkuc3ZnYDtcbiAgICBhLmNsaWNrKCk7XG4gICAgVVJMLnJldm9rZU9iamVjdFVSTCh1cmwpO1xuICAgIGFkZFRvYXN0KCdzdWNjZXNzJywgJ1FSIGRvd25sb2FkZWQhJywgJ1ByaW50IGl0IGFuZCBkaXNwbGF5IGF0IHlvdXIgc3RhbGwuJyk7XG4gIH07XG5cbiAgcmV0dXJuIChcbiAgICA8ZGl2IGNsYXNzTmFtZT1cIm1heC13LWxnIG14LWF1dG8gYW5pbWF0ZS1mYWRlLWluXCI+XG4gICAgICA8VG9hc3RDb250YWluZXIgdG9hc3RzPXt0b2FzdHN9IG9uRGlzbWlzcz17ZGlzbWlzc1RvYXN0fSAvPlxuXG4gICAgICA8ZGl2IGNsYXNzTmFtZT1cInRleHQtY2VudGVyIG1iLThcIj5cbiAgICAgICAgPGgxIGNsYXNzTmFtZT1cInRleHQtMnhsIGZvbnQtZGlzcGxheSBmb250LWJvbGQgdGV4dC1lYXJ0aC05MDBcIj5EaWdpdGFsIEFydGlzYW4gSWRlbnRpdHk8L2gxPlxuICAgICAgICA8cCBjbGFzc05hbWU9XCJ0ZXh0LWVhcnRoLTYwMCB0ZXh0LXNtIG10LTFcIj5Zb3VyIHVuaXF1ZSBRUiBpZGVudGl0eSBjYXJkIOKAkyBzaGFyZSBpdCB3aXRoIGJ1eWVyczwvcD5cbiAgICAgIDwvZGl2PlxuXG4gICAgICB7LyogSWRlbnRpdHkgQ2FyZCAqL31cbiAgICAgIDxkaXYgY2xhc3NOYW1lPVwiY2FyZCBvdmVyZmxvdy1oaWRkZW4gbWItNlwiPlxuICAgICAgICB7LyogQ2FyZCBIZWFkZXIgKi99XG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiYmctZ3JhZGllbnQtdG8tciBmcm9tLWVhcnRoLTkwMCB0by1icmFuZC04MDAgcC02IHRleHQtd2hpdGVcIj5cbiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImZsZXggaXRlbXMtY2VudGVyIGdhcC0yIG1iLTRcIj5cbiAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwidy0yIGgtMiBiZy1icmFuZC00MDAgcm91bmRlZC1mdWxsXCIgLz5cbiAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cInRleHQteHMgdGV4dC1icmFuZC0zMDAgZm9udC1tZWRpdW0gdHJhY2tpbmctd2lkZXN0IHVwcGVyY2FzZVwiPkpvaGFyIENyYWZ0IOKAoiBWZXJpZmllZCBBcnRpc2FuPC9zcGFuPlxuICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZmxleCBpdGVtcy1jZW50ZXIgZ2FwLTRcIj5cbiAgICAgICAgICAgIHthcnRpc2FuLnByb2ZpbGVQaG90byA/IChcbiAgICAgICAgICAgICAgPGltZ1xuICAgICAgICAgICAgICAgIHNyYz17YXJ0aXNhbi5wcm9maWxlUGhvdG99XG4gICAgICAgICAgICAgICAgYWx0PXthcnRpc2FuLm5hbWV9XG4gICAgICAgICAgICAgICAgY2xhc3NOYW1lPVwidy0yMCBoLTIwIHJvdW5kZWQtMnhsIG9iamVjdC1jb3ZlciBib3JkZXItMyBib3JkZXItd2hpdGUvMzBcIlxuICAgICAgICAgICAgICAvPlxuICAgICAgICAgICAgKSA6IChcbiAgICAgICAgICAgICAgPFBob3RvUGxhY2Vob2xkZXIgdHlwZT1cImFydGlzYW5cIiBjb21wYWN0IGNsYXNzTmFtZT1cInctMjAgaC0yMCByb3VuZGVkLTJ4bCBib3JkZXItMyBib3JkZXItd2hpdGUvMzAgYmctd2hpdGUvMjAgdGV4dC13aGl0ZVwiIC8+XG4gICAgICAgICAgICApfVxuICAgICAgICAgICAgPGRpdj5cbiAgICAgICAgICAgICAgPGgyIGNsYXNzTmFtZT1cInRleHQteGwgZm9udC1ib2xkXCI+e2FydGlzYW4ubmFtZX08L2gyPlxuICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJ0ZXh0LWJyYW5kLTMwMCBmb250LW1vbm8gdGV4dC1zbSBtdC0wLjVcIj57YXJ0aXNhbi5pZH08L3A+XG4gICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZmxleCBpdGVtcy1jZW50ZXIgZ2FwLTEuNSBtdC0yIHRleHQtZWFydGgtMzAwIHRleHQteHNcIj5cbiAgICAgICAgICAgICAgICA8TWFwUGluIGNsYXNzTmFtZT1cInctMyBoLTNcIiAvPlxuICAgICAgICAgICAgICAgIDxzcGFuPnthcnRpc2FuLmRpc3RyaWN0fSwgSmhhcmtoYW5kPC9zcGFuPlxuICAgICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJmbGV4IGl0ZW1zLWNlbnRlciBnYXAtMS41IG10LTEgdGV4dC1lYXJ0aC0zMDAgdGV4dC14c1wiPlxuICAgICAgICAgICAgICAgIDxzcGFuPvCfj7o8L3NwYW4+XG4gICAgICAgICAgICAgICAgPHNwYW4+XG4gICAgICAgICAgICAgICAgICB7YXJ0aXNhbi5jcmFmdENhdGVnb3J5fVxuICAgICAgICAgICAgICAgICAge3R5cGVvZiBhcnRpc2FuLnllYXJzRXhwZXJpZW5jZSA9PT0gJ251bWJlcidcbiAgICAgICAgICAgICAgICAgICAgPyBgIMK3ICR7YXJ0aXNhbi55ZWFyc0V4cGVyaWVuY2V9IHllYXJzYFxuICAgICAgICAgICAgICAgICAgICA6IGFydGlzYW4ueWVhcnNFeHBlcmllbmNlICYmIGFydGlzYW4ueWVhcnNFeHBlcmllbmNlICE9PSAnSW5mb3JtYXRpb24gbm90IHByb3ZpZGVkJ1xuICAgICAgICAgICAgICAgICAgICA/IGAgwrcgJHthcnRpc2FuLnllYXJzRXhwZXJpZW5jZX1gXG4gICAgICAgICAgICAgICAgICAgIDogJyd9XG4gICAgICAgICAgICAgICAgPC9zcGFuPlxuICAgICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgIDwvZGl2PlxuICAgICAgICA8L2Rpdj5cblxuICAgICAgICB7LyogUVIgQ29kZSAqL31cbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJwLTggZmxleCBmbGV4LWNvbCBpdGVtcy1jZW50ZXIgYmctd2hpdGVcIj5cbiAgICAgICAgICA8ZGl2IHJlZj17cXJSZWZ9IGNsYXNzTmFtZT1cInAtNCBiZy13aGl0ZSBib3JkZXItMiBib3JkZXItZWFydGgtMTAwIHJvdW5kZWQtMnhsIHNoYWRvdy1pbm5lciBtYi00XCI+XG4gICAgICAgICAgICA8UVJDb2RlU1ZHXG4gICAgICAgICAgICAgIHZhbHVlPXtwcm9maWxlVXJsfVxuICAgICAgICAgICAgICBzaXplPXsyMDB9XG4gICAgICAgICAgICAgIGZnQ29sb3I9XCIjM2ExNjBjXCJcbiAgICAgICAgICAgICAgYmdDb2xvcj1cIiNmZmZmZmZcIlxuICAgICAgICAgICAgICBsZXZlbD1cIkhcIlxuICAgICAgICAgICAgICBpbmNsdWRlTWFyZ2luPXtmYWxzZX1cbiAgICAgICAgICAgIC8+XG4gICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgPHAgY2xhc3NOYW1lPVwidGV4dC14cyB0ZXh0LWVhcnRoLTUwMCB0ZXh0LWNlbnRlciBtYXgtdy14c1wiPlxuICAgICAgICAgICAgU2NhbiB0aGlzIFFSIGNvZGUgdG8gdmlldyB7YXJ0aXNhbi5uYW1lfSdzIGFydGlzYW4gcHJvZmlsZSBhbmQgcHJvZHVjdCBjYXRhbG9nXG4gICAgICAgICAgPC9wPlxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwibXQtMyBmbGV4IGl0ZW1zLWNlbnRlciBnYXAtMS41IHRleHQteHMgdGV4dC1icmFuZC02MDAgZm9udC1tZWRpdW1cIj5cbiAgICAgICAgICAgIDxFeHRlcm5hbExpbmsgY2xhc3NOYW1lPVwidy0zLjUgaC0zLjVcIiAvPlxuICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwidHJ1bmNhdGUgbWF4LXcteHNcIj57cHJvZmlsZVVybH08L3NwYW4+XG4gICAgICAgICAgPC9kaXY+XG4gICAgICAgIDwvZGl2PlxuXG4gICAgICAgIHsvKiBDYXJkIEZvb3RlciAqL31cbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJweC02IHB5LTQgYmctZWFydGgtNTAgYm9yZGVyLXQgYm9yZGVyLWVhcnRoLTEwMFwiPlxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZmxleCBpdGVtcy1jZW50ZXIganVzdGlmeS1iZXR3ZWVuIHRleHQteHMgdGV4dC1lYXJ0aC01MDBcIj5cbiAgICAgICAgICAgIDxzcGFuPkpvaGFyIENyYWZ0IFBsYXRmb3JtPC9zcGFuPlxuICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJmbGV4IGl0ZW1zLWNlbnRlciBnYXAtMVwiPlxuICAgICAgICAgICAgICA8QXdhcmQgY2xhc3NOYW1lPVwidy0zLjUgaC0zLjUgdGV4dC1icmFuZC01MDBcIiAvPlxuICAgICAgICAgICAgICA8c3Bhbj5KaGFya2hhbmQgVHJpYmFsIEFydGlzYW48L3NwYW4+XG4gICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgPC9kaXY+XG4gICAgICA8L2Rpdj5cblxuICAgICAgey8qIEFjdGlvbnMgKi99XG4gICAgICA8ZGl2IGNsYXNzTmFtZT1cImdyaWQgZ3JpZC1jb2xzLTIgZ2FwLTNcIj5cbiAgICAgICAgPGJ1dHRvbiBvbkNsaWNrPXtoYW5kbGVEb3dubG9hZFFSfSBjbGFzc05hbWU9XCJidG4tc2Vjb25kYXJ5IGp1c3RpZnktY2VudGVyXCI+XG4gICAgICAgICAgPERvd25sb2FkIGNsYXNzTmFtZT1cInctNCBoLTRcIiAvPlxuICAgICAgICAgIERvd25sb2FkIFFSXG4gICAgICAgIDwvYnV0dG9uPlxuICAgICAgICA8YnV0dG9uIG9uQ2xpY2s9e2hhbmRsZVNoYXJlfSBjbGFzc05hbWU9XCJidG4tcHJpbWFyeSBqdXN0aWZ5LWNlbnRlclwiPlxuICAgICAgICAgIDxTaGFyZTIgY2xhc3NOYW1lPVwidy00IGgtNFwiIC8+XG4gICAgICAgICAgU2hhcmUgSWRlbnRpdHlcbiAgICAgICAgPC9idXR0b24+XG4gICAgICA8L2Rpdj5cblxuICAgICAgPGRpdiBjbGFzc05hbWU9XCJtdC00IHRleHQtY2VudGVyXCI+XG4gICAgICAgIDxidXR0b24gb25DbGljaz17KCkgPT4gbmF2aWdhdGUoYC9hcnRpc2FuLyR7YXJ0aXNhbi5pZH1gKX0gY2xhc3NOYW1lPVwiYnRuLWdob3N0IHRleHQtc21cIj5cbiAgICAgICAgICA8RXh0ZXJuYWxMaW5rIGNsYXNzTmFtZT1cInctNCBoLTRcIiAvPlxuICAgICAgICAgIFZpZXcgUHVibGljIFByb2ZpbGVcbiAgICAgICAgPC9idXR0b24+XG4gICAgICA8L2Rpdj5cbiAgICA8L2Rpdj5cbiAgKTtcbn1cbiJdLCJmaWxlIjoiQzovVXNlcnMvWUFTSC9PbmVEcml2ZS9Eb2N1bWVudHMvTmV3IGZvbGRlci9qb2hhci1jcmFmdC9zcmMvcGFnZXMvYXJ0aXNhbi9RUlBhZ2UudHN4In0=
