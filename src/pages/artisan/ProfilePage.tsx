@@ -7,10 +7,12 @@ import { JHARKHAND_DISTRICTS, CRAFT_CATEGORIES } from '../../types';
 import { useToast } from '../../hooks/useToast';
 import { ToastContainer } from '../../components/ui/Toast';
 import { PhotoUploader } from '../../components/PhotoUploader';
+import { useLanguage } from '../../i18n';
 import type { Artisan } from '../../types';
 
 export function ProfilePage() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const { toasts, addToast, dismissToast } = useToast();
   const existing = getArtisan();
   const [saved, setSaved] = useState(false);
@@ -150,7 +152,7 @@ export function ProfilePage() {
             <User className="w-5 h-5 text-brand-600" />
           </div>
           <h1 className="text-2xl font-display font-bold text-earth-900">
-            {existing ? 'Edit Your Profile' : 'Create Your Artisan Identity'}
+            {existing ? t('artisan.edit_profile') : t('artisan.create_profile')}
           </h1>
         </div>
         <p className="text-earth-600">Your profile is your digital identity — make it count.</p>
@@ -181,7 +183,7 @@ export function ProfilePage() {
         {/* ── Village + District ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="label">Village / Town *</label>
+            <label className="label">{t('artisan.village')} *</label>
             <input
               type="text"
               value={form.village}
@@ -192,7 +194,7 @@ export function ProfilePage() {
             {errors.village && <p className="text-red-500 text-xs mt-1">{errors.village}</p>}
           </div>
           <div>
-            <label className="label">District</label>
+            <label className="label">{t('artisan.district')}</label>
             <select
               value={form.district}
               onChange={e => update('district', e.target.value)}
@@ -203,7 +205,7 @@ export function ProfilePage() {
           </div>
         </div>
 
-        {/* ── State (locked) ── */}
+        {/* ── State (Fixed: Jharkhand) ── */}
         <div>
           <label className="label">State</label>
           <input
@@ -217,7 +219,7 @@ export function ProfilePage() {
         {/* ── Craft Category + Years ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="label">Craft Category</label>
+            <label className="label">{t('artisan.craft_category')}</label>
             <select
               value={form.craftCategory}
               onChange={e => update('craftCategory', e.target.value)}
@@ -227,13 +229,13 @@ export function ProfilePage() {
             </select>
           </div>
           <div>
-            <label className="label">Years of Experience</label>
+            <label className="label">{t('artisan.experience')}</label>
             <input
               type="number"
               min="1"
               max="60"
               value={form.yearsExperience}
-              onChange={e => update('yearsExperience', Number(e.target.value))}
+              onChange={e => update('yearsExperience', parseInt(e.target.value, 10) || 1)}
               className="input"
             />
           </div>
@@ -241,7 +243,7 @@ export function ProfilePage() {
 
         {/* ── Phone ── */}
         <div>
-          <label className="label">Phone Number *</label>
+          <label className="label">{t('artisan.phone')} *</label>
           <input
             type="tel"
             value={form.phone}
@@ -254,7 +256,7 @@ export function ProfilePage() {
 
         {/* ── Story ── */}
         <div>
-          <label className="label">Your Artisan Story *</label>
+          <label className="label">{t('artisan.bio')} *</label>
           <textarea
             rows={5}
             value={form.story}
@@ -276,8 +278,8 @@ export function ProfilePage() {
         >
           <Save className="w-5 h-5" />
           {loading
-            ? 'Saving…'
-            : existing ? 'Update Profile' : 'Create My Artisan Identity'}
+            ? t('common.loading')
+            : existing ? t('artisan.save_changes') : t('artisan.create_profile')}
         </button>
       </form>
     </div>

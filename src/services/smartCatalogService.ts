@@ -72,13 +72,13 @@ function classifyColor(r: number, g: number, b: number): { name: string; hex: st
   if (r > 140 && g > 110 && b < 90 && delta > 40) {
     return { name: 'Warm Brass / Bronze Gold', hex, categoryCue: 'Dokra Bell Metal Craft', materialCue: 'Brass / Bronze Metal' };
   }
-  // Bamboo / Cane Beige / Tan
+  // Warm Beige / Tan
   if (r > 160 && g > 140 && b > 100 && r > b + 30) {
-    return { name: 'Natural Bamboo Beige / Straw', hex, categoryCue: 'Bamboo & Cane', materialCue: 'Natural Bamboo / Cane' };
+    return { name: 'Warm Beige / Natural Tan', hex, categoryCue: undefined, materialCue: undefined };
   }
   // Green / Forest
   if (g > r && g > b) {
-    return { name: 'Natural Forest Green', hex, categoryCue: 'Bamboo & Cane / Textiles', materialCue: 'Organic Plant Fibers' };
+    return { name: 'Natural Forest Green', hex, categoryCue: 'Textiles', materialCue: 'Natural Dyes' };
   }
   // Default earthy tone
   return { name: 'Natural Earth Tone', hex, categoryCue: 'Handmade Craft', materialCue: 'Natural Craft Materials' };

@@ -11,6 +11,7 @@ import {
   Building2,
 } from 'lucide-react';
 import { useAccount } from '../context/AccountContext';
+import { useLanguage } from '../i18n/LanguageContext';
 import { JHARKHAND_DISTRICTS, CRAFT_CATEGORIES, type BuyerType } from '../types';
 
 interface AddAccountModalProps {
@@ -27,6 +28,7 @@ export function AddAccountModal({
   initialType = null,
 }: AddAccountModalProps) {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const { createArtisan, createBuyer } = useAccount();
 
   const [step, setStep] = useState<'select' | 'artisan_form' | 'buyer_form'>(
@@ -125,13 +127,13 @@ export function AddAccountModal({
             <div className="text-center space-y-2">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-900 border border-amber-200">
                 <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-                Add New Johar Craft Account
+                {t('account.add_account')}
               </span>
               <h2 className="text-2xl font-serif font-bold text-earth-900">
-                Choose Account Type
+                {t('account.choose_account')}
               </h2>
               <p className="text-xs text-earth-600 max-w-md mx-auto">
-                Create multiple artisan or buyer accounts on this device. You can easily switch between them at any time.
+                {t('account.choose_account_desc')}
               </p>
             </div>
 
@@ -148,7 +150,7 @@ export function AddAccountModal({
                 <div className="flex-1">
                   <div className="flex items-center justify-between mb-1">
                     <h3 className="font-semibold text-earth-900 group-hover:text-amber-900 transition-colors">
-                      Artisan / Craftsperson
+                      {t('account.artisan_role')} / Craftsperson
                     </h3>
                     <ArrowRight className="w-4 h-4 text-amber-600 group-hover:translate-x-1 transition-transform" />
                   </div>
@@ -175,7 +177,7 @@ export function AddAccountModal({
                 <div className="flex-1">
                   <div className="flex items-center justify-between mb-1">
                     <h3 className="font-semibold text-earth-900 group-hover:text-stone-900 transition-colors">
-                      Buyer (Individual or Business)
+                      {t('account.buyer_role')} ({t('account.individual_type')} / {t('account.business_type')})
                     </h3>
                     <ArrowRight className="w-4 h-4 text-stone-700 group-hover:translate-x-1 transition-transform" />
                   </div>
@@ -215,7 +217,7 @@ export function AddAccountModal({
             </div>
 
             <div>
-              <label className="label">Full Name *</label>
+              <label className="label">{t('artisan.name')} *</label>
               <input
                 type="text"
                 value={artisanName}
@@ -231,7 +233,7 @@ export function AddAccountModal({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="label">District (Jharkhand) *</label>
+                <label className="label">{t('artisan.district')} (Jharkhand) *</label>
                 <select
                   value={district}
                   onChange={e => setDistrict(e.target.value)}
@@ -246,7 +248,7 @@ export function AddAccountModal({
               </div>
 
               <div>
-                <label className="label">Village / Town *</label>
+                <label className="label">{t('artisan.village')} *</label>
                 <input
                   type="text"
                   value={village}
@@ -262,7 +264,7 @@ export function AddAccountModal({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="label">Craft Specialization *</label>
+                <label className="label">{t('artisan.craft')} *</label>
                 <select
                   value={craftCategory}
                   onChange={e => setCraftCategory(e.target.value)}
@@ -277,7 +279,7 @@ export function AddAccountModal({
               </div>
 
               <div>
-                <label className="label">Phone Number (Optional)</label>
+                <label className="label">{t('artisan.phone')} (Optional)</label>
                 <input
                   type="tel"
                   value={phone}
@@ -303,15 +305,15 @@ export function AddAccountModal({
               <button
                 type="button"
                 onClick={() => setStep('select')}
-                className="px-4 py-2.5 rounded-xl border border-earth-300 text-earth-700 text-xs font-semibold hover:bg-earth-100 transition-colors"
+                className="px-4 py-2.5 rounded-xl border border-earth-300 text-earth-700 text-xs font-semibold hover:bg-earth-100 transition-colors cursor-pointer"
               >
-                Back
+                {t('common.back')}
               </button>
               <button
                 type="submit"
-                className="px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold transition-colors shadow-xs"
+                className="px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold transition-colors shadow-xs cursor-pointer"
               >
-                Create & Switch to Artisan
+                {t('account.create_artisan_account')}
               </button>
             </div>
           </form>
@@ -324,13 +326,13 @@ export function AddAccountModal({
               <button
                 type="button"
                 onClick={() => setStep('select')}
-                className="p-1.5 rounded-lg hover:bg-earth-100 text-earth-600 transition-colors"
+                className="p-1.5 rounded-lg hover:bg-earth-100 text-earth-600 transition-colors cursor-pointer"
               >
                 <ArrowLeft className="w-4 h-4" />
               </button>
               <div>
                 <h3 className="text-lg font-serif font-bold text-earth-900">
-                  New Buyer Profile
+                  {t('account.create_buyer_account')}
                 </h3>
                 <p className="text-xs text-earth-500">
                   Auto-generates a persistent JC-BUY identifier
@@ -343,29 +345,29 @@ export function AddAccountModal({
               <button
                 type="button"
                 onClick={() => setBuyerType('INDIVIDUAL')}
-                className={`py-2 text-xs font-semibold rounded-lg transition-all ${
+                className={`py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
                   buyerType === 'INDIVIDUAL'
                     ? 'bg-white text-earth-900 shadow-xs'
                     : 'text-earth-600 hover:text-earth-900'
                 }`}
               >
-                Individual Buyer
+                {t('verification.individual_buyer')}
               </button>
               <button
                 type="button"
                 onClick={() => setBuyerType('BUSINESS')}
-                className={`py-2 text-xs font-semibold rounded-lg transition-all ${
+                className={`py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
                   buyerType === 'BUSINESS'
                     ? 'bg-white text-earth-900 shadow-xs'
                     : 'text-earth-600 hover:text-earth-900'
                 }`}
               >
-                Business / Wholesale
+                {t('verification.business_buyer')}
               </button>
             </div>
 
             <div>
-              <label className="label">Your Name *</label>
+              <label className="label">{t('artisan.name')} *</label>
               <input
                 type="text"
                 value={buyerName}
@@ -410,7 +412,7 @@ export function AddAccountModal({
               </div>
 
               <div>
-                <label className="label">Phone Number</label>
+                <label className="label">{t('artisan.phone')}</label>
                 <input
                   type="tel"
                   value={buyerPhone}
@@ -436,15 +438,15 @@ export function AddAccountModal({
               <button
                 type="button"
                 onClick={() => setStep('select')}
-                className="px-4 py-2.5 rounded-xl border border-earth-300 text-earth-700 text-xs font-semibold hover:bg-earth-100 transition-colors"
+                className="px-4 py-2.5 rounded-xl border border-earth-300 text-earth-700 text-xs font-semibold hover:bg-earth-100 transition-colors cursor-pointer"
               >
-                Back
+                {t('common.back')}
               </button>
               <button
                 type="submit"
-                className="px-5 py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold transition-colors shadow-xs"
+                className="px-5 py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold transition-colors shadow-xs cursor-pointer"
               >
-                Create & Switch to Buyer
+                {t('account.create_buyer_account')}
               </button>
             </div>
           </form>

@@ -13,6 +13,7 @@ import {
 import { useAccount } from '../context/AccountContext';
 import { PhotoPlaceholder } from './PhotoPlaceholder';
 import { AddAccountModal } from './AddAccountModal';
+import { useLanguage } from '../i18n';
 
 interface AccountSwitcherProps {
   compact?: boolean;
@@ -20,6 +21,7 @@ interface AccountSwitcherProps {
 
 export function AccountSwitcher({ compact = false }: AccountSwitcherProps) {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const { accounts, activeAccount, switchAccount, logout } = useAccount();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [addModalOpen, setAddModalOpen] = useState(false);
@@ -67,10 +69,10 @@ export function AccountSwitcher({ compact = false }: AccountSwitcherProps) {
       <div className="relative" ref={dropdownRef}>
         <button
           onClick={() => navigate('/account/select')}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-earth-300 hover:bg-earth-100 text-xs font-semibold text-earth-800 transition-colors"
+          className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-earth-300 hover:bg-earth-100 text-xs font-semibold text-earth-800 transition-colors cursor-pointer"
         >
           <User className="w-4 h-4 text-earth-600" />
-          <span>Select Account</span>
+          <span>{t('account.select_account')}</span>
         </button>
       </div>
     );
@@ -87,7 +89,7 @@ export function AccountSwitcher({ compact = false }: AccountSwitcherProps) {
       <button
         onClick={() => setDropdownOpen(v => !v)}
         className="flex items-center gap-2.5 p-1 sm:px-2.5 sm:py-1.5 rounded-xl hover:bg-earth-100 transition-colors text-left group cursor-pointer border border-transparent hover:border-earth-200"
-        title="Switch Account"
+        title={t('account.switch_account')}
       >
         {activeAccount.photo ? (
           <img
@@ -114,7 +116,7 @@ export function AccountSwitcher({ compact = false }: AccountSwitcherProps) {
                     : 'bg-stone-200 text-stone-800'
                 }`}
               >
-                {isArtisan ? 'Artisan' : 'Buyer'}
+                {isArtisan ? t('account.artisan_role') : t('account.buyer_role')}
               </span>
             </div>
             <p className="text-[11px] text-earth-500 leading-none mt-0.5 font-mono">
@@ -137,11 +139,11 @@ export function AccountSwitcher({ compact = false }: AccountSwitcherProps) {
           <div className="px-4 pb-3 border-b border-earth-100">
             <div className="flex items-center justify-between mb-2">
               <span className="text-[11px] font-semibold uppercase tracking-wider text-earth-500">
-                Active Account
+                {t('account.active_account')}
               </span>
               <span className="flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                Active
+                {t('common.active')}
               </span>
             </div>
 
@@ -170,8 +172,8 @@ export function AccountSwitcher({ compact = false }: AccountSwitcherProps) {
                     {isArtisan
                       ? (activeAccount as any).craftCategory
                       : (activeAccount as any).buyerType === 'BUSINESS'
-                      ? 'Business'
-                      : 'Individual'}
+                      ? t('account.business_type')
+                      : t('account.individual_type')}
                   </span>
                 </div>
               </div>
@@ -182,7 +184,7 @@ export function AccountSwitcher({ compact = false }: AccountSwitcherProps) {
           {otherAccounts.length > 0 && (
             <div className="px-2 py-2 border-b border-earth-100 max-h-48 overflow-y-auto">
               <div className="px-2 py-1 text-[11px] font-semibold uppercase tracking-wider text-earth-400">
-                Switch Account
+                {t('account.switch_account')}
               </div>
               {otherAccounts.map(acc => {
                 const accIsArtisan = acc.type === 'artisan';
@@ -218,7 +220,7 @@ export function AccountSwitcher({ compact = false }: AccountSwitcherProps) {
                               : 'bg-stone-200 text-stone-800'
                           }`}
                         >
-                          {accIsArtisan ? 'Artisan' : 'Buyer'}
+                          {accIsArtisan ? t('account.artisan_role') : t('account.buyer_role')}
                         </span>
                       </div>
                       <p className="text-[11px] text-earth-500 font-mono leading-none mt-0.5">
@@ -226,7 +228,7 @@ export function AccountSwitcher({ compact = false }: AccountSwitcherProps) {
                       </p>
                     </div>
                     <span className="text-[11px] text-brand-600 font-semibold group-hover:underline">
-                      Switch
+                      {t('account.switch_account')}
                     </span>
                   </button>
                 );
@@ -244,7 +246,7 @@ export function AccountSwitcher({ compact = false }: AccountSwitcherProps) {
               className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-earth-50 text-xs font-semibold text-earth-800 transition-colors cursor-pointer"
             >
               <Plus className="w-4 h-4 text-brand-600" />
-              <span>+ Add Account</span>
+              <span>{t('account.add_account')}</span>
             </button>
 
             <button
@@ -252,7 +254,7 @@ export function AccountSwitcher({ compact = false }: AccountSwitcherProps) {
               className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-earth-50 text-xs font-semibold text-earth-800 transition-colors cursor-pointer"
             >
               <Settings className="w-4 h-4 text-earth-500" />
-              <span>Manage Accounts</span>
+              <span>{t('account.manage_accounts')}</span>
             </button>
 
             <button
@@ -260,7 +262,7 @@ export function AccountSwitcher({ compact = false }: AccountSwitcherProps) {
               className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-red-50 text-xs font-semibold text-red-700 transition-colors cursor-pointer"
             >
               <LogOut className="w-4 h-4 text-red-600" />
-              <span>Log Out</span>
+              <span>{t('account.log_out')}</span>
             </button>
           </div>
         </div>

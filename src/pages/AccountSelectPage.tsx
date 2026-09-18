@@ -11,9 +11,12 @@ import {
 import { Logo } from '../components/Logo';
 import { useAccount } from '../context/AccountContext';
 import { AddAccountModal } from '../components/AddAccountModal';
+import { ViewModeSwitcher } from '../components/ViewModeSwitcher';
+import { useLanguage } from '../i18n';
 
 export function AccountSelectPage() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const { accounts, activeAccount, switchAccount } = useAccount();
   const [addModalOpen, setAddModalOpen] = useState(false);
 
@@ -33,12 +36,15 @@ export function AccountSelectPage() {
         <Link to="/">
           <Logo size="sm" />
         </Link>
-        <Link
-          to="/"
-          className="text-xs font-semibold text-earth-600 hover:text-earth-900 transition-colors"
-        >
-          ← Back to Home
-        </Link>
+        <div className="flex items-center gap-3">
+          <ViewModeSwitcher compact />
+          <Link
+            to="/"
+            className="text-xs font-semibold text-earth-600 hover:text-earth-900 transition-colors"
+          >
+            ← {t('common.back')} {t('nav.home')}
+          </Link>
+        </div>
       </header>
 
       {/* Main Content */}
@@ -46,10 +52,10 @@ export function AccountSelectPage() {
         <div className="card p-6 sm:p-8 bg-white border border-earth-200 shadow-xl space-y-6">
           <div className="text-center space-y-2">
             <h1 className="text-2xl sm:text-3xl font-serif font-bold text-earth-900">
-              Choose an Account
+              {t('account.choose_account')}
             </h1>
             <p className="text-xs sm:text-sm text-earth-600 max-w-md mx-auto">
-              Select an existing Johar Craft account stored on this device, or create a new profile.
+              {t('account.choose_account_desc')}
             </p>
           </div>
 
@@ -59,16 +65,16 @@ export function AccountSelectPage() {
               <div className="text-center py-8 px-4 rounded-2xl bg-earth-50 border border-earth-200">
                 <User className="w-10 h-10 text-earth-400 mx-auto mb-2" />
                 <p className="text-sm font-semibold text-earth-900">
-                  No accounts saved on this device
+                  {t('account.no_accounts_saved')}
                 </p>
                 <p className="text-xs text-earth-500 mt-1 mb-4">
-                  Create an Artisan profile to showcase your crafts, or a Buyer account to place orders.
+                  {t('account.no_accounts_desc')}
                 </p>
                 <button
                   onClick={() => setAddModalOpen(true)}
-                  className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-semibold shadow-xs"
+                  className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-semibold shadow-xs cursor-pointer"
                 >
-                  Create Your First Account
+                  {t('account.create_first_account')}
                 </button>
               </div>
             ) : (
@@ -114,11 +120,11 @@ export function AccountSelectPage() {
                                 : 'bg-stone-100 text-stone-800 border border-stone-200'
                             }`}
                           >
-                            {isArtisan ? 'Artisan' : 'Buyer'}
+                            {isArtisan ? t('account.artisan_role') : t('account.buyer_role')}
                           </span>
                           {isActive && (
                             <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
-                              Active
+                              {t('common.active')}
                             </span>
                           )}
                         </div>
@@ -132,44 +138,34 @@ export function AccountSelectPage() {
                             ? `${(acc as any).craftCategory} • ${
                                 (acc as any).district
                               }`
-                            : `${(acc as any).location || 'Jharkhand'}`}
+                            : `${(acc as any).location || t('crafts.jharkhand')}`}
                         </p>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-1 text-xs font-semibold text-brand-600 group-hover:translate-x-1 transition-transform">
-                      <span>Select</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </div>
+                    <ArrowRight className="w-5 h-5 text-earth-400 group-hover:text-brand-600 group-hover:translate-x-1 transition-all shrink-0" />
                   </button>
                 );
               })
             )}
-          </div>
 
-          {/* Bottom Actions */}
-          <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-earth-100">
-            <button
-              onClick={() => setAddModalOpen(true)}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-earth-900 hover:bg-earth-800 text-white text-xs font-semibold transition-colors cursor-pointer"
-            >
-              <Plus className="w-4 h-4" />
-              <span>+ Add Another Account</span>
-            </button>
-
-            <Link
-              to="/marketplace"
-              className="text-xs font-semibold text-earth-600 hover:text-earth-900 transition-colors"
-            >
-              Browse Marketplace as Guest →
-            </Link>
+            {/* Add Account Button */}
+            {accounts.length > 0 && (
+              <button
+                onClick={() => setAddModalOpen(true)}
+                className="w-full p-3.5 rounded-2xl border-2 border-dashed border-earth-300 hover:border-brand-600 hover:bg-brand-50/20 text-earth-700 hover:text-brand-700 transition-all flex items-center justify-center gap-2 text-xs font-semibold cursor-pointer"
+              >
+                <Plus className="w-4 h-4" />
+                <span>{t('account.add_account')}</span>
+              </button>
+            )}
           </div>
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="max-w-4xl mx-auto w-full text-center py-4 text-xs text-earth-500">
-        Johar Craft · Preserving Jharkhand's Tribal Heritage
+      <footer className="text-center text-xs text-earth-500 py-4">
+        {t('brand.built_for_community')}
       </footer>
 
       {/* Add Account Modal */}
@@ -180,3 +176,5 @@ export function AccountSelectPage() {
     </div>
   );
 }
+
+export default AccountSelectPage;

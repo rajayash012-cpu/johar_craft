@@ -10,9 +10,13 @@ import { getTierLabel } from '../../services/verificationService';
 import { formatRupees } from '../../utils/pricing';
 import { PhotoPlaceholder } from '../../components/PhotoPlaceholder';
 import { REAL_ARTISANS } from '../../data/artisans';
+import { useLanguage } from '../../i18n';
+import { useViewMode } from '../../context/ViewModeContext';
 
 export function DashboardPage() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
+  const { isMobile } = useViewMode();
   const registeredArtisan = getArtisan();
   const isDemoPreview = !registeredArtisan;
   const artisan = registeredArtisan || REAL_ARTISANS[0];
@@ -25,29 +29,29 @@ export function DashboardPage() {
   const displayEnquiries = directEnquiries.length > 0 ? directEnquiries : getEnquiries().slice(0, 3);
 
   const stats = [
-    { label: 'Total Products', value: publishedProducts.length, icon: Package, color: 'bg-brand-100 text-brand-600', trend: '+2 this month' },
-    { label: 'Profile Views', value: artisan?.profileViews ?? 0, icon: Eye, color: 'bg-blue-100 text-blue-600', trend: '+12% this week' },
-    { label: 'Product Views', value: artisan?.productViews ?? 0, icon: TrendingUp, color: 'bg-green-100 text-green-600', trend: '+8% this week' },
-    { label: 'Buyer Enquiries', value: (artisan?.enquiries ?? 0) + directEnquiries.length, icon: MessageSquare, color: 'bg-purple-100 text-purple-600', trend: '+3 new' },
+    { label: t('nav.products'), value: publishedProducts.length, icon: Package, color: 'bg-brand-100 text-brand-600', trend: t('artisan.trend_month') },
+    { label: t('artisan.profile_views'), value: artisan?.profileViews ?? 0, icon: Eye, color: 'bg-blue-100 text-blue-600', trend: t('artisan.trend_views_week') },
+    { label: t('artisan.product_views'), value: artisan?.productViews ?? 0, icon: TrendingUp, color: 'bg-green-100 text-green-600', trend: t('artisan.trend_prod_week') },
+    { label: t('artisan.recent_enquiries'), value: (artisan?.enquiries ?? 0) + directEnquiries.length, icon: MessageSquare, color: 'bg-purple-100 text-purple-600', trend: t('artisan.trend_enquiries') },
   ];
 
   const profileFields = [
-    { label: 'Name', done: !!artisan?.name },
-    { label: 'Profile Photo', done: !!artisan?.profilePhoto },
-    { label: 'Craft Category', done: !!artisan?.craftCategory },
-    { label: 'Artisan Story', done: !!artisan?.story },
-    { label: 'Trust Credentials', done: verifProfile.tier !== 'LEVEL_0_UNVERIFIED' },
-    { label: 'First Product', done: publishedProducts.length > 0 },
+    { label: t('artisan.my_profile'), done: !!artisan?.name },
+    { label: t('artisan.upload_photo'), done: !!artisan?.profilePhoto },
+    { label: t('artisan.craft_category'), done: !!artisan?.craftCategory },
+    { label: t('artisan.bio'), done: !!artisan?.story },
+    { label: t('nav.verification'), done: verifProfile.tier !== 'LEVEL_0_UNVERIFIED' },
+    { label: t('artisan.first_product'), done: publishedProducts.length > 0 },
   ];
   const completedFields = profileFields.filter(f => f.done).length;
   const completionPercent = Math.round((completedFields / profileFields.length) * 100);
 
   const quickActions = [
-    { label: '+ Add Product', to: '/artisan/products/add', icon: PlusCircle, color: 'bg-brand-600 text-white hover:bg-brand-700' },
-    { label: '✨ Smart Catalog', to: '/artisan/smart-catalog', icon: Sparkles, color: 'bg-amber-600 text-white hover:bg-amber-700' },
-    { label: 'Trust & Verification', to: '/artisan/verification', icon: ShieldCheck, color: 'bg-amber-700 text-white hover:bg-amber-800' },
-    { label: 'View My Profile', to: `/artisan/${artisan.id}`, icon: Users, color: 'bg-blue-600 text-white hover:bg-blue-700' },
-    { label: 'Check Fair Price', to: '/artisan/pricing', icon: Calculator, color: 'bg-purple-600 text-white hover:bg-purple-700' },
+    { label: `+ ${t('nav.add_product')}`, to: '/artisan/products/add', icon: PlusCircle, color: 'bg-brand-600 text-white hover:bg-brand-700' },
+    { label: `✨ ${t('nav.smart_catalog')}`, to: '/artisan/smart-catalog', icon: Sparkles, color: 'bg-amber-600 text-white hover:bg-amber-700' },
+    { label: t('nav.verification'), to: '/artisan/verification', icon: ShieldCheck, color: 'bg-amber-700 text-white hover:bg-amber-800' },
+    { label: t('nav.profile'), to: `/artisan/${artisan.id}`, icon: Users, color: 'bg-blue-600 text-white hover:bg-blue-700' },
+    { label: t('nav.pricing'), to: '/artisan/pricing', icon: Calculator, color: 'bg-purple-600 text-white hover:bg-purple-700' },
   ];
 
   return (
@@ -56,12 +60,12 @@ export function DashboardPage() {
         <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-900 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <span className="font-semibold bg-amber-200/70 text-amber-950 px-2 py-0.5 rounded-md text-[11px]">
-              Prototype Demo Mode
+              {t('artisan.demo_banner')}
             </span>
-            <span>Previewing Artisan Portal as Master Artisan Putli Devi ({artisan.id}).</span>
+            <span>{t('artisan.demo_preview_desc', { id: artisan.id })}</span>
           </div>
           <Link to="/artisan/profile" className="font-semibold underline hover:text-amber-950 shrink-0">
-            Create Custom Profile →
+            {t('artisan.create_custom_profile')}
           </Link>
         </div>
       )}
@@ -81,12 +85,14 @@ export function DashboardPage() {
           )}
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-serif font-bold text-white">Welcome back, {artisan.name.split(' ')[0]}</h1>
+              <h1 className="text-xl sm:text-2xl font-serif font-bold text-white">
+                {t('artisan.welcome_back', { name: artisan.name.split(' ')[0] })}
+              </h1>
               <span className="text-sm">🌾</span>
             </div>
-            <p className="text-brand-100 text-xs sm:text-sm mt-0.5">{artisan.id} · {artisan.district}, Jharkhand</p>
+            <p className="text-brand-100 text-xs sm:text-sm mt-0.5">{artisan.id} · {artisan.district}, {t('crafts.jharkhand')}</p>
             <span className="mt-2 inline-flex items-center gap-1 text-[11px] font-medium bg-white/20 backdrop-blur-xs px-2.5 py-1 rounded-full text-white border border-white/20">
-              <Star className="w-3 h-3 fill-white" /> {artisan.isVerified ? 'Verified Master Artisan' : 'Registered Artisan'}
+              <Star className="w-3 h-3 fill-white" /> {artisan.isVerified ? t('artisan.verified_master') : t('artisan.registered_artisan')}
             </span>
           </div>
         </div>
@@ -116,19 +122,21 @@ export function DashboardPage() {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wider text-earth-700">Verification Status:</span>
+              <span className="text-xs font-semibold uppercase tracking-wider text-earth-700">
+                {t('artisan.verification_status')}
+              </span>
               <span className="text-xs font-bold text-earth-900 bg-white px-2 py-0.5 rounded-md border border-earth-300">
                 {getTierLabel(verifProfile.tier)}
               </span>
             </div>
             <p className="text-xs text-earth-600 mt-0.5">
               {verifProfile.tier === 'LEVEL_3_BUSINESS_VERIFIED'
-                ? 'Business credentials verified. Enterprise wholesale enquiries enabled.'
+                ? t('artisan.level_3_desc')
                 : verifProfile.tier === 'LEVEL_2_ARTISAN_VERIFIED'
-                ? 'Pehchan Artisan Card verified with DC (Handicrafts).'
+                ? t('artisan.level_2_desc')
                 : verifProfile.tier === 'LEVEL_1_IDENTITY_VERIFIED'
-                ? 'Your government identity verification has been completed.'
-                : 'Verify your identity using one valid government ID to build trust with buyers.'}
+                ? t('artisan.level_1_desc')
+                : t('artisan.level_0_desc')}
             </p>
           </div>
         </div>
@@ -136,7 +144,7 @@ export function DashboardPage() {
           to="/artisan/verification"
           className="btn-secondary !py-1.5 !px-3.5 !text-xs shrink-0 self-start sm:self-auto flex items-center gap-1"
         >
-          <span>{verifProfile.tier === 'LEVEL_0_UNVERIFIED' ? 'Start Verification' : 'Manage Credentials'}</span>
+          <span>{verifProfile.tier === 'LEVEL_0_UNVERIFIED' ? t('verification.verify_now') : t('verification.identity_verified')}</span>
           <ArrowRight className="w-3.5 h-3.5" />
         </Link>
       </div>
@@ -149,13 +157,13 @@ export function DashboardPage() {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="font-serif font-bold text-lg text-earth-900">AI Smart Catalog</h3>
+              <h3 className="font-serif font-bold text-lg text-earth-900">{t('nav.smart_catalog')}</h3>
               <span className="text-[10px] uppercase font-bold tracking-wider text-brand-800 bg-brand-100 px-2.5 py-0.5 rounded-full border border-brand-200">
-                Assistive AI
+                {t('artisan.assistive_ai')}
               </span>
             </div>
             <p className="text-xs sm:text-sm text-earth-700 mt-1 max-w-xl leading-relaxed">
-              Create a professional product listing from your handicraft photos. Turn photos into structured descriptions, materials, and searchable tags in minutes.
+              {t('artisan.smart_catalog_desc')}
             </p>
           </div>
         </div>
@@ -164,12 +172,12 @@ export function DashboardPage() {
           className="btn-primary shrink-0 self-start sm:self-center !px-5 !py-2.5 !text-xs sm:!text-sm flex items-center gap-2 shadow-xs"
         >
           <Sparkles className="w-4 h-4" />
-          <span>+ Create Smart Catalog</span>
+          <span>+ {t('nav.smart_catalog')}</span>
         </Link>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      <div className={`grid gap-3 sm:gap-4 ${isMobile ? 'grid-cols-2' : 'grid-cols-1 xs:grid-cols-2 lg:grid-cols-4'}`}>
         {stats.map(stat => (
           <div key={stat.label} className="card p-4 sm:p-5">
             <div className="flex items-center justify-between mb-3">
@@ -184,10 +192,10 @@ export function DashboardPage() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className={`grid gap-6 ${isMobile ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-3'}`}>
         {/* Quick Actions */}
         <div className="card p-5">
-          <h3 className="font-semibold text-earth-900 mb-4">Quick Actions</h3>
+          <h3 className="font-semibold text-earth-900 mb-4">{t('artisan.quick_actions')}</h3>
           <div className="space-y-2">
             {quickActions.map(action => (
               <Link
@@ -206,7 +214,7 @@ export function DashboardPage() {
         {/* Profile Completion */}
         <div className="card p-5">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-earth-900">Profile Completion</h3>
+            <h3 className="font-semibold text-earth-900">{t('artisan.profile_completion')}</h3>
             <span className="text-lg font-bold text-brand-600">{completionPercent}%</span>
           </div>
           <div className="w-full bg-earth-100 rounded-full h-2 mb-4">
@@ -227,14 +235,16 @@ export function DashboardPage() {
         {/* Recent Products */}
         <div className="card p-5">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-earth-900">Recent Products</h3>
-            <Link to="/artisan/products" className="text-xs text-brand-600 hover:underline">View all</Link>
+            <h3 className="font-semibold text-earth-900">{t('artisan.recent_products')}</h3>
+            <Link to="/artisan/products" className="text-xs text-brand-600 hover:underline">{t('artisan.view_all_products')}</Link>
           </div>
           {publishedProducts.length === 0 ? (
             <div className="text-center py-6">
               <Package className="w-10 h-10 text-earth-300 mx-auto mb-2" />
-              <p className="text-sm text-earth-500">No products yet</p>
-              <Link to="/artisan/products/add" className="text-sm text-brand-600 hover:underline mt-1 block">+ Add your first product</Link>
+              <p className="text-sm text-earth-500">{t('artisan.no_products_yet')}</p>
+              <Link to="/artisan/products/add" className="text-sm text-brand-600 hover:underline mt-1 block">
+                {t('artisan.add_first_product')}
+              </Link>
             </div>
           ) : (
             <div className="space-y-3">
@@ -253,7 +263,7 @@ export function DashboardPage() {
                     <p className="text-sm font-medium text-earth-900 truncate">{product.name}</p>
                     <p className="text-xs text-brand-600">{formatRupees(product.price || 0)}</p>
                   </div>
-                  <span className="badge-green text-xs">{product.views}v</span>
+                  <span className="badge-green text-xs">{t('product.views_count', { count: product.views })}</span>
                 </div>
               ))}
             </div>
@@ -266,12 +276,12 @@ export function DashboardPage() {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <MessageSquare className="w-4 h-4 text-purple-600" />
-            <h3 className="font-semibold text-earth-900">Recent Buyer Enquiries</h3>
+            <h3 className="font-semibold text-earth-900">{t('artisan.recent_enquiries')}</h3>
             <span className="text-xs bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full font-medium">
-              {displayEnquiries.length} Active
+              {t('artisan.active_enquiries', { count: displayEnquiries.length })}
             </span>
           </div>
-          <span className="text-xs text-stone-500">Verified Buyer Credentials</span>
+          <span className="text-xs text-stone-500">{t('artisan.verified_buyer_credentials')}</span>
         </div>
 
         <div className="space-y-3">
@@ -311,10 +321,10 @@ export function DashboardPage() {
 
               <div className="flex items-center justify-between text-xs text-stone-500 pt-2 border-t border-stone-200/60">
                 <span>
-                  Product: <strong className="text-stone-800">{enq.productName}</strong> (Qty: {enq.quantity})
+                  {t('artisan.product_label')} <strong className="text-stone-800">{enq.productName}</strong> ({t('artisan.qty_label')} {enq.quantity})
                 </span>
                 <span className="text-[11px] text-amber-800 font-medium">
-                  Status: {enq.status.toUpperCase()}
+                  {t('artisan.status_label')} {enq.status.toUpperCase()}
                 </span>
               </div>
             </div>
@@ -324,3 +334,5 @@ export function DashboardPage() {
     </div>
   );
 }
+
+export default DashboardPage;

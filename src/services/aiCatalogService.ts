@@ -176,9 +176,11 @@ export class AICatalogService {
       materials: {
         value: materials,
         source: materialSource,
-        confidence: identification.confidence.material,
+        confidence: manualOverrides?.materials ? 'High' : identification.confidence.material,
         notes: manualOverrides?.materials
           ? 'Confirmed by artisan'
+          : materials.toLowerCase().includes('not visually')
+          ? 'Material not determinable from photo alone; artisan confirmation required'
           : 'Inferred from photo surface cues; please confirm',
       },
       color: {
@@ -223,7 +225,7 @@ export class AICatalogService {
         craftCategory,
         subtype: identification.subtype || 'Traditional Handicraft',
         materials,
-        materialConfirmationRequired: !manualOverrides?.materials,
+        materialConfirmationRequired: !manualOverrides?.materials || materials.toLowerCase().includes('not visually') || !identification.identified,
         color: identification.dominantColor,
         design: identification.designCharacteristics,
         possibleUses: identification.possibleUses,

@@ -9,6 +9,7 @@ import {
   Building2,
 } from 'lucide-react';
 import type { VerificationLevel, ArtisanVerificationTier } from '../types';
+import { useLanguage } from '../i18n';
 
 interface CredibilityBadgeProps {
   level?: VerificationLevel;
@@ -27,40 +28,42 @@ export const CredibilityBadge: React.FC<CredibilityBadgeProps> = ({
   className = '',
   onClick,
 }) => {
+  const { t } = useLanguage();
+
   // If tier is provided, configure based on Artisan Verification Tier
   if (tier) {
     const tierConfigs = {
       LEVEL_3_BUSINESS_VERIFIED: {
-        label: 'Business Registration Verified',
-        shortLabel: 'Business Verified',
+        label: t('verification.tier_3'),
+        shortLabel: t('verification.badge_business'),
         icon: Building2,
         bg: 'bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100',
         iconColor: 'text-emerald-600',
-        tooltip: 'Business credentials verified (MSME or GSTIN). Click to view verification details.',
+        tooltip: t('verification.tooltip_business'),
       },
       LEVEL_2_ARTISAN_VERIFIED: {
-        label: 'Artisan Registration Provided',
-        shortLabel: 'Artisan Verified',
+        label: t('verification.tier_2'),
+        shortLabel: t('verification.badge_artisan'),
         icon: Award,
         bg: 'bg-blue-50 text-blue-800 border-blue-200 hover:bg-blue-100',
         iconColor: 'text-blue-600',
-        tooltip: 'Pehchan Artisan ID Card verified with DC (Handicrafts). Click to view verification details.',
+        tooltip: t('verification.tooltip_artisan'),
       },
       LEVEL_1_IDENTITY_VERIFIED: {
-        label: 'Identity Verified',
-        shortLabel: 'Identity Verified',
+        label: t('verification.tier_1'),
+        shortLabel: t('verification.badge_identity'),
         icon: ShieldCheck,
         bg: 'bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100',
         iconColor: 'text-emerald-600',
-        tooltip: 'Government digital KYC completed. Click to view verification details.',
+        tooltip: t('verification.tooltip_identity'),
       },
       LEVEL_0_UNVERIFIED: {
-        label: 'Not Verified',
-        shortLabel: 'Not Verified',
+        label: t('verification.tier_0'),
+        shortLabel: t('verification.badge_unverified'),
         icon: HelpCircle,
         bg: 'bg-stone-50 text-stone-600 border-stone-200 hover:bg-stone-100',
         iconColor: 'text-stone-400',
-        tooltip: 'Verification documents pending submission.',
+        tooltip: t('verification.tooltip_unverified'),
       },
     };
 
@@ -115,44 +118,44 @@ export const CredibilityBadge: React.FC<CredibilityBadgeProps> = ({
   const currentLevel = level || 'UNKNOWN';
   const levelConfigs = {
     VERIFIED_OFFICIAL: {
-      label: 'Verified Official / GI Tag',
-      shortLabel: 'Govt / GI Tagged',
+      label: t('buyer.gi_tagged'),
+      shortLabel: t('product.gi_tag'),
       icon: ShieldCheck,
       bg: 'bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100',
       iconColor: 'text-emerald-600',
-      tooltip: 'Documented by official Govt records, GI Registry, or DC Handicrafts.',
+      tooltip: t('verification.tooltip_identity'),
     },
     PUBLICLY_DOCUMENTED: {
-      label: 'Publicly Documented Craft',
-      shortLabel: 'Publicly Documented',
+      label: t('references.badge'),
+      shortLabel: t('references.badge'),
       icon: BookOpen,
       bg: 'bg-blue-50 text-blue-800 border-blue-200 hover:bg-blue-100',
       iconColor: 'text-blue-600',
-      tooltip: 'Documented by reputable cultural institutions, TWAC, INTACH, or research archives.',
+      tooltip: t('references.desc'),
     },
     MARKET_REFERENCE: {
-      label: 'Market Price Reference',
-      shortLabel: 'Market Reference',
+      label: t('product.online_reference'),
+      shortLabel: t('product.online_reference'),
       icon: ShoppingBag,
       bg: 'bg-amber-50 text-amber-800 border-amber-200 hover:bg-amber-100',
       iconColor: 'text-amber-600',
-      tooltip: 'Observed on public marketplaces (Tribes India, Jharcraft emporiums).',
+      tooltip: t('product.online_reference'),
     },
     USER_PROVIDED: {
-      label: 'Artisan Submitted',
-      shortLabel: 'Artisan Submitted',
+      label: t('verification.tier_2'),
+      shortLabel: t('verification.badge_artisan'),
       icon: UserCheck,
       bg: 'bg-stone-50 text-stone-700 border-stone-200 hover:bg-stone-100',
       iconColor: 'text-stone-500',
-      tooltip: 'Directly provided by the registered artisan.',
+      tooltip: t('verification.tier_2'),
     },
     UNKNOWN: {
-      label: 'Unverified',
-      shortLabel: 'Unverified',
+      label: t('verification.unverified'),
+      shortLabel: t('verification.unverified'),
       icon: HelpCircle,
       bg: 'bg-gray-50 text-gray-600 border-gray-200',
       iconColor: 'text-gray-400',
-      tooltip: 'Information pending verification.',
+      tooltip: t('verification.unverified'),
     },
   };
 
@@ -200,3 +203,5 @@ export const CredibilityBadge: React.FC<CredibilityBadgeProps> = ({
     </span>
   );
 };
+
+export default CredibilityBadge;

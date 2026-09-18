@@ -12,6 +12,7 @@ import {
 import { getBuyerProfile, createEnquiry } from '../utils/storage';
 import { BuyerVerificationModal } from './BuyerVerificationModal';
 import type { BuyerProfile } from '../types';
+import { useLanguage } from '../i18n';
 
 interface ContactArtisanModalProps {
   isOpen: boolean;
@@ -34,6 +35,7 @@ export const ContactArtisanModal: React.FC<ContactArtisanModalProps> = ({
   productPrice,
   onSuccess,
 }) => {
+  const { t } = useLanguage();
   if (!isOpen) return null;
 
   const [buyerProfile, setBuyerProfile] = useState<BuyerProfile>(() =>
@@ -58,7 +60,7 @@ export const ContactArtisanModal: React.FC<ContactArtisanModalProps> = ({
 
   const verificationBadges: string[] = [];
   if (isBusinessVerified) {
-    verificationBadges.push('Verified Business Buyer');
+    verificationBadges.push(t('verification.verified_business_buyer'));
     if (buyerProfile.records.gstin?.status === 'verified' || buyerProfile.businessDetails?.gstin) {
       verificationBadges.push('GST Verified');
     }
@@ -66,9 +68,9 @@ export const ContactArtisanModal: React.FC<ContactArtisanModalProps> = ({
       verificationBadges.push('Udyam Verified');
     }
   } else if (isIdentityVerified) {
-    verificationBadges.push('Verified Buyer');
+    verificationBadges.push(t('verification.verified_buyer'));
   } else if (isPhoneVerified) {
-    verificationBadges.push('Phone Verified');
+    verificationBadges.push(t('verification.phone_verification'));
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -114,17 +116,16 @@ export const ContactArtisanModal: React.FC<ContactArtisanModalProps> = ({
           <div className="px-6 py-5 border-b border-stone-200 bg-gradient-to-r from-amber-50 to-stone-50 flex items-start justify-between">
             <div>
               <h2 className="text-lg font-bold text-stone-900 font-serif">
-                Contact Artisan Directly
+                {t('buyer.contact_artisan_title')}
               </h2>
               <p className="text-xs text-stone-600">
-                Send an authentic enquiry directly to{' '}
-                <span className="font-semibold text-stone-800">{artisanName}</span>
+                {t('buyer.contact_artisan_subtitle', { name: artisanName })}
               </p>
             </div>
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-200/60 transition-colors"
-              aria-label="Close modal"
+              className="p-1.5 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-200/60 transition-colors cursor-pointer"
+              aria-label={t('common.close')}
             >
               <X className="w-5 h-5" />
             </button>
@@ -138,10 +139,10 @@ export const ContactArtisanModal: React.FC<ContactArtisanModalProps> = ({
                   <CheckCircle2 className="w-8 h-8" />
                 </div>
                 <h3 className="text-lg font-bold text-stone-900 font-serif">
-                  Enquiry Sent Successfully!
+                  {t('buyer.enquiry_sent')}
                 </h3>
                 <p className="text-xs text-stone-600 max-w-xs mx-auto">
-                  Your enquiry has been delivered to {artisanName}. The artisan will see your trust credentials and contact details.
+                  {t('buyer.enquiry_success_msg', { name: artisanName })}
                 </p>
               </div>
             ) : (
@@ -156,7 +157,7 @@ export const ContactArtisanModal: React.FC<ContactArtisanModalProps> = ({
                       </div>
                       {productPrice !== undefined && (
                         <div className="text-amber-800 font-medium">
-                          ₹{productPrice.toLocaleString('en-IN')} per unit
+                          ₹{productPrice.toLocaleString('en-IN')} {t('common.per_unit')}
                         </div>
                       )}
                     </div>
@@ -168,7 +169,7 @@ export const ContactArtisanModal: React.FC<ContactArtisanModalProps> = ({
                   <div className="flex items-center justify-between gap-2 mb-1.5">
                     <span className="text-xs font-semibold text-stone-700 flex items-center gap-1.5">
                       <ShieldCheck className="w-4 h-4 text-amber-600" />
-                      <span>Your Buyer Credibility:</span>
+                      <span>{t('buyer.buyer_credibility')}</span>
                     </span>
                     {verificationBadges.length > 0 ? (
                       <div className="flex items-center gap-1.5">
@@ -183,7 +184,7 @@ export const ContactArtisanModal: React.FC<ContactArtisanModalProps> = ({
                       </div>
                     ) : (
                       <span className="text-[11px] font-medium text-stone-500 bg-stone-200/70 px-2 py-0.5 rounded-full">
-                        Unverified Contact
+                        {t('buyer.unverified_contact')}
                       </span>
                     )}
                   </div>
@@ -191,19 +192,19 @@ export const ContactArtisanModal: React.FC<ContactArtisanModalProps> = ({
                   {verificationBadges.length === 0 ? (
                     <div className="flex items-center justify-between gap-2 pt-1">
                       <p className="text-[11px] text-stone-500">
-                        Artisans prioritize verified buyers.
+                        {t('buyer.artisan_prioritize_verified')}
                       </p>
                       <button
                         type="button"
                         onClick={() => setBuyerModalOpen(true)}
-                        className="text-[11px] font-semibold text-amber-700 hover:text-amber-800 underline"
+                        className="text-[11px] font-semibold text-amber-700 hover:text-amber-800 underline cursor-pointer"
                       >
-                        Verify in 30 Seconds →
+                        {t('buyer.verify_30_seconds')}
                       </button>
                     </div>
                   ) : (
                     <p className="text-[11px] text-emerald-700">
-                      Artisans will see your verified status on this enquiry.
+                      {t('buyer.artisans_will_see_verified')}
                     </p>
                   )}
                 </div>
@@ -213,7 +214,7 @@ export const ContactArtisanModal: React.FC<ContactArtisanModalProps> = ({
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <label className="block text-xs font-medium text-stone-700 mb-1">
-                        Your Name *
+                        {t('buyer.your_name')}
                       </label>
                       <input
                         type="text"
@@ -227,7 +228,7 @@ export const ContactArtisanModal: React.FC<ContactArtisanModalProps> = ({
 
                     <div>
                       <label className="block text-xs font-medium text-stone-700 mb-1">
-                        Phone or Email *
+                        {t('buyer.phone_or_email')}
                       </label>
                       <input
                         type="text"
@@ -242,7 +243,7 @@ export const ContactArtisanModal: React.FC<ContactArtisanModalProps> = ({
 
                   <div>
                     <label className="block text-xs font-medium text-stone-700 mb-1">
-                      Quantity Required
+                      {t('buyer.quantity_required')}
                     </label>
                     <input
                       type="number"
@@ -255,7 +256,7 @@ export const ContactArtisanModal: React.FC<ContactArtisanModalProps> = ({
 
                   <div>
                     <label className="block text-xs font-medium text-stone-700 mb-1">
-                      Message / Customization Request
+                      {t('buyer.message_label')}
                     </label>
                     <textarea
                       rows={3}
@@ -269,10 +270,10 @@ export const ContactArtisanModal: React.FC<ContactArtisanModalProps> = ({
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="w-full py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-semibold text-xs rounded-xl shadow-xs transition-colors flex items-center justify-center gap-1.5 disabled:opacity-50 mt-3"
+                    className="w-full py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-semibold text-xs rounded-xl shadow-xs transition-colors flex items-center justify-center gap-1.5 disabled:opacity-50 mt-3 cursor-pointer"
                   >
                     <Send className="w-3.5 h-3.5" />
-                    <span>{submitting ? 'Sending Enquiry...' : 'Send Enquiry to Artisan'}</span>
+                    <span>{submitting ? t('buyer.sending_enquiry') : t('buyer.send_enquiry_btn')}</span>
                   </button>
                 </form>
               </>
@@ -296,3 +297,5 @@ export const ContactArtisanModal: React.FC<ContactArtisanModalProps> = ({
     </>
   );
 };
+
+export default ContactArtisanModal;

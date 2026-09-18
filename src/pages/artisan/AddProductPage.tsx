@@ -8,6 +8,7 @@ import { useToast } from '../../hooks/useToast';
 import { ToastContainer } from '../../components/ui/Toast';
 import { ProductPhotoUploader } from '../../components/ProductPhotoUploader';
 import { SmartCatalogService } from '../../services/smartCatalogService';
+import { useLanguage } from '../../i18n';
 import type { Product } from '../../types';
 
 function generateCatalogDescription(name: string, material: string, category: string, days: number): string {
@@ -21,8 +22,10 @@ function generateCatalogDescription(name: string, material: string, category: st
 
 export function AddProductPage() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [searchParams] = useSearchParams();
   const editId = searchParams.get('edit');
+  const priceParam = searchParams.get('price');
   const { toasts, addToast, dismissToast } = useToast();
   const artisan = getArtisan();
 
@@ -43,7 +46,7 @@ export function AddProductPage() {
     packaging: 0,
     transportation: 0,
     other: 0,
-    price: 0,
+    price: priceParam && !isNaN(Number(priceParam)) ? Number(priceParam) : 0,
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -505,7 +508,7 @@ export function AddProductPage() {
           )}
 
           <div className="mt-4 pt-4 border-t border-earth-100">
-            <label className="label">Final Selling Price (₹) *</label>
+            <label className="label">{t('product.price')} *</label>
             <input
               type="number"
               value={form.price || ''}
@@ -525,7 +528,7 @@ export function AddProductPage() {
             className="btn-secondary flex-1 justify-center !py-3"
           >
             <Sparkles className="w-4 h-4 text-purple-600" />
-            Generate Smart Catalog
+            {t('nav.smart_catalog')}
           </button>
           <button
             type="button"
@@ -539,7 +542,7 @@ export function AddProductPage() {
             className="btn-primary flex-1 justify-center !py-3"
           >
             <Save className="w-4 h-4" />
-            {editId ? 'Save Changes' : 'Publish Product'}
+            {editId ? t('artisan.save_changes') : t('product.publish')}
           </button>
         </div>
 
@@ -549,7 +552,7 @@ export function AddProductPage() {
             onClick={() => navigate('/artisan/pricing')}
             className="btn-ghost text-sm text-earth-600"
           >
-            <Calculator className="w-4 h-4" /> Need help? Open Fair Price Assistant
+            <Calculator className="w-4 h-4" /> {t('nav.pricing')}
           </button>
         </div>
       </div>

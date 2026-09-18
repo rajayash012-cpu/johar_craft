@@ -6,6 +6,7 @@ import { ProductCard } from '../../components/ProductCard';
 import { ArtisanCard } from '../../components/ArtisanCard';
 import { getProducts, getAllArtisans } from '../../utils/storage';
 import { CRAFT_CATEGORIES, JHARKHAND_DISTRICTS } from '../../types';
+import { useLanguage } from '../../i18n';
 
 // Smart matching / keyword search
 function matchProducts(query: string, products: ReturnType<typeof getProducts>) {
@@ -18,6 +19,7 @@ function matchProducts(query: string, products: ReturnType<typeof getProducts>) 
 }
 
 export function MarketplacePage() {
+  const { t } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
   const [tab, setTab] = useState(searchParams.get('tab') || 'products');
   const [searchInput, setSearchInput] = useState(searchParams.get('search') || '');
@@ -39,8 +41,10 @@ export function MarketplacePage() {
   useEffect(() => {
     const s = searchParams.get('search');
     const c = searchParams.get('category');
+    const tParam = searchParams.get('tab');
     if (s) { setSearch(s); setSearchInput(s); }
     if (c) setCategoryFilter(c);
+    if (tParam) setTab(tParam === 'artisans' || tParam === 'smart' ? tParam : 'products');
   }, [searchParams]);
 
   const filteredProducts = useMemo(() => {
@@ -129,10 +133,10 @@ export function MarketplacePage() {
         <div className="mb-6">
           <div className="inline-flex items-center gap-2 px-3 py-0.5 rounded-full bg-[#FAF4EB] border border-earth-300 text-xs text-earth-700 mb-2 font-medium">
             <span className="text-brand-600">❖</span>
-            <span>Direct from Jharkhand Village Clusters</span>
+            <span>{t('buyer.village_clusters')}</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-display font-bold text-earth-900 mb-2">
-            Explore Jharkhand Crafts
+            {t('buyer.explore_crafts')}
           </h1>
           <p className="text-earth-700 max-w-2xl leading-relaxed">
             Authentic handcrafted products, verified GI living traditions, and sustainable rural artisan livelihoods.
@@ -147,13 +151,13 @@ export function MarketplacePage() {
             </div>
             <div>
               <h3 className="font-serif font-bold text-earth-900 text-sm sm:text-base flex items-center gap-2">
-                100% Verifiable Living Crafts
+                {t('buyer.verifiable_living_crafts')}
                 <span className="text-[11px] font-sans font-semibold bg-forest-100 text-forest-800 border border-forest-200/80 px-2 py-0.5 rounded-full">
-                  Zero Hallucination
+                  {t('buyer.zero_hallucination')}
                 </span>
               </h3>
               <p className="text-xs text-earth-600 mt-0.5 leading-relaxed max-w-xl">
-                Every artisan cluster, GI tag (#645 Sohrai, #646 Khovar), and observed price range is documented from public registries and authentic cooperatives.
+                {t('buyer.transparency_desc')}
               </p>
             </div>
           </div>
@@ -163,13 +167,13 @@ export function MarketplacePage() {
               className="btn-secondary !py-2 !px-3.5 !text-xs"
             >
               <ShieldCheck className="w-3.5 h-3.5 text-forest-700" />
-              <span>Buyer Verification</span>
+              <span>{t('verification.individual_buyer')}</span>
             </Link>
             <Link
               to="/references"
               className="btn-primary !py-2 !px-3.5 !text-xs"
             >
-              <span>Evidence Records</span>
+              <span>{t('nav.documentation')}</span>
               <ExternalLink className="w-3 h-3" />
             </Link>
           </div>
@@ -179,20 +183,20 @@ export function MarketplacePage() {
         <div className="overflow-x-auto scrollbar-none mb-6">
           <div className="flex gap-1 p-1 bg-[#FAF4EB] border border-earth-200 rounded-xl w-fit min-w-full sm:min-w-0">
             {[
-              { id: 'products', label: '🏺 Handcrafted Products' },
-              { id: 'artisans', label: '👨‍🎨 Master Artisans' },
-              { id: 'smart', label: '✨ Find the Right Craft' },
-            ].map(t => (
+              { id: 'products', label: `🏺 ${t('nav.products')}` },
+              { id: 'artisans', label: `👨‍🎨 ${t('nav.artisans')}` },
+              { id: 'smart', label: `✨ ${t('buyer.search')}` },
+            ].map(tItem => (
               <button
-                key={t.id}
-                onClick={() => setTab(t.id)}
+                key={tItem.id}
+                onClick={() => setTab(tItem.id)}
                 className={`px-3 sm:px-5 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all cursor-pointer whitespace-nowrap ${
-                  tab === t.id
+                  tab === tItem.id
                     ? 'bg-white text-earth-900 shadow-xs border border-earth-200/80 font-semibold'
                     : 'text-earth-700 hover:text-earth-950 hover:bg-earth-100/60'
                 }`}
               >
-                {t.label}
+                {tItem.label}
               </button>
             ))}
           </div>
@@ -211,7 +215,7 @@ export function MarketplacePage() {
                     : 'bg-[#FAF4EB] border border-earth-300 text-earth-800 hover:border-brand-500 hover:bg-[#FAF5EC]'
                 }`}
               >
-                All Crafts
+                {t('buyer.all_categories')}
               </button>
               <button
                 type="button"
@@ -222,7 +226,7 @@ export function MarketplacePage() {
                     : 'bg-forest-50 border border-forest-200 text-forest-700 hover:bg-forest-100/80'
                 }`}
               >
-                🏛️ GI Tagged (Sohrai & Khovar)
+                {t('buyer.gi_sohrai_khovar')}
               </button>
               {['Dokra', 'Bamboo & Cane', 'Sohrai Art', 'Khovar Art', 'Pottery', 'Textiles', 'Tribal Jewellery'].map(cat => (
                 <button
@@ -248,7 +252,7 @@ export function MarketplacePage() {
                   type="text"
                   value={searchInput}
                   onChange={e => setSearchInput(e.target.value)}
-                  placeholder="Search crafts, products or artisans..."
+                  placeholder={t('nav.search_placeholder')}
                   className="input pl-10 pr-10"
                 />
                 {searchInput && (
@@ -259,7 +263,7 @@ export function MarketplacePage() {
               </form>
               <button onClick={() => setShowFilters(v => !v)} className="btn-secondary whitespace-nowrap">
                 <SlidersHorizontal className="w-4 h-4" />
-                Filters
+                {t('buyer.filter')}
                 <ChevronDown className={`w-4 h-4 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
               </button>
             </div>

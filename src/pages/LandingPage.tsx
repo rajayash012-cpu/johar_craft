@@ -6,6 +6,7 @@ import { getArtisan } from '../utils/storage';
 import { useLanguage } from '../i18n';
 import { useAccount } from '../context/AccountContext';
 import { AccountSwitcher } from '../components/AccountSwitcher';
+import { ViewModeSwitcher } from '../components/ViewModeSwitcher';
 import { AddAccountModal } from '../components/AddAccountModal';
 
 import { CulturalDivider } from '../components/CulturalDivider';
@@ -61,7 +62,8 @@ export function LandingPage() {
           </span>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2 sm:gap-2.5">
+          <ViewModeSwitcher compact />
           <AccountSwitcher compact />
           <button
             onClick={() => setAboutOpen(true)}
@@ -78,7 +80,7 @@ export function LandingPage() {
         <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#FAF4EB] border border-earth-300/80 mb-6 shadow-2xs">
           <span className="text-brand-600 text-xs">❖</span>
           <span className="text-[11px] font-sans font-semibold uppercase tracking-widest text-earth-700">
-            Tribal Living Heritage · Jharkhand
+            {t('landing.heritage_badge')}
           </span>
           <span className="text-brand-600 text-xs">❖</span>
         </div>

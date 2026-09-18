@@ -292,6 +292,70 @@ export class PriceResearchService {
       accessedDate: '17 September 2026',
       matchCriteria: ['Craft: Khovar Art', 'Subtype: Sgraffito Art', 'GI Registry No. 646 heritage'],
     },
+
+    // --- Wood Crafts ---
+    {
+      id: 'CMP-WOD-01',
+      title: 'Handcrafted Jharkhand Tribal Carved Wood Relief Panel (14x10 in)',
+      craftCategory: 'Wood Craft',
+      subtype: 'Carved Wood Panel',
+      material: 'Native Gamhar Hardwood',
+      approxSize: '14 x 10 inches',
+      price: 1650,
+      currency: 'INR',
+      sourceName: 'Tribes India (TRIFED)',
+      sourceQuality: 'OFFICIAL',
+      sourceUrl: 'https://www.tribesindia.com',
+      accessedDate: '17 September 2026',
+      matchCriteria: ['Craft: Wood Craft', 'Subtype: Wood Panel', 'Hand-carved indigenous timber'],
+    },
+    {
+      id: 'CMP-WOD-02',
+      title: 'Traditional Hand-Carved Wooden Animal Figurine',
+      craftCategory: 'Wood Craft',
+      subtype: 'Carved Wood Figurine',
+      material: 'Seasoned Sal Timber',
+      approxSize: '18 cm height, ~500g',
+      price: 950,
+      currency: 'INR',
+      sourceName: 'Jharcraft State Emporium',
+      sourceQuality: 'OFFICIAL',
+      sourceUrl: 'https://www.jharcraft.in',
+      accessedDate: '17 September 2026',
+      matchCriteria: ['Craft: Wood Craft', 'Subtype: Animal Figurine', 'Natural beeswax polish'],
+    },
+
+    // --- Tribal Jewellery ---
+    {
+      id: 'CMP-JWL-01',
+      title: 'Traditional Santhali Handcrafted Hasli Bell-Metal Choker',
+      craftCategory: 'Tribal Jewellery',
+      subtype: 'Hasli Neck Ornament',
+      material: 'Bell Metal / White Metal Alloy',
+      approxSize: 'Standard neck collar, ~220g',
+      price: 1850,
+      currency: 'INR',
+      sourceName: 'Tribes India (TRIFED)',
+      sourceQuality: 'OFFICIAL',
+      sourceUrl: 'https://www.tribesindia.com',
+      accessedDate: '17 September 2026',
+      matchCriteria: ['Craft: Tribal Jewellery', 'Subtype: Hasli Choker', 'Traditional tribal metalwork'],
+    },
+    {
+      id: 'CMP-JWL-02',
+      title: 'Indigenous Brass Coin & Bead Layered Tribal Necklace',
+      craftCategory: 'Tribal Jewellery',
+      subtype: 'Tribal Coin Necklace',
+      material: 'Antique Brass & Cord',
+      approxSize: 'Adjustable length',
+      price: 1200,
+      currency: 'INR',
+      sourceName: 'Tribes India (TRIFED)',
+      sourceQuality: 'OFFICIAL',
+      sourceUrl: 'https://www.tribesindia.com',
+      accessedDate: '17 September 2026',
+      matchCriteria: ['Craft: Tribal Jewellery', 'Subtype: Beaded Necklace', 'Hand-threaded artisan beads'],
+    },
   ];
 
   /**
@@ -309,15 +373,29 @@ export class PriceResearchService {
     const cleanCategory = craftCategory.trim().toLowerCase();
     const cleanSubtype = (subtype || '').trim().toLowerCase();
     const cleanName = productName.trim().toLowerCase();
+    const isSaree = cleanName.includes('saree') || cleanSubtype.includes('saree') || cleanCategory.includes('saree');
 
     // 1. Strict filter by craft category
-    let matches = this.REAL_MARKETPLACE_LISTINGS.filter(
-      (item) => item.craftCategory.toLowerCase() === cleanCategory
-    );
+    let matches: ComparableProductMatch[] = [];
 
-    // 2. Subtype narrowing if applicable (e.g. elephant vs tortoise vs necklace)
+    if (isSaree || cleanCategory === 'textiles') {
+      matches = this.REAL_MARKETPLACE_LISTINGS.filter(
+        (item) => item.craftCategory.toLowerCase() === 'textiles'
+      );
+    } else if (cleanCategory !== 'not confidently identified' && cleanCategory !== 'other handicrafts') {
+      matches = this.REAL_MARKETPLACE_LISTINGS.filter(
+        (item) => item.craftCategory.toLowerCase() === cleanCategory
+      );
+    }
+
+    // 2. Subtype narrowing if applicable (e.g. elephant vs tortoise vs necklace vs saree)
     if (matches.length > 2) {
-      if (cleanSubtype.includes('elephant') || cleanName.includes('elephant')) {
+      if (isSaree) {
+        const sareeMatches = matches.filter(
+          (m) => m.subtype?.toLowerCase().includes('saree') || m.title.toLowerCase().includes('saree')
+        );
+        if (sareeMatches.length > 0) matches = sareeMatches;
+      } else if (cleanSubtype.includes('elephant') || cleanName.includes('elephant')) {
         const elephantMatches = matches.filter(
           (m) => m.subtype?.toLowerCase().includes('elephant') || m.title.toLowerCase().includes('elephant')
         );
@@ -345,13 +423,13 @@ export class PriceResearchService {
       }
     }
 
-    // Fallback if category has no specific comparables
+    // Fallback if category has no specific comparables or is unconfirmed
     if (matches.length === 0) {
       matches = [
         {
           id: 'CMP-GEN-01',
-          title: `Handcrafted ${craftCategory} Artisan Piece`,
-          craftCategory,
+          title: `Handcrafted ${craftCategory !== 'Not confidently identified' ? craftCategory : 'Artisan'} Piece`,
+          craftCategory: craftCategory !== 'Not confidently identified' ? craftCategory : 'Handicraft',
           subtype: 'Handcrafted Piece',
           material: 'Natural Material',
           price: 950,

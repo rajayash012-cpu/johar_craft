@@ -32,8 +32,10 @@ import type {
   BusinessBuyerDetails,
   VerificationStatus,
 } from '../../types';
+import { useLanguage } from '../../i18n/LanguageContext';
 
 export function BuyerVerificationPage() {
+  const { t } = useLanguage();
   const [profile, setProfile] = useState<BuyerProfile>(() => getBuyerProfile());
   const [selectedBuyerType, setSelectedBuyerType] = useState<BuyerType>(
     profile.buyerType || 'INDIVIDUAL'
@@ -271,7 +273,7 @@ export function BuyerVerificationPage() {
           <div className="flex items-center justify-between gap-2 mb-1.5">
             <div className="flex items-center gap-2 text-amber-900 font-semibold text-xs tracking-wide">
               <ShieldCheck className="w-4 h-4 text-amber-700" />
-              <span>Demo Verification Mode</span>
+              <span>{t('verification.demo_mode')}</span>
             </div>
             <button
               type="button"
@@ -317,7 +319,7 @@ export function BuyerVerificationPage() {
                   className="ml-auto px-2.5 py-1 rounded-lg text-xs font-medium bg-stone-100 text-stone-700 border border-stone-300 hover:bg-stone-200 transition-colors flex items-center gap-1"
                 >
                   <RefreshCw className="w-3.5 h-3.5" />
-                  Reset to Unverified
+                  {t('verification.unverified')}
                 </button>
               </div>
             </div>
@@ -352,13 +354,13 @@ export function BuyerVerificationPage() {
                     <User className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-stone-900 text-sm">Individual Buyer</h3>
+                    <h3 className="font-bold text-stone-900 text-sm">{t('verification.individual_buyer')}</h3>
                     <p className="text-xs text-stone-500">Buying for personal use</p>
                   </div>
                 </div>
                 {isIndividualFullyVerified && selectedBuyerType === 'INDIVIDUAL' && (
                   <span className="text-emerald-700 bg-emerald-50 text-[11px] font-semibold px-2 py-0.5 rounded-full border border-emerald-200 flex items-center gap-1">
-                    <CheckCircle2 className="w-3 h-3" /> Verified
+                    <CheckCircle2 className="w-3 h-3" /> {t('verification.verified')}
                   </span>
                 )}
               </div>
@@ -389,7 +391,7 @@ export function BuyerVerificationPage() {
                     <Building2 className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-stone-900 text-sm">Business Buyer</h3>
+                    <h3 className="font-bold text-stone-900 text-sm">{t('verification.business_buyer')}</h3>
                     <p className="text-xs text-stone-500">
                       Buying for a business, organization or resale
                     </p>
@@ -397,7 +399,7 @@ export function BuyerVerificationPage() {
                 </div>
                 {isBusinessVerified && selectedBuyerType === 'BUSINESS' && (
                   <span className="text-emerald-700 bg-emerald-50 text-[11px] font-semibold px-2 py-0.5 rounded-full border border-emerald-200 flex items-center gap-1">
-                    <CheckCircle2 className="w-3 h-3" /> Verified
+                    <CheckCircle2 className="w-3 h-3" /> {t('verification.verified')}
                   </span>
                 )}
               </div>

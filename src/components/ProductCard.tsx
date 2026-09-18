@@ -6,6 +6,7 @@ import { formatRupees } from '../utils/pricing';
 import { toggleWishlist, isWishlisted } from '../utils/storage';
 import { PhotoPlaceholder } from './PhotoPlaceholder';
 import { CredibilityBadge } from './CredibilityBadge';
+import { useLanguage } from '../i18n';
 
 interface ProductCardProps {
   product: Product;
@@ -13,6 +14,7 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, showArtisan = true }: ProductCardProps) {
+  const { t } = useLanguage();
   const [wishlisted, setWishlisted] = React.useState(() => isWishlisted(product.id));
 
   const handleWishlist = (e: React.MouseEvent) => {
@@ -38,8 +40,8 @@ export function ProductCard({ product, showArtisan = true }: ProductCardProps) {
           )}
           <button
             onClick={handleWishlist}
-            className="absolute top-3 right-3 p-2 bg-[#FAF4EB]/90 backdrop-blur-xs rounded-full shadow-md hover:scale-110 transition-transform z-10 border border-earth-200"
-            aria-label="Wishlist"
+            className="absolute top-3 right-3 p-2 bg-[#FAF4EB]/90 backdrop-blur-xs rounded-full shadow-md hover:scale-110 transition-transform z-10 border border-earth-200 cursor-pointer"
+            aria-label={t('product.wishlist')}
           >
             <Heart
               className={`w-4 h-4 transition-colors ${
@@ -55,7 +57,7 @@ export function ProductCard({ product, showArtisan = true }: ProductCardProps) {
             {isGITagged && (
               <span className="inline-flex items-center gap-1 text-[11px] font-semibold bg-forest-600 text-white px-2.5 py-0.5 rounded-full shadow-xs">
                 <ShieldCheck className="w-3 h-3" />
-                GI Tag
+                {t('product.gi_tag')}
               </span>
             )}
           </div>
@@ -67,16 +69,18 @@ export function ProductCard({ product, showArtisan = true }: ProductCardProps) {
           {showArtisan && (
             <div className="flex items-center gap-1 text-xs text-earth-600 mb-1">
               <MapPin className="w-3 h-3 text-brand-600" />
-              <span>{product.artisanDistrict}, Jharkhand</span>
+              <span>{product.artisanDistrict}, {t('crafts.jharkhand')}</span>
             </div>
           )}
           {showArtisan && (
-            <p className="text-xs text-earth-600 mb-2.5">by {product.artisanName}</p>
+            <p className="text-xs text-earth-600 mb-2.5">
+              {t('product.by_artisan', { name: product.artisanName })}
+            </p>
           )}
 
           {product.priceRange && (
             <div className="text-[11px] text-earth-800 mb-2.5 bg-[#FAF4EB] px-2.5 py-1 rounded-md border border-earth-200/90 inline-block">
-              Online reference: <span className="font-semibold">₹{product.priceRange.min} – ₹{product.priceRange.max}</span>
+              {t('product.online_reference')} <span className="font-semibold">₹{product.priceRange.min} – ₹{product.priceRange.max}</span>
             </div>
           )}
 
@@ -92,3 +96,5 @@ export function ProductCard({ product, showArtisan = true }: ProductCardProps) {
     </div>
   );
 }
+
+export default ProductCard;

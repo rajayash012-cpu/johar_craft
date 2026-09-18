@@ -35,8 +35,10 @@ import type {
   VerificationStatus,
 } from '../../types';
 import { VerificationDetailsModal } from '../../components/VerificationDetailsModal';
+import { useLanguage } from '../../i18n/LanguageContext';
 
 export function VerificationPage() {
+  const { t } = useLanguage();
   const currentArtisan = getArtisan();
   const artisanId = currentArtisan?.id || 'JH-ART-0001';
   const artisanName = currentArtisan?.name || 'Artisan';
@@ -260,10 +262,10 @@ export function VerificationPage() {
           <span>Trust & Credibility System</span>
         </div>
         <h1 className="text-2xl sm:text-3xl font-bold font-serif text-earth-900">
-          Trust & Verification Center
+          {t('verification.title')}
         </h1>
         <p className="text-sm text-earth-700">
-          Build lasting trust with buyers and galleries through transparent, verified craft identity.
+          {t('verification.subtitle')}
         </p>
       </div>
 
@@ -295,7 +297,7 @@ export function VerificationPage() {
         <div className="flex items-center justify-between gap-2 mb-1.5">
           <div className="flex items-center gap-2 text-earth-900 font-semibold text-xs tracking-wide">
             <ShieldCheck className="w-4 h-4 text-forest-700" />
-            <span>Demo Verification Mode</span>
+            <span>{t('verification.demo_mode')}</span>
           </div>
           <button
             type="button"
@@ -371,7 +373,7 @@ export function VerificationPage() {
             </div>
             <div>
               <h2 className="text-lg font-serif font-bold text-earth-900">
-                {isIdentityVerified ? 'Identity Verified' : 'Artisan Identity'}
+                {isIdentityVerified ? t('verification.badge_identity') : t('verification.identity_card_title')}
               </h2>
               <p className="text-xs text-earth-600">
                 {isIdentityVerified
@@ -385,11 +387,11 @@ export function VerificationPage() {
             {isIdentityVerified ? (
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-forest-100 text-forest-800 border border-forest-200">
                 <CheckCircle2 className="w-3.5 h-3.5 text-forest-700" />
-                Identity Verified
+                {t('verification.badge_identity')}
               </span>
             ) : (
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-earth-100 text-earth-700 border border-earth-200">
-                Status: Not Verified
+                Status: {t('verification.unverified')}
               </span>
             )}
           </div>
@@ -431,7 +433,7 @@ export function VerificationPage() {
                 onClick={() => setShowDetailsModal(true)}
                 className="px-4 py-2.5 rounded-xl bg-amber-800 hover:bg-amber-900 text-white text-xs font-semibold transition-colors shadow-xs"
               >
-                View Verification Details
+                {t('verification.view_details')}
               </button>
               <button
                 type="button"
@@ -485,7 +487,7 @@ export function VerificationPage() {
                 </>
               ) : (
                 <>
-                  <span>Verify Identity</span>
+                  <span>{t('verification.verify_now')}</span>
                   <ChevronRight className="w-4 h-4" />
                 </>
               )}
@@ -500,7 +502,7 @@ export function VerificationPage() {
       <div className="space-y-3 pt-2">
         <div>
           <h3 className="text-sm font-bold text-stone-900">
-            Additional Credentials
+            {t('verification.additional_credentials')}
           </h3>
           <p className="text-xs text-stone-500">
             Optional artisan registrations for recognized craftspersons, SHGs, and registered craft enterprises. These do not block basic Identity Verified status.
@@ -533,7 +535,7 @@ export function VerificationPage() {
                 <div className="p-2.5 rounded-lg bg-blue-50 border border-blue-200 text-xs text-blue-900 space-y-1">
                   <div className="flex items-center gap-1 font-semibold text-[11px]">
                     <CheckCircle2 className="w-3.5 h-3.5 text-blue-600" />
-                    <span>Pehchan Verified</span>
+                    <span>{t('verification.badge_artisan')}</span>
                   </div>
                   <p className="text-[10px] text-blue-700 font-mono">
                     {profile.records.pehchan.maskedReference}
@@ -597,7 +599,7 @@ export function VerificationPage() {
                 <div className="p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 space-y-1">
                   <div className="flex items-center gap-1 font-semibold text-[11px]">
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                    <span>Udyam Verified</span>
+                    <span>{t('verification.badge_business')}</span>
                   </div>
                   <p className="text-[10px] text-emerald-700 font-mono">
                     {profile.records.udyam.maskedReference}
@@ -661,7 +663,7 @@ export function VerificationPage() {
                 <div className="p-2.5 rounded-lg bg-purple-50 border border-purple-200 text-xs text-purple-900 space-y-1">
                   <div className="flex items-center gap-1 font-semibold text-[11px]">
                     <CheckCircle2 className="w-3.5 h-3.5 text-purple-600" />
-                    <span>GST Verified</span>
+                    <span>{t('verification.badge_business')}</span>
                   </div>
                   <p className="text-[10px] text-purple-700 font-mono">
                     {profile.records.gstin.maskedReference}

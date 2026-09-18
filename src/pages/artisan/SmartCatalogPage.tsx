@@ -23,9 +23,11 @@ import {
   FileText,
   Clock,
   Layers,
-  Info
+  Info,
+  Key
 } from 'lucide-react';
 import { ProductPhotoUploader } from '../../components/ProductPhotoUploader';
+import { AIVisionService } from '../../services/aiVisionService';
 import {
   AICatalogService,
   CompleteAICatalogResult
@@ -73,6 +75,8 @@ export function SmartCatalogPage() {
   const [aiResult, setAiResult] = useState<CompleteAICatalogResult | null>(null);
   const [showPriceSourcesModal, setShowPriceSourcesModal] = useState(false);
   const [showResearchSourcesModal, setShowResearchSourcesModal] = useState(false);
+  const [showApiKeyModal, setShowApiKeyModal] = useState(false);
+  const [geminiApiKeyInput, setGeminiApiKeyInput] = useState(() => AIVisionService.getGeminiApiKey() || '');
 
   // Editable Catalog Fields in Review Stage
   const [title, setTitle] = useState('');
@@ -393,23 +397,32 @@ export function SmartCatalogPage() {
               Dashboard
             </Link>
             <span className="text-xs text-earth-400">/</span>
-            <span className="text-xs font-semibold text-brand-700">Smart Catalog</span>
+            <span className="text-xs font-semibold text-brand-700">{t('smart_catalog.title')}</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-serif font-bold text-earth-900 flex items-center gap-2">
             <Sparkles className="w-6 h-6 text-brand-600" />
-            AI Smart Catalog & Web Research
+            {t('smart_catalog.title')}
           </h1>
           <p className="text-xs sm:text-sm text-earth-600 mt-1 max-w-2xl leading-relaxed">
-            Upload your handicraft photo. AI vision identifies the craft, researches real market prices & official sources, and builds your complete listing.
+            {t('smart_catalog.upload_subheading')}
           </p>
         </div>
 
-        {/* Demo AI Mode Badge */}
-        <div className="flex items-center gap-2 self-start sm:self-auto">
+        {/* Vision Mode Badge & API Key Settings */}
+        <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
           <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-forest-800 bg-forest-50 border border-forest-200 px-3 py-1.5 rounded-full shadow-2xs">
             <ShieldCheck className="w-3.5 h-3.5 text-forest-600" />
-            Verified Research Engine Active
+            {AIVisionService.getGeminiApiKey() ? 'Gemini Cloud Vision Active' : 'Unbiased Vision Engine Active'}
           </span>
+          <button
+            type="button"
+            onClick={() => setShowApiKeyModal(true)}
+            className="inline-flex items-center gap-1 text-xs font-semibold text-earth-700 bg-white border border-earth-300 hover:bg-earth-50 px-2.5 py-1.5 rounded-full shadow-2xs cursor-pointer transition-colors"
+            title="Configure optional Gemini Vision API Key"
+          >
+            <Key className="w-3 h-3 text-brand-600" />
+            <span>API Key</span>
+          </button>
         </div>
       </div>
 
@@ -422,13 +435,13 @@ export function SmartCatalogPage() {
           <div className="card-warm p-6 sm:p-8 border-2 border-earth-300 text-center space-y-6 shadow-xs rounded-3xl">
             <div className="max-w-xl mx-auto space-y-2">
               <span className="text-xs font-bold text-brand-700 uppercase tracking-wider">
-                Photo-First Listing
+                {t('smart_catalog.stage_upload')}
               </span>
               <h2 className="text-2xl sm:text-3xl font-serif font-bold text-earth-900">
-                ✨ AI Smart Catalog
+                ✨ {t('smart_catalog.title')}
               </h2>
               <p className="text-xs sm:text-sm text-earth-700 leading-relaxed">
-                Upload a photo of your handicraft and let AI identify, research and prepare your product listing. You can review and edit everything before publishing.
+                {t('smart_catalog.upload_subheading')}
               </p>
             </div>
 
@@ -442,12 +455,12 @@ export function SmartCatalogPage() {
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-earth-800 flex items-center gap-1.5">
                   <Palette className="w-3.5 h-3.5 text-brand-600" />
-                  Or test instantly with a real Jharkhand craft sample:
+                  {t('smart_catalog.or_select_preset')}
                 </span>
                 <span className="text-[11px] text-earth-500">Click any preset to load</span>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2">
                 {SAMPLE_CRAFT_PRESETS.map((sample) => (
                   <button
                     key={sample.id}
@@ -490,10 +503,10 @@ export function SmartCatalogPage() {
                 type="button"
                 disabled={images.length === 0}
                 onClick={handleStartAnalysis}
-                className="btn-primary w-full justify-center !py-3.5 !text-base shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                className="btn-primary w-full justify-center !py-3.5 !text-base shadow-md disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
                 <Sparkles className="w-5 h-5 text-brand-200" />
-                <span>✨ Analyze with AI</span>
+                <span>✨ {t('smart_catalog.analyze_btn')}</span>
               </button>
 
               <div className="flex items-center justify-between text-xs text-earth-500 px-2">
@@ -533,7 +546,7 @@ export function SmartCatalogPage() {
 
           <div>
             <h2 className="text-2xl font-serif font-bold text-stone-900">
-              Analyzing your handicraft...
+              {t('smart_catalog.analyzing_title')}
             </h2>
             <p className="text-xs sm:text-sm text-stone-500 mt-1">
               AI Vision & Web Research Engine are compiling verified information.
@@ -549,7 +562,7 @@ export function SmartCatalogPage() {
                 <div className="w-4 h-4 rounded-full border-2 border-amber-600 border-t-transparent animate-spin shrink-0" />
               )}
               <span className={pipelineStep >= 1 ? 'font-semibold text-stone-900' : 'text-stone-500'}>
-                1. AI Vision Analysis (Color, texture, contour)
+                {t('smart_catalog.pipeline_vqa')}
               </span>
             </div>
 
@@ -562,7 +575,7 @@ export function SmartCatalogPage() {
                 <div className="w-4 h-4 rounded-full border border-stone-300 shrink-0" />
               )}
               <span className={pipelineStep >= 2 ? 'font-semibold text-stone-900' : 'text-stone-400'}>
-                2. Craft Classification & Confidence Assessment
+                {t('smart_catalog.pipeline_tax')}
               </span>
             </div>
 
@@ -575,7 +588,7 @@ export function SmartCatalogPage() {
                 <div className="w-4 h-4 rounded-full border border-stone-300 shrink-0" />
               )}
               <span className={pipelineStep >= 3 ? 'font-semibold text-stone-900' : 'text-stone-400'}>
-                3. Generating Targeted Web Search Queries
+                {t('smart_catalog.pipeline_research')}
               </span>
             </div>
 
@@ -588,7 +601,7 @@ export function SmartCatalogPage() {
                 <div className="w-4 h-4 rounded-full border border-stone-300 shrink-0" />
               )}
               <span className={pipelineStep >= 4 ? 'font-semibold text-stone-900' : 'text-stone-400'}>
-                4. Researching Official & Reputable Craft Portals
+                {t('smart_catalog.pipeline_audit')}
               </span>
             </div>
 
@@ -601,7 +614,7 @@ export function SmartCatalogPage() {
                 <div className="w-4 h-4 rounded-full border border-stone-300 shrink-0" />
               )}
               <span className={pipelineStep >= 5 ? 'font-semibold text-stone-900' : 'text-stone-400'}>
-                5. Market Price Research & Comparable Product Matching
+                {t('smart_catalog.pipeline_research')}
               </span>
             </div>
 
@@ -612,7 +625,7 @@ export function SmartCatalogPage() {
                 <div className="w-4 h-4 rounded-full border border-stone-300 shrink-0" />
               )}
               <span className={pipelineStep >= 6 ? 'font-semibold text-stone-900' : 'text-stone-400'}>
-                6. Assembling Structured Reviewable Catalog
+                {t('smart_catalog.pipeline_draft')}
               </span>
             </div>
           </div>
@@ -642,10 +655,10 @@ export function SmartCatalogPage() {
                 <span className="text-xs text-stone-500">Researched 17 September 2026</span>
               </div>
               <h2 className="text-xl font-serif font-bold text-stone-900 mt-1">
-                Review & Confirm Product Listing
+                {t('smart_catalog.review_title')}
               </h2>
               <p className="text-xs text-stone-600">
-                AI has researched craft details and online prices. Please review and make any changes before publishing.
+                {t('smart_catalog.review_subtitle')}
               </p>
             </div>
 
@@ -659,22 +672,99 @@ export function SmartCatalogPage() {
             </button>
           </div>
 
-          {/* Ambiguous Craft Notice if Not Confidently Identified */}
-          {!aiResult.identification.identified && (
-            <div className="bg-amber-50 border border-amber-300 rounded-2xl p-4 text-xs text-amber-950 flex items-start gap-3 shadow-2xs">
-              <AlertCircle className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
-              <div className="space-y-2">
-                <div>
-                  <span className="font-bold">Unable to Confidently Identify Product: </span>
-                  AI could not determine the exact craft category from the photo alone. To prevent errors, please select your craft category below:
+          {/* AI Vision Identification & Human Review Summary Card (Section 11 & 12) */}
+          <div className="bg-white rounded-2xl border-2 border-stone-200 p-4 sm:p-5 space-y-3.5 shadow-xs">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-stone-100 pb-2.5">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-brand-600" />
+                <h3 className="font-bold text-xs sm:text-sm text-stone-900 uppercase tracking-wider">
+                  AI Vision Identification & Human Review
+                </h3>
+              </div>
+              <span className="text-[11px] text-stone-500 font-medium">
+                Review & Confirm before publishing to marketplace
+              </span>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+              <div className="p-3 rounded-xl bg-stone-50 border border-stone-200 space-y-1">
+                <span className="text-[10px] text-stone-500 font-bold uppercase block">1. Product Type</span>
+                <span className="font-bold text-stone-900 text-sm block truncate" title={aiResult.identification.productType}>
+                  {aiResult.identification.productType}
+                </span>
+                {renderConfidenceChip(aiResult.identification.confidence.productName)}
+              </div>
+
+              <div className="p-3 rounded-xl bg-stone-50 border border-stone-200 space-y-1">
+                <span className="text-[10px] text-stone-500 font-bold uppercase block">2. Category</span>
+                <span className="font-bold text-stone-900 text-sm block truncate" title={craftCategory}>
+                  {craftCategory === 'Not confidently identified' ? 'Not Confirmed' : craftCategory}
+                </span>
+                {renderConfidenceChip(aiResult.identification.confidence.craftCategory)}
+              </div>
+
+              <div className="p-3 rounded-xl bg-stone-50 border border-stone-200 space-y-1">
+                <span className="text-[10px] text-stone-500 font-bold uppercase block">3. Material</span>
+                <span className="font-bold text-stone-900 text-sm block truncate" title={materials}>
+                  {isMaterialConfirmed ? materials : 'Not confirmed'}
+                </span>
+                {isMaterialConfirmed ? (
+                  <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                    <Check className="w-3 h-3" /> Artisan Confirmed
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                    <AlertCircle className="w-3 h-3" /> Low Confidence
+                  </span>
+                )}
+              </div>
+
+              <div className="p-3 rounded-xl bg-stone-50 border border-stone-200 space-y-1">
+                <span className="text-[10px] text-stone-500 font-bold uppercase block">4. Origin Location</span>
+                <span className="font-bold text-stone-900 text-sm block truncate">
+                  {artisan?.district || 'Jharkhand'}, India
+                </span>
+                <span className="inline-flex items-center gap-1 text-[10px] font-bold text-stone-600 bg-stone-100 px-2 py-0.5 rounded border border-stone-200">
+                  Artisan Provided
+                </span>
+              </div>
+            </div>
+
+            {/* Low Confidence Warning Notice */}
+            {(aiResult.identification.confidence.material === 'Low' ||
+              aiResult.identification.confidence.craftCategory === 'Low' ||
+              !isMaterialConfirmed ||
+              craftCategory === 'Not confidently identified') && (
+              <div className="p-3 bg-amber-50 rounded-xl border border-amber-300 text-xs text-amber-950 flex items-start gap-2.5">
+                <AlertCircle className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+                <div className="space-y-0.5">
+                  <p className="font-bold">AI is not confident about some fields in this analysis.</p>
+                  <p className="text-[11px] text-amber-800 leading-relaxed">
+                    Specific materials, craft traditions, and origin cannot be proven from a photograph alone. You have full control to edit, confirm, or override any suggestions below before publishing.
+                  </p>
                 </div>
-                <div className="flex flex-wrap gap-1.5">
+              </div>
+            )}
+          </div>
+
+          {/* Ambiguous Craft Notice if Not Confidently Identified */}
+          {(!aiResult.identification.identified || craftCategory === 'Not confidently identified' || aiResult.identification.craftCategory === 'Not confidently identified') && (
+            <div className="bg-amber-50 border-2 border-amber-400 rounded-2xl p-4 text-xs text-amber-950 flex items-start gap-3 shadow-xs">
+              <AlertCircle className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
+              <div className="space-y-2 flex-1">
+                <div>
+                  <span className="font-bold text-sm text-amber-900 block">AI is not confident about this product category</span>
+                  <p className="text-xs text-amber-800 mt-0.5">
+                    The photo could not be matched with high confidence to a single craft tradition. To ensure accuracy, please select your authentic craft category:
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-1.5 pt-1">
                   {CRAFT_CATEGORIES.map((cat) => (
                     <button
                       key={cat}
                       type="button"
                       onClick={() => handleCategoryChangeInReview(cat)}
-                      className={`px-2.5 py-1 rounded-lg text-xs font-semibold cursor-pointer transition-colors ${
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-colors ${
                         craftCategory === cat
                           ? 'bg-amber-700 text-white shadow-xs'
                           : 'bg-white border border-amber-300 text-amber-900 hover:bg-amber-100'
@@ -994,8 +1084,15 @@ export function SmartCatalogPage() {
                     <select
                       value={craftCategory}
                       onChange={(e) => handleCategoryChangeInReview(e.target.value)}
-                      className="input cursor-pointer font-medium"
+                      className={`input cursor-pointer font-medium ${
+                        craftCategory === 'Not confidently identified' ? 'border-amber-400 bg-amber-50/50' : ''
+                      }`}
                     >
+                      {craftCategory === 'Not confidently identified' && (
+                        <option value="Not confidently identified" disabled>
+                          -- Select Craft Category --
+                        </option>
+                      )}
                       {CRAFT_CATEGORIES.map((c) => (
                         <option key={c} value={c}>
                           {c}
@@ -1003,6 +1100,11 @@ export function SmartCatalogPage() {
                       ))}
                       <option value="Other Handicrafts">Other Handicrafts</option>
                     </select>
+                    {craftCategory === 'Not confidently identified' && (
+                      <span className="text-[11px] text-amber-700 font-medium block mt-1">
+                        ⚠ AI is not confident about this field. Please select your category.
+                      </span>
+                    )}
                   </div>
 
                   <div>
@@ -1022,13 +1124,13 @@ export function SmartCatalogPage() {
                         Material <span className="text-red-500">*</span>
                       </label>
                       {isMaterialConfirmed ? (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded">
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
                           <Check className="w-3 h-3 text-emerald-600" />
                           Artisan Confirmed
                         </span>
                       ) : (
                         <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
-                          ⚠ AI Inference — Please Confirm
+                          ⚠ AI is not confident about this field
                         </span>
                       )}
                     </div>
@@ -1041,6 +1143,7 @@ export function SmartCatalogPage() {
                           setIsMaterialConfirmed(true);
                         }}
                         className="input"
+                        placeholder="e.g. Handspun Cotton, Tussar Silk, Brass, Terracotta Clay..."
                       />
                       {!isMaterialConfirmed && (
                         <button
@@ -1052,6 +1155,11 @@ export function SmartCatalogPage() {
                         </button>
                       )}
                     </div>
+                    {!isMaterialConfirmed && (
+                      <p className="text-[11px] text-amber-800 bg-amber-50/80 border border-amber-200 p-2 rounded-lg">
+                        ⚠ AI is not confident about this field. Material cannot be proven from a photograph alone. Please confirm or edit above.
+                      </p>
+                    )}
                   </div>
 
                   <div>
@@ -1195,7 +1303,7 @@ export function SmartCatalogPage() {
                   className="w-full py-4 px-6 rounded-2xl bg-amber-700 hover:bg-amber-800 text-white font-serif font-bold text-base shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <ShoppingBag className="w-5 h-5" />
-                  <span>Save & Publish to Marketplace</span>
+                  <span>{t('smart_catalog.publish_catalog_btn')}</span>
                 </button>
 
                 <button
@@ -1395,7 +1503,7 @@ export function SmartCatalogPage() {
 
           <div>
             <span className="text-xs font-bold text-emerald-800 uppercase tracking-wider">
-              {savedProduct.status === 'published' ? 'Published to Marketplace' : 'Draft Saved'}
+              {savedProduct.status === 'published' ? t('smart_catalog.success_title') : 'Draft Saved'}
             </span>
             <h2 className="text-2xl font-serif font-bold text-stone-900 mt-1">
               "{savedProduct.name}"
@@ -1438,7 +1546,7 @@ export function SmartCatalogPage() {
                 className="flex-1 py-3 px-4 rounded-xl bg-amber-700 hover:bg-amber-800 text-white text-xs font-semibold shadow-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 <ExternalLink className="w-3.5 h-3.5" />
-                <span>View in Marketplace</span>
+                <span>{t('smart_catalog.view_product')}</span>
               </button>
             )}
 
@@ -1447,7 +1555,7 @@ export function SmartCatalogPage() {
               onClick={() => navigate('/artisan/products')}
               className="flex-1 py-3 px-4 rounded-xl bg-white border border-stone-300 hover:bg-stone-50 text-stone-800 text-xs font-semibold shadow-xs transition-colors cursor-pointer"
             >
-              My Products
+              {t('nav.my_products')}
             </button>
           </div>
 
@@ -1461,8 +1569,77 @@ export function SmartCatalogPage() {
               }}
               className="text-xs text-amber-700 font-semibold hover:underline cursor-pointer"
             >
-              + Create Another Smart Catalog Listing
+              + {t('smart_catalog.create_another')}
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Gemini API Key Configuration Modal (Optional) */}
+      {showApiKeyModal && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-xl border border-stone-200 animate-slide-up">
+            <div className="flex items-center justify-between border-b border-stone-100 pb-3">
+              <div className="flex items-center gap-2">
+                <Key className="w-5 h-5 text-brand-600" />
+                <h3 className="font-bold text-base text-stone-900">Gemini Vision API Key</h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowApiKeyModal(false)}
+                className="text-stone-400 hover:text-stone-600 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <p className="text-xs text-stone-600 leading-relaxed">
+              Johar Craft includes a built-in unbiased local vision engine. You can optionally connect a Google Gemini API key to run Google's live multimodal vision models. The key is stored only in your browser local storage.
+            </p>
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-stone-800">API Key</label>
+              <input
+                type="password"
+                value={geminiApiKeyInput}
+                onChange={(e) => setGeminiApiKeyInput(e.target.value)}
+                placeholder="AIzaSy..."
+                className="input font-mono text-xs"
+              />
+            </div>
+
+            <div className="flex items-center justify-between pt-2 border-t border-stone-100">
+              <button
+                type="button"
+                onClick={() => {
+                  setGeminiApiKeyInput('');
+                  AIVisionService.setGeminiApiKey('');
+                  setShowApiKeyModal(false);
+                }}
+                className="text-xs text-red-600 hover:underline cursor-pointer"
+              >
+                Clear Key
+              </button>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowApiKeyModal(false)}
+                  className="px-3 py-1.5 rounded-lg border border-stone-300 text-xs font-semibold text-stone-700 hover:bg-stone-50 cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    AIVisionService.setGeminiApiKey(geminiApiKeyInput);
+                    setShowApiKeyModal(false);
+                  }}
+                  className="px-4 py-1.5 rounded-lg bg-brand-600 hover:bg-brand-700 text-xs font-bold text-white shadow-xs cursor-pointer"
+                >
+                  Save Key
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}

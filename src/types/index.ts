@@ -72,11 +72,33 @@ export interface Artisan {
 
 export type FieldSource = 'artisan' | 'ai_suggestion' | 'verified_reference' | 'ai_vision' | 'web_research';
 
-export type AIConfidence = 'High' | 'Medium' | 'Low';
+export type AIConfidence = 'High' | 'Medium' | 'Low' | 'high' | 'medium' | 'low';
 
 export type FactProvenance = 'OBSERVED' | 'INFERRED' | 'RESEARCHED' | 'ARTISAN_PROVIDED';
 
 export type ResearchSourceQuality = 'OFFICIAL' | 'REPUTABLE' | 'MARKETPLACE' | 'OTHER';
+
+export interface AIField<T = string> {
+  value: T;
+  confidence: AIConfidence;
+  source: FieldSource;
+}
+
+export interface StructuredVisionResponse {
+  productType: AIField<string>;
+  category: AIField<string>;
+  subtype: AIField<string>;
+  materials: string[];
+  colors: string[];
+  patterns: string[];
+  visualDescription: string;
+  possibleCraft: AIField<string>;
+  origin: {
+    value: string;
+    source: FieldSource;
+  };
+  uncertainFields: string[];
+}
 
 export interface AIVisionIdentification {
   identified: boolean;
@@ -106,6 +128,8 @@ export interface AIVisionIdentification {
     design: FactProvenance;
   };
   notes: string[];
+  uncertainFields?: string[];
+  structuredResponse?: StructuredVisionResponse;
 }
 
 export interface WebResearchSource {

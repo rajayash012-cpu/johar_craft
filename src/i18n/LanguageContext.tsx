@@ -20,7 +20,7 @@ const DICTIONARIES: Record<string, any> = {
   hoc
 };
 
-const STORAGE_KEY = 'joharcraft_language';
+const STORAGE_KEYS = ['karigarsetu_language', 'joharcraft_language'];
 
 interface LanguageContextType {
   language: string;
@@ -43,27 +43,37 @@ function getNestedValue(obj: any, path: string): string | undefined {
   return typeof current === 'string' ? current : undefined;
 }
 
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguageState] = useState<string>(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
+function getSavedLanguage(): string {
+  try {
+    for (const key of STORAGE_KEYS) {
+      const saved = localStorage.getItem(key);
       if (saved && SUPPORTED_LANGUAGES.some((l) => l.code === saved)) {
         return saved;
       }
-    } catch (_) {
-      // Ignore localStorage read errors
     }
-    return DEFAULT_LANGUAGE;
-  });
+  } catch (_) {
+    // Ignore localStorage read errors
+  }
+  return DEFAULT_LANGUAGE;
+}
+
+function saveLanguage(lang: string) {
+  try {
+    for (const key of STORAGE_KEYS) {
+      localStorage.setItem(key, lang);
+    }
+  } catch (_) {
+    // Ignore localStorage write errors
+  }
+}
+
+export function LanguageProvider({ children }: { children: React.ReactNode }) {
+  const [language, setLanguageState] = useState<string>(getSavedLanguage);
 
   const setLanguage = (lang: string) => {
     if (!SUPPORTED_LANGUAGES.some((l) => l.code === lang)) return;
     setLanguageState(lang);
-    try {
-      localStorage.setItem(STORAGE_KEY, lang);
-    } catch (_) {
-      // Ignore localStorage write errors
-    }
+    saveLanguage(lang);
   };
 
   useEffect(() => {
@@ -79,7 +89,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     );
   }, [language]);
 
-  // Robust 3-tier fallback translation function: Regional -> Hindi -> English -> Key
+  // Robust 3-tier fallback translation function: Regional -> Hindi -> English -> Human readable fallback
   const t = (path: string, params?: Record<string, string | number>): string => {
     const selectedDict = DICTIONARIES[language];
     const hindiDict = DICTIONARIES['hi'];
@@ -98,16 +108,17 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
       val = getNestedValue(englishDict, path);
     }
 
-    // 4. Safe string default if all else fails
+    // 4. Safe human-readable string default if all else fails (never display raw key with dot)
     if (!val) {
       const parts = path.split('.');
-      val = parts[parts.length - 1] || path;
+      const last = parts[parts.length - 1] || path;
+      val = last.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
     }
 
-    // Interpolate params if provided
+    // Interpolate params if provided (supports both {k} and {{k}})
     if (params) {
       Object.entries(params).forEach(([k, v]) => {
-        val = val!.replace(new RegExp(`\\{${k}\\}`, 'g'), String(v));
+        val = val!.replace(new RegExp(`\\{\\{?${k}\\}\\}?`, 'g'), String(v));
       });
     }
 
@@ -136,3 +147,4 @@ export function useLanguage() {
   }
   return context;
 }
+export default LanguageContext;

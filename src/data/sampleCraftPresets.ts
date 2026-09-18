@@ -103,6 +103,57 @@ const AMBIGUOUS_SAMPLE_DATA_URI =
   </svg>
 `);
 
+const WOOD_SAMPLE_DATA_URI =
+  'data:image/svg+xml;utf8,' +
+  encodeURIComponent(`
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+    <rect width="600" height="600" fill="#2a1608" />
+    <!-- Carved Hardwood Relief Panel -->
+    <g fill="#5c381e" stroke="#1d0e04" stroke-width="4">
+      <rect x="100" y="80" width="400" height="440" rx="16" fill="#6e4224" stroke="#422510" stroke-width="10" />
+      <!-- Linear Wood Grain Lines -->
+      <path d="M120,120 Q300,100 480,120 M120,200 Q300,180 480,200 M120,320 Q300,300 480,320 M120,440 Q300,420 480,440" fill="none" stroke="#4d2b13" stroke-width="3" />
+      <!-- Carved Tribal Floral / Sun Motif -->
+      <circle cx="300" cy="280" r="75" fill="#8a532d" stroke="#331908" stroke-width="6" />
+      <circle cx="300" cy="280" r="30" fill="#a36539" />
+      <!-- Chiseled Petals -->
+      <path d="M300,175 L300,205 M300,355 L300,385 M195,280 L225,280 M375,280 L405,280 M225,205 L245,225 M355,355 L375,335 M225,355 L245,335 M355,205 L375,225" stroke="#ffe0b2" stroke-width="8" stroke-linecap="round" />
+    </g>
+    <text x="300" y="560" fill="#ffe0b2" font-family="sans-serif" font-size="16" font-weight="bold" text-anchor="middle">
+      Hand-Carved Indigenous Hardwood Relief Panel
+    </text>
+  </svg>
+`);
+
+const JEWELLERY_SAMPLE_DATA_URI =
+  'data:image/svg+xml;utf8,' +
+  encodeURIComponent(`
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+    <rect width="600" height="600" fill="#14181f" />
+    <!-- Tribal Bell Metal / Silver Hasli Choker & Beads -->
+    <g fill="#d1d5db" stroke="#9ca3af" stroke-width="4">
+      <!-- Main Collar Arc (Hasli) -->
+      <path d="M150,220 C150,380 450,380 450,220" fill="none" stroke="#e5e7eb" stroke-width="22" stroke-linecap="round" />
+      <!-- Filigree Engraved Bands on Collar -->
+      <path d="M220,320 L220,340 M260,345 L260,365 M300,350 L300,370 M340,345 L340,365 M380,320 L380,340" stroke="#4b5563" stroke-width="4" />
+      <!-- Dangling Tribal Coin / Bell Charms -->
+      <g fill="#f3f4f6" stroke="#6b7280" stroke-width="2">
+        <circle cx="220" cy="370" r="14" />
+        <circle cx="260" cy="395" r="15" />
+        <circle cx="300" cy="405" r="17" />
+        <circle cx="340" cy="395" r="15" />
+        <circle cx="380" cy="370" r="14" />
+      </g>
+      <!-- Connecting Beads -->
+      <circle cx="160" cy="220" r="16" fill="#9ca3af" />
+      <circle cx="440" cy="220" r="16" fill="#9ca3af" />
+    </g>
+    <text x="300" y="540" fill="#e5e7eb" font-family="sans-serif" font-size="16" font-weight="bold" text-anchor="middle">
+      Traditional Santhali Handcrafted Hasli Ornament
+    </text>
+  </svg>
+`);
+
 export const SAMPLE_CRAFT_PRESETS: SampleCraftPreset[] = [
   {
     id: 'sample-dokra',
@@ -132,9 +183,25 @@ export const SAMPLE_CRAFT_PRESETS: SampleCraftPreset[] = [
     id: 'sample-textile',
     label: 'Santhali Saree',
     craftCategory: 'Textiles',
-    expectedName: 'Santhali Traditional Handwoven Cotton Saree',
+    expectedName: 'Traditional Handwoven Saree',
     image: sareeImg,
-    description: 'Indigenous cotton handloom drape with classic red geometric temple border.',
+    description: 'Indigenous handloom drape with classic red geometric temple border.',
+  },
+  {
+    id: 'sample-wood',
+    label: 'Wood Carving',
+    craftCategory: 'Wood Craft',
+    expectedName: 'Handcrafted Carved Wood Piece',
+    image: WOOD_SAMPLE_DATA_URI,
+    description: 'Hand-carved indigenous timber relief panel with natural grain.',
+  },
+  {
+    id: 'sample-jewellery',
+    label: 'Tribal Jewellery',
+    craftCategory: 'Tribal Jewellery',
+    expectedName: 'Traditional Hasli Ornament',
+    image: JEWELLERY_SAMPLE_DATA_URI,
+    description: 'Handcrafted bell metal / white metal tribal collar choker with coin pendants.',
   },
   {
     id: 'sample-sohrai',
@@ -147,7 +214,7 @@ export const SAMPLE_CRAFT_PRESETS: SampleCraftPreset[] = [
   {
     id: 'sample-ambiguous',
     label: 'Ambiguous / Unrelated Item',
-    craftCategory: 'Other Handicrafts',
+    craftCategory: 'Not confidently identified',
     expectedName: 'Handicraft Item (Unconfirmed)',
     image: AMBIGUOUS_SAMPLE_DATA_URI,
     description: 'Synthetic/unrelated shape to test no-hallucination handling and manual fallback.',

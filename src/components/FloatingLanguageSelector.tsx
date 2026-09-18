@@ -98,7 +98,7 @@ export function FloatingLanguageSelector() {
               {t('common.language')}
             </span>
             <span className="text-[10px] text-brand-700 font-medium px-2 py-0.5 rounded-full bg-brand-50 border border-brand-200/70">
-              8 Languages
+              {t('common.languages_badge')}
             </span>
           </div>
 
@@ -139,11 +139,12 @@ export function FloatingLanguageSelector() {
 
           {/* Subtle footer */}
           <div className="px-3.5 py-1.5 bg-earth-100/70 border-t border-earth-200/70 text-[10px] text-earth-600 text-center italic">
-            Jharkhand Regional Languages
+            {t('common.regional_languages')}
           </div>
         </div>
       )}
     </div>
   );
 }
+
 export default FloatingLanguageSelector;

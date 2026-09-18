@@ -1,15 +1,18 @@
 import React, { useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
 import { Share2, Download, MapPin, Award, ExternalLink } from 'lucide-react';
-import { getArtisan } from '../../utils/storage';
+import { getArtisan, getArtisanById } from '../../utils/storage';
 import { PhotoPlaceholder } from '../../components/PhotoPlaceholder';
 import { useToast } from '../../hooks/useToast';
 import { ToastContainer } from '../../components/ui/Toast';
+import { useLanguage } from '../../i18n';
 
 export function QRPage() {
   const navigate = useNavigate();
-  const artisan = getArtisan();
+  const { id } = useParams<{ id?: string }>();
+  const { t } = useLanguage();
+  const artisan = id ? getArtisanById(id) || getArtisan() : getArtisan();
   const { toasts, addToast, dismissToast } = useToast();
   const qrRef = useRef<HTMLDivElement>(null);
 
@@ -17,9 +20,11 @@ export function QRPage() {
     return (
       <div className="text-center py-20">
         <div className="text-6xl mb-4">🪪</div>
-        <h2 className="text-2xl font-display font-bold text-earth-900 mb-3">No Identity Yet</h2>
-        <p className="text-earth-600 mb-6">Create your artisan profile to generate your QR Identity.</p>
-        <button onClick={() => navigate('/artisan/profile')} className="btn-primary">Create Profile</button>
+        <h2 className="text-2xl font-display font-bold text-earth-900 mb-3">{t('qr.no_identity_title')}</h2>
+        <p className="text-earth-600 mb-6">{t('qr.no_identity_desc')}</p>
+        <button onClick={() => navigate('/artisan/profile')} className="btn-primary cursor-pointer">
+          {t('qr.create_profile')}
+        </button>
       </div>
     );
   }
@@ -40,7 +45,7 @@ export function QRPage() {
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(profileUrl).then(() => {
-      addToast('success', 'Profile link copied!', 'Share it with buyers and customers.');
+      addToast('success', t('qr.link_copied'), t('qr.link_copied_desc'));
     });
   };
 
@@ -55,7 +60,7 @@ export function QRPage() {
     a.download = `${artisan.id}-qr-identity.svg`;
     a.click();
     URL.revokeObjectURL(url);
-    addToast('success', 'QR downloaded!', 'Print it and display at your stall.');
+    addToast('success', t('qr.qr_downloaded'), t('qr.qr_downloaded_desc'));
   };
 
   return (
@@ -63,8 +68,8 @@ export function QRPage() {
       <ToastContainer toasts={toasts} onDismiss={dismissToast} />
 
       <div className="text-center mb-8">
-        <h1 className="text-2xl font-display font-bold text-earth-900">Digital Artisan Identity</h1>
-        <p className="text-earth-600 text-sm mt-1">Your unique QR identity card – share it with buyers</p>
+        <h1 className="text-2xl font-display font-bold text-earth-900">{t('artisan.qr_identity')}</h1>
+        <p className="text-earth-600 text-sm mt-1">{t('qr.subtitle')}</p>
       </div>
 
       {/* Identity Card */}
@@ -77,11 +82,11 @@ export function QRPage() {
               <div className="flex items-center gap-2">
                 <span className="text-brand-300 text-xs">❖</span>
                 <span className="text-[11px] text-brand-200 font-sans font-semibold tracking-widest uppercase">
-                  Digital Artisan Identity
+                  {t('qr.digital_artisan_identity')}
                 </span>
               </div>
               <span className="text-[10px] bg-white/20 px-2 py-0.5 rounded-full text-white font-mono">
-                Jharkhand Living Craft
+                {t('qr.living_craft')}
               </span>
             </div>
             <div className="flex items-center gap-4">
@@ -99,14 +104,14 @@ export function QRPage() {
                 <p className="text-brand-200 font-mono text-xs font-semibold mt-0.5">{artisan.id}</p>
                 <div className="flex items-center gap-1.5 mt-2 text-earth-200 text-xs">
                   <MapPin className="w-3.5 h-3.5 text-brand-300" />
-                  <span>{artisan.district}, Jharkhand</span>
+                  <span>{artisan.district}, {t('crafts.jharkhand')}</span>
                 </div>
                 <div className="flex items-center gap-1.5 mt-1 text-earth-200 text-xs">
                   <span>🏺</span>
                   <span>
                     {artisan.craftCategory}
                     {typeof artisan.yearsExperience === 'number'
-                      ? ` · ${artisan.yearsExperience} years`
+                      ? ` · ${t('artisan.years_exp', { count: artisan.yearsExperience })}`
                       : artisan.yearsExperience && artisan.yearsExperience !== 'Information not provided'
                       ? ` · ${artisan.yearsExperience}`
                       : ''}
@@ -130,7 +135,7 @@ export function QRPage() {
             />
           </div>
           <p className="text-xs text-earth-700 text-center max-w-xs font-medium">
-            Scan this QR code to view {artisan.name}'s verified artisan profile and authentic product catalog
+            {t('qr.scan_instruction', { name: artisan.name })}
           </p>
           <div className="mt-3 flex items-center gap-1.5 text-xs text-brand-700 font-semibold bg-[#FAF4EB] px-3 py-1 rounded-full border border-earth-200">
             <ExternalLink className="w-3.5 h-3.5" />
@@ -138,36 +143,26 @@ export function QRPage() {
           </div>
         </div>
 
-        {/* Card Footer */}
-        <div className="px-6 py-4 bg-[#F4E5D3] border-t border-earth-300">
-          <div className="flex items-center justify-between text-xs text-earth-700">
-            <span className="font-serif italic font-medium">Johar Craft Platform</span>
-            <div className="flex items-center gap-1 font-semibold text-brand-800">
-              <Award className="w-3.5 h-3.5 text-brand-700" />
-              <span>Jharkhand Tribal Artisan</span>
-            </div>
-          </div>
+        {/* Action Buttons */}
+        <div className="p-4 bg-[#FAF4EB] border-t border-earth-200 flex gap-3">
+          <button
+            onClick={handleShare}
+            className="flex-1 btn-primary justify-center flex items-center gap-2 text-xs cursor-pointer"
+          >
+            <Share2 className="w-4 h-4" />
+            <span>{t('qr.share_profile')}</span>
+          </button>
+          <button
+            onClick={handleDownloadQR}
+            className="flex-1 btn-secondary justify-center flex items-center gap-2 text-xs cursor-pointer"
+          >
+            <Download className="w-4 h-4" />
+            <span>{t('qr.download_qr')}</span>
+          </button>
         </div>
-      </div>
-
-      {/* Actions */}
-      <div className="grid grid-cols-2 gap-3">
-        <button onClick={handleDownloadQR} className="btn-secondary justify-center">
-          <Download className="w-4 h-4" />
-          Download QR
-        </button>
-        <button onClick={handleShare} className="btn-primary justify-center">
-          <Share2 className="w-4 h-4" />
-          Share Identity
-        </button>
-      </div>
-
-      <div className="mt-4 text-center">
-        <button onClick={() => navigate(`/artisan/${artisan.id}`)} className="btn-ghost text-sm">
-          <ExternalLink className="w-4 h-4" />
-          View Public Profile
-        </button>
       </div>
     </div>
   );
 }
+
+export default QRPage;

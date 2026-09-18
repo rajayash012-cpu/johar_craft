@@ -16,10 +16,12 @@ import { formatRupees } from '../../utils/pricing';
 import { useToast } from '../../hooks/useToast';
 import { ToastContainer } from '../../components/ui/Toast';
 import { CulturalDivider } from '../../components/CulturalDivider';
+import { useLanguage } from '../../i18n';
 
 export function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const { toasts, addToast, dismissToast } = useToast();
 
   const product = id ? getProductById(id) : undefined;
@@ -52,9 +54,20 @@ export function ProductDetailPage() {
     setContactModalOpen(true);
   };
 
-  const handleShare = () => {
-    navigator.clipboard.writeText(window.location.href);
-    addToast('success', 'Link copied!', 'Share this product with others.');
+  const handleShare = async () => {
+    if (navigator.share && product) {
+      try {
+        await navigator.share({ title: product.name, text: product.description, url: window.location.href });
+        return;
+      } catch (_) {}
+    }
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(window.location.href)
+        .then(() => addToast('success', 'Link copied!', 'Share this product with others.'))
+        .catch(() => addToast('info', 'Share URL', window.location.href));
+    } else {
+      addToast('info', 'Share URL', window.location.href);
+    }
   };
 
   if (!product) {
@@ -177,14 +190,14 @@ export function ProductDetailPage() {
             {/* Quick Details */}
             <div className="grid grid-cols-2 gap-3.5 mb-6">
               <div className="bg-[#FAF5EC] border border-earth-200/90 rounded-xl p-3.5">
-                <p className="text-[11px] uppercase tracking-wider text-earth-600 font-semibold mb-1">Materials</p>
-                <p className="font-medium text-earth-900 text-sm">{product.materials || 'Information not provided'}</p>
+                <p className="text-[11px] uppercase tracking-wider text-earth-600 font-semibold mb-1">{t('product.materials')}</p>
+                <p className="font-medium text-earth-900 text-sm">{product.materials || t('common.na')}</p>
               </div>
               {product.dimensions && (
                 <div className="bg-[#FAF5EC] border border-earth-200/90 rounded-xl p-3.5">
                   <div className="flex items-center gap-1 text-[11px] uppercase tracking-wider text-earth-600 font-semibold mb-1">
                     <Layers className="w-3.5 h-3.5 text-brand-600" />
-                    <span>Dimensions</span>
+                    <span>{t('product.dimensions')}</span>
                   </div>
                   <p className="font-medium text-earth-900 text-sm">{product.dimensions}</p>
                 </div>
@@ -316,7 +329,7 @@ export function ProductDetailPage() {
             <div className="space-y-3">
               <button onClick={handleContact} className="btn-primary w-full justify-center !py-3.5 min-h-[48px]">
                 <MessageCircle className="w-5 h-5" />
-                Contact Artisan Directly
+                {t('buyer.contact_artisan')}
               </button>
               <div className="grid grid-cols-1 xs:grid-cols-2 gap-3">
                 <button onClick={handleWishlist} className="btn-secondary justify-center min-h-[44px]">
@@ -337,7 +350,7 @@ export function ProductDetailPage() {
           <div className="card-warm p-6 mb-12 border border-earth-300 shadow-xs">
             <h2 className="font-serif text-xl font-bold text-earth-900 mb-4 flex items-center gap-2">
               <span className="text-brand-600 text-xs">❖</span>
-              <span>About the Master Artisan</span>
+              <span>{t('buyer.view_artisan')}</span>
             </h2>
             <div className="flex flex-col sm:flex-row items-start gap-4">
               {artisan.profilePhoto ? (

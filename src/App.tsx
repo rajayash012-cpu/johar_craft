@@ -3,10 +3,13 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { seedDemoDataIfNeeded } from './utils/storage';
 import { LanguageProvider } from './i18n';
 import { AccountProvider, useAccount } from './context/AccountContext';
+import { ViewModeProvider } from './context/ViewModeContext';
+import { ViewModeContainer } from './components/ViewModeContainer';
 import { FloatingLanguageSelector } from './components/FloatingLanguageSelector';
 
 // Layouts
 import { ArtisanLayout } from './layouts/ArtisanLayout';
+import { MarketplaceLayout } from './layouts/MarketplaceLayout';
 
 // Pages
 import { LandingPage } from './pages/LandingPage';
@@ -35,7 +38,6 @@ function ArtisanRoute({ children }: { children: React.ReactNode }) {
   return <ArtisanLayout>{children}</ArtisanLayout>;
 }
 
-
 export default function App() {
   useEffect(() => {
     seedDemoDataIfNeeded();
@@ -44,45 +46,49 @@ export default function App() {
   return (
     <AccountProvider>
       <LanguageProvider>
-        <BrowserRouter>
-          <Routes>
-            {/* Landing */}
-            <Route path="/" element={<LandingPage />} />
+        <ViewModeProvider>
+          <ViewModeContainer>
+            <BrowserRouter>
+              <Routes>
+                {/* Landing */}
+                <Route path="/" element={<LandingPage />} />
 
-            {/* Account Selector */}
-            <Route path="/account/select" element={<AccountSelectPage />} />
+                {/* Account Selector */}
+                <Route path="/account/select" element={<AccountSelectPage />} />
 
-            {/* Artisan Portal */}
-            <Route path="/artisan" element={<ArtisanRoute><DashboardPage /></ArtisanRoute>} />
-            <Route path="/artisan/profile" element={<ArtisanRoute><ProfilePage /></ArtisanRoute>} />
-            <Route path="/artisan/products" element={<ArtisanRoute><MyProductsPage /></ArtisanRoute>} />
-            <Route path="/artisan/smart-catalog" element={<ArtisanRoute><SmartCatalogPage /></ArtisanRoute>} />
-            <Route path="/artisan/products/add" element={<ArtisanRoute><AddProductPage /></ArtisanRoute>} />
-            <Route path="/artisan/pricing" element={<ArtisanRoute><PricingPage /></ArtisanRoute>} />
-            <Route path="/artisan/verification" element={<ArtisanRoute><VerificationPage /></ArtisanRoute>} />
-            <Route path="/artisan/settings/verification" element={<ArtisanRoute><VerificationPage /></ArtisanRoute>} />
-            <Route path="/artisan/qr" element={<ArtisanRoute><QRPage /></ArtisanRoute>} />
-            <Route path="/artisan/analytics" element={<ArtisanRoute><AnalyticsPage /></ArtisanRoute>} />
-            <Route path="/artisan/settings" element={<ArtisanRoute><SettingsPage /></ArtisanRoute>} />
+                {/* Artisan Portal */}
+                <Route path="/artisan" element={<ArtisanRoute><DashboardPage /></ArtisanRoute>} />
+                <Route path="/artisan/profile" element={<ArtisanRoute><ProfilePage /></ArtisanRoute>} />
+                <Route path="/artisan/products" element={<ArtisanRoute><MyProductsPage /></ArtisanRoute>} />
+                <Route path="/artisan/smart-catalog" element={<ArtisanRoute><SmartCatalogPage /></ArtisanRoute>} />
+                <Route path="/artisan/products/add" element={<ArtisanRoute><AddProductPage /></ArtisanRoute>} />
+                <Route path="/artisan/pricing" element={<ArtisanRoute><PricingPage /></ArtisanRoute>} />
+                <Route path="/artisan/verification" element={<ArtisanRoute><VerificationPage /></ArtisanRoute>} />
+                <Route path="/artisan/settings/verification" element={<ArtisanRoute><VerificationPage /></ArtisanRoute>} />
+                <Route path="/artisan/qr" element={<ArtisanRoute><QRPage /></ArtisanRoute>} />
+                <Route path="/artisan/analytics" element={<ArtisanRoute><AnalyticsPage /></ArtisanRoute>} />
+                <Route path="/artisan/settings" element={<ArtisanRoute><SettingsPage /></ArtisanRoute>} />
 
-            {/* Buyer Portal / Verification */}
-            <Route path="/buyer/verification" element={<BuyerVerificationPage />} />
+                {/* Buyer Portal / Verification */}
+                <Route path="/buyer/verification" element={<BuyerVerificationPage />} />
 
-            {/* Marketplace / Public */}
-            <Route path="/marketplace" element={<MarketplacePage />} />
-            <Route path="/product/:id" element={<ProductDetailPage />} />
-            <Route path="/artisan/:id" element={<PublicArtisanProfilePage />} />
-            <Route path="/references" element={<ReferencesPage />} />
+                {/* Marketplace / Public */}
+                <Route path="/marketplace" element={<MarketplacePage />} />
+                <Route path="/product/:id" element={<ProductDetailPage />} />
+                <Route path="/artisan/:id" element={<PublicArtisanProfilePage />} />
+                <Route path="/artisan/:id/qr" element={<MarketplaceLayout><div className="py-8 px-4"><QRPage /></div></MarketplaceLayout>} />
+                <Route path="/references" element={<ReferencesPage />} />
 
-            {/* Fallback */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
+                {/* Fallback */}
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
 
-          {/* Global Persistent Floating Language Selector */}
-          <FloatingLanguageSelector />
-        </BrowserRouter>
+              {/* Global Persistent Floating Language Selector */}
+              <FloatingLanguageSelector />
+            </BrowserRouter>
+          </ViewModeContainer>
+        </ViewModeProvider>
       </LanguageProvider>
     </AccountProvider>
   );
 }
-

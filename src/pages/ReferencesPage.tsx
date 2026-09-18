@@ -3,8 +3,10 @@ import { ExternalLink, Search, ShieldCheck, BookOpen, ShoppingBag, Award, Info, 
 import { REAL_REFERENCES } from '../data/references';
 import { CredibilityBadge } from '../components/CredibilityBadge';
 import type { VerificationLevel } from '../types';
+import { useLanguage } from '../i18n/LanguageContext';
 
 export const ReferencesPage: React.FC = () => {
+  const { t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedType, setSelectedType] = useState<string>('ALL');
 
@@ -40,15 +42,13 @@ export const ReferencesPage: React.FC = () => {
         <div className="mb-10 text-center sm:text-left">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-semibold mb-3">
             <ShieldCheck className="w-4 h-4" />
-            <span>Verifiable Public Research</span>
+            <span>{t('references.badge')}</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-serif font-extrabold text-stone-900 tracking-tight">
-            Documentation & Evidence Sources
+            {t('references.title')}
           </h1>
           <p className="mt-3 text-stone-600 text-base sm:text-lg max-w-3xl leading-relaxed">
-            Johar Craft follows a strict zero-fabrication research standard. Every artisan cluster,
-            Geographical Indication (GI), craft tradition, and observed price range is cross-referenced
-            with official government registries, indigenous cooperatives, and public marketplace records.
+            {t('references.desc')}
           </p>
         </div>
 
@@ -56,7 +56,7 @@ export const ReferencesPage: React.FC = () => {
         <div className="bg-white border border-stone-200 rounded-2xl p-6 mb-8 shadow-xs">
           <h2 className="font-serif font-bold text-stone-900 text-lg flex items-center gap-2">
             <Award className="w-5 h-5 text-terracotta-600" />
-            Source Verification Hierarchy
+            {t('references.hierarchy_title')}
           </h2>
           <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="bg-emerald-50/70 border border-emerald-200/80 rounded-xl p-4">

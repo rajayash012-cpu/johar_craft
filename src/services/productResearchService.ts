@@ -23,14 +23,25 @@ export class ProductResearchService {
     const queries: string[] = [];
     const name = id.productName.replace(/Handcrafted|Handmade|Traditional/gi, '').trim();
     const cat = id.craftCategory;
-    const mat = id.visibleMaterial.split(/[/,;]+/)[0].trim();
+    const isSaree = id.productType.toLowerCase().includes('saree') || name.toLowerCase().includes('saree');
+    const mat = id.visibleMaterial && !id.visibleMaterial.toLowerCase().includes('not visually')
+      ? id.visibleMaterial.split(/[/,;]+/)[0].trim()
+      : '';
 
-    if (id.identified) {
-      queries.push(`Jharkhand handcrafted ${name.toLowerCase()}`);
-      queries.push(`Jharkhand ${cat.toLowerCase()} artisan products`);
-      queries.push(`${cat.toLowerCase()} ${mat.toLowerCase()} handmade price India`);
-      queries.push(`Tribes India ${cat.toLowerCase()} authentic listings`);
-      queries.push(`Jharkhand tribal ${cat.toLowerCase()} craft heritage`);
+    if (id.identified && cat !== 'Not confidently identified') {
+      if (isSaree) {
+        queries.push('Jharkhand handloom sarees authentic');
+        queries.push('Santhali traditional Panchi Parhan saree price');
+        queries.push('Kuchai Tussar silk handloom saree Jharkhand');
+        queries.push('Tribes India authentic handwoven sarees');
+      } else {
+        queries.push(`Jharkhand handcrafted ${name.toLowerCase()}`);
+        queries.push(`Jharkhand ${cat.toLowerCase()} artisan products`);
+        if (mat) {
+          queries.push(`${cat.toLowerCase()} ${mat.toLowerCase()} handmade price India`);
+        }
+        queries.push(`Tribes India ${cat.toLowerCase()} authentic listings`);
+      }
     } else {
       queries.push('Jharkhand tribal handicrafts catalog');
       queries.push('Tribes India authentic Jharkhand artisan products');

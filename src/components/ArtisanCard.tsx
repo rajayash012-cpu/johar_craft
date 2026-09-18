@@ -5,19 +5,21 @@ import type { Artisan } from '../types';
 import { getProductsByArtisan } from '../utils/storage';
 import { PhotoPlaceholder } from './PhotoPlaceholder';
 import { CredibilityBadge } from './CredibilityBadge';
+import { useLanguage } from '../i18n';
 
 interface ArtisanCardProps {
   artisan: Artisan;
 }
 
 export function ArtisanCard({ artisan }: ArtisanCardProps) {
+  const { t } = useLanguage();
   const productCount = getProductsByArtisan(artisan.id).filter(p => p.status === 'published').length;
 
   const experienceText = typeof artisan.yearsExperience === 'number'
-    ? `${artisan.yearsExperience} yrs experience`
+    ? t('artisan.years_exp', { count: artisan.yearsExperience })
     : artisan.yearsExperience && artisan.yearsExperience !== 'Information not provided'
     ? artisan.yearsExperience
-    : 'Information not provided';
+    : t('common.na');
 
   return (
     <div className="card-hover group p-5">
@@ -59,7 +61,7 @@ export function ArtisanCard({ artisan }: ArtisanCardProps) {
         <div className="space-y-1.5 mb-3">
           <div className="flex items-center gap-1.5 text-sm text-earth-600">
             <MapPin className="w-3.5 h-3.5 text-brand-500" />
-            <span>{artisan.district}, Jharkhand</span>
+            <span>{artisan.district}, {t('crafts.jharkhand')}</span>
           </div>
           <div className="flex items-center gap-1.5 text-sm text-earth-600">
             <Package className="w-3.5 h-3.5 text-brand-500" />
@@ -68,9 +70,11 @@ export function ArtisanCard({ artisan }: ArtisanCardProps) {
         </div>
         <div className="flex items-center justify-between pt-3 border-t border-earth-100">
           <span className="text-xs text-earth-500 truncate max-w-[130px]">{experienceText}</span>
-          <span className="badge-brand">{productCount} products</span>
+          <span className="badge-brand">{t('artisan.product_count', { count: productCount })}</span>
         </div>
       </Link>
     </div>
   );
 }
+
+export default ArtisanCard;

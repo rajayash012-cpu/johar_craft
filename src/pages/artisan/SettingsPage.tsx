@@ -22,12 +22,14 @@ import {
 import { getArtisan, getArtisanVerification } from '../../utils/storage';
 import { getTierLabel } from '../../services/verificationService';
 import { useAccount } from '../../context/AccountContext';
+import { useLanguage } from '../../i18n/LanguageContext';
 import { AddAccountModal } from '../../components/AddAccountModal';
 import { PhotoPlaceholder } from '../../components/PhotoPlaceholder';
 import type { Account } from '../../types';
 
 export function SettingsPage() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [searchParams] = useSearchParams();
   const initialTab = (searchParams.get('tab') as any) || 'accounts';
 
@@ -126,10 +128,10 @@ export function SettingsPage() {
         </div>
         <div>
           <h1 className="text-2xl font-display font-bold text-earth-900">
-            Settings
+            {t('settings.title')}
           </h1>
           <p className="text-xs text-earth-600">
-            Manage accounts, security credentials, and preferences
+            {t('settings.subtitle')}
           </p>
         </div>
       </div>
@@ -145,7 +147,7 @@ export function SettingsPage() {
           }`}
         >
           <Users className="w-4 h-4" />
-          <span>Accounts</span>
+          <span>{t('settings.tab_accounts')}</span>
           <span className="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-earth-100 text-earth-700">
             {accounts.length}
           </span>
@@ -159,7 +161,7 @@ export function SettingsPage() {
           }`}
         >
           <User className="w-4 h-4" />
-          <span>Profile</span>
+          <span>{t('settings.tab_profile')}</span>
         </button>
         <button
           onClick={() => setActiveTab('verification')}
@@ -170,7 +172,7 @@ export function SettingsPage() {
           }`}
         >
           <ShieldCheck className="w-4 h-4" />
-          <span>Trust & Verification</span>
+          <span>{t('settings.tab_verification')}</span>
           {verifProfile.tier !== 'LEVEL_0_UNVERIFIED' && (
             <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
           )}
@@ -184,7 +186,7 @@ export function SettingsPage() {
           }`}
         >
           <Bell className="w-4 h-4" />
-          <span>Notifications</span>
+          <span>{t('settings.tab_notifications')}</span>
         </button>
         <button
           onClick={() => setActiveTab('privacy')}
@@ -195,7 +197,7 @@ export function SettingsPage() {
           }`}
         >
           <Lock className="w-4 h-4" />
-          <span>Data & Privacy</span>
+          <span>{t('settings.tab_privacy')}</span>
         </button>
       </div>
 
@@ -207,9 +209,9 @@ export function SettingsPage() {
           {/* Top Bar of Accounts Tab */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h2 className="text-lg font-bold text-earth-900">Accounts</h2>
+              <h2 className="text-lg font-bold text-earth-900">{t('account.manage_accounts')}</h2>
               <p className="text-xs text-earth-600">
-                Manage your Johar Craft accounts stored on this device
+                {t('account.choose_account_desc')}
               </p>
             </div>
             <button
@@ -217,14 +219,14 @@ export function SettingsPage() {
               className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold transition-colors shadow-xs cursor-pointer"
             >
               <Plus className="w-4 h-4" />
-              <span>+ Add Account</span>
+              <span>{t('account.add_account')}</span>
             </button>
           </div>
 
           {/* 1. Active Account Card */}
           <div className="space-y-2">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-earth-500">
-              Active Account
+              {t('account.active_account')}
             </h3>
 
             {activeAccount ? (
@@ -257,11 +259,11 @@ export function SettingsPage() {
                           }`}
                         >
                           {activeAccount.type === 'artisan'
-                            ? 'Artisan'
-                            : 'Buyer'}
+                            ? t('account.artisan_role')
+                            : t('account.buyer_role')}
                         </span>
                         <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                          Status: Active
+                          Status: {t('verification.verified')}
                         </span>
                       </div>
 
@@ -275,10 +277,10 @@ export function SettingsPage() {
                         {activeAccount.type === 'artisan' ? (
                           <>
                             <span>
-                              District: {(activeAccount as any).district}
+                              {t('artisan.district')}: {(activeAccount as any).district}
                             </span>
                             <span>
-                              Craft: {(activeAccount as any).craftCategory}
+                              {t('artisan.craft')}: {(activeAccount as any).craftCategory}
                             </span>
                           </>
                         ) : (
@@ -286,8 +288,8 @@ export function SettingsPage() {
                             <span>
                               Type:{' '}
                               {(activeAccount as any).buyerType === 'BUSINESS'
-                                ? 'Business Buyer'
-                                : 'Individual Buyer'}
+                                ? t('verification.business_buyer')
+                                : t('verification.individual_buyer')}
                             </span>
                             <span>
                               Location:{' '}
@@ -308,7 +310,7 @@ export function SettingsPage() {
                           className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-earth-300 text-earth-800 text-xs font-semibold hover:bg-earth-50 transition-colors"
                         >
                           <Edit className="w-3.5 h-3.5" />
-                          <span>Edit Profile</span>
+                          <span>{t('artisan.edit_profile')}</span>
                         </Link>
                       ) : (
                         <Link
@@ -316,7 +318,7 @@ export function SettingsPage() {
                           className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-earth-300 text-earth-800 text-xs font-semibold hover:bg-earth-50 transition-colors"
                         >
                           <Edit className="w-3.5 h-3.5" />
-                          <span>Edit Profile</span>
+                          <span>{t('artisan.edit_profile')}</span>
                         </Link>
                       )}
 
@@ -325,16 +327,16 @@ export function SettingsPage() {
                         className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-earth-300 text-earth-700 text-xs font-semibold hover:bg-earth-50 transition-colors cursor-pointer"
                       >
                         <LogOut className="w-3.5 h-3.5" />
-                        <span>Log Out</span>
+                        <span>{t('account.log_out')}</span>
                       </button>
                     </div>
 
                     <button
                       onClick={() => setDeleteModalAccount(activeAccount)}
-                      className="inline-flex items-center gap-1.5 text-xs text-red-600 hover:text-red-800 hover:underline transition-colors mt-1"
+                      className="inline-flex items-center gap-1.5 text-xs text-red-600 hover:text-red-800 hover:underline transition-colors mt-1 cursor-pointer"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
-                      <span>Delete Account</span>
+                      <span>{t('account.delete_account')}</span>
                     </button>
                   </div>
                 </div>
@@ -430,14 +432,14 @@ export function SettingsPage() {
                           onClick={() => handleSwitch(acc.id, acc.type)}
                           className="px-3 py-1.5 rounded-xl bg-earth-100 hover:bg-brand-600 hover:text-white text-earth-800 text-xs font-semibold transition-all cursor-pointer shadow-2xs"
                         >
-                          Switch
+                          {t('account.switch_account')}
                         </button>
                         <button
                           onClick={() => setDeleteModalAccount(acc)}
                           className="px-2.5 py-1.5 rounded-xl border border-red-200 text-red-600 hover:bg-red-50 text-xs font-semibold transition-colors cursor-pointer"
-                          title="Delete this account"
+                          title={t('common.delete')}
                         >
-                          Delete
+                          {t('common.delete')}
                         </button>
                       </div>
                     </div>
@@ -721,14 +723,14 @@ export function SettingsPage() {
                 onClick={() => setDeleteModalAccount(null)}
                 className="px-4 py-2 rounded-xl border border-earth-300 text-earth-700 text-xs font-semibold hover:bg-earth-100 transition-colors cursor-pointer"
               >
-                Cancel
+                {t('common.cancel')}
               </button>
               <button
                 type="button"
                 onClick={handleConfirmDelete}
                 className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-semibold transition-colors shadow-xs cursor-pointer"
               >
-                Permanently Delete
+                {t('common.delete')}
               </button>
             </div>
           </div>
